@@ -4,8 +4,8 @@ if (typeof window !== 'undefined') {
     if ('mapgl' in window) {
         (mapgl as any).Ruler = Ruler;
     } else {
-        // Если так вышло, что плагин инициализирован раньше mapgl, поместим его во временную переменную
-        // Из нее уже сам mapgl все положит в себя.
+        // If it so happens that the plugin is initialized before mapgl, we will put it in a temporary variable
+        // Mapgl will put everything into itself from it.
         if (!(window as any).__mapglPlugins) {
             (window as any).__mapglPlugins = {};
         }

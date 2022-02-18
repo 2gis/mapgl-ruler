@@ -15,7 +15,8 @@
     "dev": "npm run build:assets && webpack-dev-server",
     "prettier": "prettier --check \"./**/*.{ts,tsx,js,json,html,css,md}\"",
     "prettier:write": "prettier --write \"./**/*.{ts,tsx,js,json,html,css,md}\"",
-    "lint": "tslint -p tsconfig.json 'src/**/*.ts' 'demo/**/*.ts'"
+    "lint": "tslint -p tsconfig.json 'src/**/*.ts' 'demo/**/*.ts'",
+    "test": "npm run prettier && npm run lint"
   },
   "license": "BSD-2-Clause",
   "files": [

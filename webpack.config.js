@@ -41,8 +41,8 @@ module.exports = (_, argv) => {
             path: path.resolve(__dirname, 'dist'),
             publicPath: '/',
             libraryTarget: 'umd',
-            // webpack для umd использует window, которого может не быть в nodejs окружении.
-            // вероятно поправили в 5 webpack, тогда можно будет удалить globalObject
+            // webpack for amd uses window, which may not be in the nodejs environment.
+            // probably corrected in 5 webpack, then it will be possible to delete globalObject
             // https://github.com/webpack/webpack/pull/8625
             globalObject: "typeof self !== 'undefined' ? self : this",
         },
@@ -86,7 +86,7 @@ module.exports = (_, argv) => {
             },
             disableHostCheck: true,
             clientLogLevel: 'error',
-            // Чтобы скрипт можно было тянуть с другого домена, например, в visual-comparator
+            // it is used so that the script can be pulled from another domain, for example, in visual-comparator
             headers: {
                 'Access-Control-Allow-Origin': '*',
             },
