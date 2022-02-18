@@ -1,4 +1,4 @@
-import {Ruler} from './ruler';
+import { Ruler } from './ruler';
 
 if (typeof window !== 'undefined') {
     if ('mapgl' in window) {

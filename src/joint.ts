@@ -19,6 +19,7 @@ interface EventTable {
 }
 
 let lastId = 0;
+
 export class Joint extends Evented<EventTable> {
     public readonly id: number;
     private dragging = false;
