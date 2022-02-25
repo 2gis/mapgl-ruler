@@ -10,3 +10,8 @@ export interface SnapInfo {
 export interface TargetedEvent<T> {
     targetData: T;
 }
+
+export interface RulerChangedEvent {
+    points: GeoPoint[];
+    isUser: boolean;
+}

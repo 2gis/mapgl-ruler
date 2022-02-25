@@ -15,7 +15,7 @@ interface EventTable {
     dragstart: TargetedEvent<Joint>;
     dragend: TargetedEvent<Joint>;
     move: TargetedEvent<Joint>;
-    destroy: TargetedEvent<Joint>;
+    removed: TargetedEvent<Joint>;
 }
 
 let lastId = 0;
@@ -27,7 +27,7 @@ export class Joint extends Evented<EventTable> {
     private isFirst: boolean;
     private labelText?: string;
     private distance: number;
-    private hoverTimer?: number;
+    private hoverTimer?: ReturnType<typeof setTimeout>;
     private coordinates: GeoPoint;
     private marker?: mapgl.HtmlMarker;
     private label?: mapgl.HtmlMarker;
@@ -58,8 +58,6 @@ export class Joint extends Evented<EventTable> {
         this.label = undefined;
 
         document.removeEventListener('mousemove', this.onMouseMove);
-
-        this.emit('destroy', { targetData: this });
     }
 
     enable() {
@@ -93,7 +91,7 @@ export class Joint extends Evented<EventTable> {
     }
 
     setAsFirstJoint() {
-        if (!this.isFirst) {
+        if (this.isFirst) {
             return;
         }
 
@@ -150,6 +148,7 @@ export class Joint extends Evented<EventTable> {
 
     private onClickLabel = () => {
         this.disable();
+        this.emit('removed', { targetData: this });
     };
 
     private onMouseOver = () => {
