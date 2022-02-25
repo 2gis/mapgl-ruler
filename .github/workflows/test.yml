@@ -12,7 +12,6 @@ jobs:
       - name: Build container and run tests
         run: npm run docker:test
       - uses: actions/upload-artifact@v2
-        if: ${{ failure() }}
         with:
-          path: test/screenshots/standards/api/__diff_output__/*.png
+          path: test/screenshots/standards/**/__diff_output__/*.png
           retention-days: 5
