@@ -12,6 +12,7 @@ jobs:
       - name: Build container and run tests
         run: docker-compose up --build --exit-code-from test
       - uses: actions/upload-artifact@v2
+        if: ${{ failure() }}
         with:
           path: test/screenshots/standards/**/__diff_output__/*.png
           retention-days: 5
