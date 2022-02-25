@@ -18,5 +18,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: ${{ failure() }}
         with:
-          path: test/screenshots/standards/**/__diff_output__
+          path: test/screenshots/standards/api/__diff_output__/*.png
           retention-days: 5
