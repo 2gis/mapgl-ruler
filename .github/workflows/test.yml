@@ -16,6 +16,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - uses: actions/upload-artifact@v2
+        if: ${{ failure() }}
         with:
           path: test/screenshots/standards/**/__diff_output__
           retention-days: 5
