@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build container and run tests
-        run: npm run docker:test
+        run: docker-compose up --build
       - uses: actions/upload-artifact@v2
         with:
           path: test/screenshots/standards/**/__diff_output__/*.png
