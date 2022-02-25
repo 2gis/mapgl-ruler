@@ -9,12 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm test
+      - name: Build container and run tests
+        run: npm run docker:test
       - uses: actions/upload-artifact@v2
         if: ${{ failure() }}
         with:

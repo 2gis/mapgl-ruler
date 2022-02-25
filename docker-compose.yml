@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  test:
+    build:
+      context: .
+    volumes:
+      - "./test/screenshots/standards/:/mapgl-ruler/test/screenshots/standards"

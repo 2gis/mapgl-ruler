@@ -20,8 +20,9 @@
     "prettier": "prettier --check \"./**/*.{ts,tsx,js,json,html,css,md}\"",
     "prettier:write": "prettier --write \"./**/*.{ts,tsx,js,json,html,css,md}\"",
     "lint": "tslint -p tsconfig.json 'src/**/*.ts' 'demo/**/*.ts'",
+    "test:screenshots": "webpack --test && TEST_SUITE=screenshots jest --no-cache",
     "test": "npm run prettier && npm run lint && npm run test:screenshots",
-    "test:screenshots": "webpack --test && TEST_SUITE=screenshots jest --no-cache"
+    "docker:test": "docker-compose up --build"
   },
   "devDependencies": {
     "@documentalist/compiler": "^2.8.1",
