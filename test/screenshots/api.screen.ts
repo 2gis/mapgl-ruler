@@ -65,9 +65,12 @@ describe('Ruler API', () => {
             window.ruler = new window.Ruler(window.sdk.map, {
                 enabled: true,
             });
+            window.ready = false;
+            window.ruler.on('ruler_redraw', () => (window.ready = true));
             window.ruler.setPoints(points);
         }, points);
 
+        await page.waitForFunction(() => window.ready);
         await makeSnapshot(page, dirPath, 'set_points_when_enabled_by_option');
     });
     it('setPoints(...) when disabled', async () => {
