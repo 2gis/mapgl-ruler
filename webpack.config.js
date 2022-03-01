@@ -1,5 +1,10 @@
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const path = require('path');
+const fs = require('fs-extra');
+
+const tsCheckerPlugin = new ForkTsCheckerWebpackPlugin();
+
+copyAssets();
 
 module.exports = (_, argv) => {
     let type = 'development';
@@ -8,6 +13,8 @@ module.exports = (_, argv) => {
         type = 'production';
     } else if (argv.demo) {
         type = 'demo';
+    } else if (argv.test) {
+        type = 'test';
     }
 
     const base = {
@@ -22,6 +29,7 @@ module.exports = (_, argv) => {
                             loader: 'ts-loader',
                             options: {
                                 transpileOnly: type === 'development',
+                                configFile: 'tsconfig.json',
                             },
                         },
                     ],
@@ -29,6 +37,7 @@ module.exports = (_, argv) => {
             ],
         },
         resolve: {
+            symlinks: false,
             extensions: ['.ts', '.js'],
         },
     };
@@ -58,18 +67,26 @@ module.exports = (_, argv) => {
         },
     };
 
-    if (type === 'production') {
-        return [library];
-    }
-
-    if (type === 'demo') {
-        return [library, demo];
-    }
+    const test = {
+        ...base,
+        mode: 'development',
+        entry: {
+            test: './test/index.ts',
+        },
+        output: {
+            filename: '[name].js',
+            path: path.resolve(__dirname, 'dist/test'),
+            publicPath: '/',
+        },
+        devtool: 'eval-source-map',
+        plugins: [tsCheckerPlugin],
+        stats: 'errors-only',
+    };
 
     const devConfig = {
         mode: 'development',
         devtool: 'eval-source-map',
-        plugins: [new ForkTsCheckerWebpackPlugin()],
+        plugins: [tsCheckerPlugin],
         devServer: {
             contentBase: path.resolve(__dirname, 'dist'),
             host: 'localhost',
@@ -93,8 +110,27 @@ module.exports = (_, argv) => {
         },
     };
 
-    return [
-        { ...library, ...devConfig },
-        { ...demo, ...devConfig },
-    ];
+    switch (type) {
+        case 'production':
+            return [library];
+        case 'demo':
+            return [library, demo];
+        case 'test':
+            return test;
+        case 'development':
+            return [
+                { ...library, ...devConfig },
+                { ...demo, ...devConfig },
+            ];
+    }
 };
+
+function copyAssets() {
+    const root = __dirname;
+    const dist = path.join(root, 'dist');
+
+    fs.copySync(path.join(root, 'demo', 'index.html'), path.join(dist, 'index.html'));
+    fs.copySync(path.join(root, 'test', 'index.html'), path.join(dist, 'test/index.html'));
+
+    console.log('+ HTML');
+}

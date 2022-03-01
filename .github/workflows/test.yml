@@ -9,9 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Build container and run tests
+        run: docker-compose up --build --exit-code-from test
+      - uses: actions/upload-artifact@v2
+        if: ${{ failure() }}
         with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm test
+          path: test/screenshots/standards/**/__diff_output__/*.png
+          retention-days: 5

@@ -1,16 +1,21 @@
 import { Evented } from './evented';
-import { GeoPoint, ScreenPoint, SnapInfo, TargetedEvent } from './types';
+import { GeoPoint, RulerChangedEvent, ScreenPoint, SnapInfo, TargetedEvent } from './types';
 import { geoPointsDistance, getLine, getSnapPoint } from './utils';
 import { Polyline, Map, DynamicObjectPointerEvent, MapPointerEvent } from '@2gis/mapgl/types';
 import { Joint } from './joint';
 import { SnapPoint } from './snapPoint';
+
+interface EventTable {
+    rulerchange: RulerChangedEvent;
+    ruler_redraw: undefined;
+}
 
 interface RulerOptions {
     points?: GeoPoint[];
     enabled?: boolean;
 }
 
-export class Ruler extends Evented<any> {
+export class Ruler extends Evented<EventTable> {
     private readonly map: Map;
     private enabled = false;
     private redrawPolyline = false;
@@ -23,13 +28,16 @@ export class Ruler extends Evented<any> {
     private previewLine?: mapgl.Polyline;
     private currentDraggableJoint?: Joint;
     private snapPoint?: SnapPoint;
+    private language: string;
 
     constructor(map: mapgl.Map, options: RulerOptions) {
         super();
         this.map = map;
+        this.language = this.map.getLanguage();
+
+        options.points?.forEach((point, i) => this.addPoint(point, i));
 
         if (options.enabled ?? true) {
-            options.points?.forEach((point, i) => this.addPoint(point, i));
             this.enable();
         }
     }
@@ -76,6 +84,7 @@ export class Ruler extends Evented<any> {
         this.joints.forEach((joint) => joint.disable());
         this.joints = [];
         points.forEach((point, i) => this.addPoint(point, i));
+        this.sendRulerChangeEvent(false);
     }
 
     private addPoint(point: GeoPoint, index: number) {
@@ -93,7 +102,7 @@ export class Ruler extends Evented<any> {
         joint.on('dragstart', this.onJointMoveStart);
         joint.on('dragend', this.onJointMoveEnd);
         joint.on('move', this.onJointMove);
-        joint.on('destroy', this.onJointDestroy);
+        joint.on('removed', this.onJointRemoved);
         joint.on('mouseover', this.onJointMouseOver);
         joint.on('mouseout', this.onJointMouseOut);
 
@@ -114,22 +123,26 @@ export class Ruler extends Evented<any> {
         }
     };
 
-    private onJointDestroy = (e: TargetedEvent<Joint>) => {
-        const destroyed = e.targetData;
-        const index = this.joints.indexOf(destroyed);
+    private onJointRemoved = (e: TargetedEvent<Joint>) => {
+        const disabled = e.targetData;
+        const index = this.joints.indexOf(disabled);
 
-        if (destroyed.isFirstJoint() && this.joints.length > 1) {
+        if (disabled.isFirstJoint() && this.joints.length > 1) {
             this.joints[index + 1].setAsFirstJoint();
         }
         this.joints.splice(index, 1);
         this.redrawPolyline = true;
         this.overed = false;
+
+        this.sendRulerChangeEvent(true);
     };
 
     private onJointMoveEnd = () => {
         this.redrawPolyline = true;
         this.redrawPreviewLine = true;
         this.currentDraggableJoint = undefined;
+
+        this.sendRulerChangeEvent(true);
     };
 
     private onJointMove = () => {
@@ -153,10 +166,12 @@ export class Ruler extends Evented<any> {
 
     private onPolylineClick = (e: DynamicObjectPointerEvent<Polyline>) => {
         this.createSnapPoint(e.point);
+        this.sendRulerChangeEvent(true);
     };
 
     private onClick = (e: MapPointerEvent) => {
         this.addPoint(e.lngLat, this.joints.length);
+        this.sendRulerChangeEvent(true);
     };
 
     private createSnapPoint(point: ScreenPoint) {
@@ -165,27 +180,41 @@ export class Ruler extends Evented<any> {
         this.redrawSnapPoint = true;
     }
 
+    private sendRulerChangeEvent(isUser: boolean): void {
+        this.emit('rulerchange', {
+            points: this.joints.map((joint) => joint.getCoordinates()),
+            isUser,
+        });
+    }
+
     private update() {
         if (!this.enabled) {
             return;
         }
+
+        if (this.language !== this.map.getLanguage()) {
+            this.language = this.map.getLanguage();
+            this.redrawPolyline = true;
+        }
+
+        const emitRedrawEvent = this.redrawPreviewLine || this.redrawPolyline;
 
         if (this.redrawPolyline) {
             this.redrawPolyline = false;
             this.polyline?.destroy();
 
             const points: GeoPoint[] = [];
-            this.joints.forEach((node, ind) => {
-                points.push(node.getCoordinates());
+            this.joints.forEach((joint, ind) => {
+                const coords = joint.getCoordinates();
                 const isFirst = ind === 0;
                 let distance = 0;
                 if (!isFirst) {
-                    const prev = this.joints[ind - 1];
-                    distance =
-                        prev.getDistance() +
-                        geoPointsDistance(node.getCoordinates(), prev.getCoordinates());
+                    const prevDistance = this.joints[ind - 1].getDistance();
+                    const prevCoordinates = this.joints[ind - 1].getCoordinates();
+                    distance = prevDistance + geoPointsDistance(coords, prevCoordinates);
                 }
-                node.setDistance(distance, isFirst);
+                joint.setDistance(distance, isFirst);
+                points.push(coords);
             });
 
             this.polyline = getLine(this.map, points, false);
@@ -225,6 +254,10 @@ export class Ruler extends Evented<any> {
             } else {
                 this.snapPoint?.hide();
             }
+        }
+
+        if (emitRedrawEvent) {
+            this.emit('ruler_redraw');
         }
 
         requestAnimationFrame(() => {
