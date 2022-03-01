@@ -46,7 +46,12 @@ Pull requests with failing tests will not be accepted. Also, if you add or modif
 
 ## Tests
 
-For check or update screenshots use command
+### Run tests
 ```shell
-docker-compose up --build
+docker-compose up --build test
+```
+
+### Update screenshots
+```shell
+docker-compose up --build screenshot-update
 ```
