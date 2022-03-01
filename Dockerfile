@@ -31,5 +31,4 @@ COPY . .
 RUN npm cache clean --force
 RUN npm ci
 
-CMD npm test
 

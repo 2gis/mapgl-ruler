@@ -6,3 +6,11 @@ services:
       context: .
     volumes:
       - "./test/screenshots/standards/:/mapgl-ruler/test/screenshots/standards"
+    command: ['npm', 'test']
+
+  screenshot-update:
+    build:
+      context: .
+    volumes:
+      - "./test/screenshots/standards/:/mapgl-ruler/test/screenshots/standards"
+    command: ['npm', 'run', 'test:screenshots:update']
