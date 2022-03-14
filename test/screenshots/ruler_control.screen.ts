@@ -46,7 +46,7 @@ describe('RulerControl', () => {
         await makeSnapshot(page, dirPath, 'disable_on_click');
     });
 
-    it.only('Enable ruler on click button', async () => {
+    it('Enable ruler on click button', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
         await page.waitForFunction(() => window.ready);
         await page.click(btn_selector);
