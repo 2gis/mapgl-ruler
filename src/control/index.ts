@@ -6,9 +6,9 @@ export class RulerControl extends mapgl.Control {
     public ruler: Ruler;
     private isEnabled: boolean;
 
-    constructor(private map: mapgl.Map, options: mapgl.ControlOptions) {
+    constructor(private map: mapgl.Map, options: mapgl.ControlOptions, enabled = true) {
         super(map, '', options);
-        this.isEnabled = true;
+        this.isEnabled = enabled;
         this.ruler = new Ruler(this.map, { enabled: this.isEnabled });
 
         this.render();
