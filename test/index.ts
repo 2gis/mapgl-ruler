@@ -1,4 +1,4 @@
-import { Ruler } from '../src';
+import { Ruler, RulerControl } from '../src';
 
 export {};
 
@@ -9,3 +9,4 @@ window.sdk = {
 window.sdk.Map = mapgl.Map;
 window.ready = false;
 window.Ruler = Ruler;
+window.Control = RulerControl;

@@ -1,4 +1,4 @@
-import { Ruler } from '../src';
+import { RulerControl } from '../src/control';
 
 declare var window: any;
 
@@ -18,14 +18,15 @@ window.map.setStyle({
     labelingGroups: {},
 });
 
-window.ruler = new Ruler(window.map, {
-    enabled: false,
-    points: [
-        [55.31878, 25.23584],
-        [55.35878, 25.23584],
-        [55.35878, 25.26584],
-    ],
-});
-window.ruler.enable();
+window.rulerControl = new RulerControl(window.map, { position: 'centerRight' });
+// window.ruler = new Ruler(window.map, {
+//     enabled: false,
+//     points: [
+//         [55.31878, 25.23584],
+//         [55.35878, 25.23584],
+//         [55.35878, 25.26584],
+//     ],
+// });
+// window.ruler.enable();
 
 window.addEventListener('resize', () => window.map.invalidateSize());
