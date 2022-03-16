@@ -156,6 +156,7 @@ export function getLabel(map: mapgl.Map, point: GeoPoint, text: string): mapgl.H
         html: content,
         anchor: [-(jointTotalWidth / 2 + 2), height / 2],
         zIndex: styles.linePhase + 1,
+        interactive: false,
     });
 }
 
