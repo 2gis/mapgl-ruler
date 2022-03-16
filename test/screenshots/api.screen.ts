@@ -66,7 +66,7 @@ describe('Ruler API', () => {
                 enabled: true,
             });
             window.ready = false;
-            window.ruler.on('ruler_redraw', () => (window.ready = true));
+            window.ruler.on('redrawn', () => (window.ready = true));
             window.ruler.setPoints(points);
         }, points);
 

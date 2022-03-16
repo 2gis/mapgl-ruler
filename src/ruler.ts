@@ -6,8 +6,8 @@ import { Joint } from './joint';
 import { SnapPoint } from './snapPoint';
 
 interface EventTable {
-    rulerchange: RulerChangedEvent;
-    ruler_redraw: undefined;
+    changed: RulerChangedEvent;
+    redrawn: undefined;
 }
 
 interface RulerOptions {
@@ -181,7 +181,7 @@ export class Ruler extends Evented<EventTable> {
     }
 
     private sendRulerChangeEvent(isUser: boolean): void {
-        this.emit('rulerchange', {
+        this.emit('changed', {
             points: this.joints.map((joint) => joint.getCoordinates()),
             isUser,
         });
@@ -257,7 +257,7 @@ export class Ruler extends Evented<EventTable> {
         }
 
         if (emitRedrawEvent) {
-            this.emit('ruler_redraw');
+            this.emit('redrawn');
         }
 
         requestAnimationFrame(() => {

@@ -21,7 +21,7 @@ describe('Interactions with Ruler', () => {
 
         await page.evaluate(() => {
             window.ruler = new window.Ruler(window.sdk.map, {});
-            window.ruler.on('ruler_redraw', () => (window.ready = true));
+            window.ruler.on('redrawn', () => (window.ready = true));
             window.ready = false;
         });
     });
