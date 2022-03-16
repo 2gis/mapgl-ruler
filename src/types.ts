@@ -11,7 +11,7 @@ export interface TargetedEvent<T> {
     targetData: T;
 }
 
-export interface RulerChangedEvent {
+export interface ChangeEvent {
     points: GeoPoint[];
     isUser: boolean;
 }

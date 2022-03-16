@@ -34,6 +34,24 @@ module.exports = (_, argv) => {
                         },
                     ],
                 },
+                // For CSS modules
+                {
+                    test: /\.module\.css$/i,
+                    use: [
+                        'style-loader',
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: {
+                                    localIdentName:
+                                        type === 'production'
+                                            ? 'mapgl_[hash:base64]'
+                                            : '[path][name]__[local]',
+                                },
+                            },
+                        },
+                    ],
+                },
             ],
         },
         resolve: {

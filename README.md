@@ -10,7 +10,9 @@ Install with NPM
 npm install mapgl-ruler
 ```
 
-Import the RulerClass to your project and use it:
+### Use ruler directly
+
+Import the Ruler class to your project and use it:
 
 ```typescript
 import { Ruler } from '@2gis/mapgl-ruler';
@@ -28,6 +30,22 @@ const ruler = new Ruler(map, {
         [55.35878, 25.26584],
     ]
 });
+```
+
+### Use ruler via RulerControl
+
+Import the RulerControl class to your project and use it:
+
+```typescript
+import { RulerControl } from "@2gis/mapgl-ruler";
+
+const map = new mapgl.Map('container', {
+    center: [55.31878, 25.23584],
+    zoom: 13,
+    key: 'Your API access key',
+});
+
+const control = new RulerControl(map, { position: 'centerRight' })
 ```
 
 ## Contributing
