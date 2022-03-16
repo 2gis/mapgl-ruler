@@ -1,13 +1,13 @@
 import { Evented } from './evented';
-import { GeoPoint, RulerChangedEvent, ScreenPoint, SnapInfo, TargetedEvent } from './types';
+import { GeoPoint, ChangeEvent, ScreenPoint, SnapInfo, TargetedEvent } from './types';
 import { geoPointsDistance, getLine, getSnapPoint } from './utils';
 import { Polyline, Map, DynamicObjectPointerEvent, MapPointerEvent } from '@2gis/mapgl/types';
 import { Joint } from './joint';
 import { SnapPoint } from './snapPoint';
 
 interface EventTable {
-    changed: RulerChangedEvent;
-    redrawn: undefined;
+    change: ChangeEvent;
+    redraw: undefined;
 }
 
 interface RulerOptions {
@@ -181,7 +181,7 @@ export class Ruler extends Evented<EventTable> {
     }
 
     private sendRulerChangeEvent(isUser: boolean): void {
-        this.emit('changed', {
+        this.emit('change', {
             points: this.joints.map((joint) => joint.getCoordinates()),
             isUser,
         });
@@ -257,7 +257,7 @@ export class Ruler extends Evented<EventTable> {
         }
 
         if (emitRedrawEvent) {
-            this.emit('redrawn');
+            this.emit('redraw');
         }
 
         requestAnimationFrame(() => {

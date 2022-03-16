@@ -7,7 +7,7 @@ let page: Page;
 
 const handleRulerEvent = async (page: Page) => {
     await page.evaluate(() => {
-        window.control.getRuler().on('redrawn', () => (window.ready = true));
+        window.control.getRuler().on('redraw', () => (window.ready = true));
         window.ready = false;
     });
 };
