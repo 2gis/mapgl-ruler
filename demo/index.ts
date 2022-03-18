@@ -7,16 +7,6 @@ window.map = new mapgl.Map('container', {
     zoom: 13,
     key: 'cb20c5bf-34d3-4f0e-9b2b-33e9b8edb57f',
 });
-window.map.setStyle({
-    version: 1,
-    name: 'псевдоночная тема для MapGL JS API',
-    background: {
-        color: '#1C2429',
-    },
-    layers: [],
-    icons: {},
-    labelingGroups: {},
-});
 
 window.rulerControl = new RulerControl(window.map, { position: 'centerRight' });
 window.rulerControl.ruler.setPoints([

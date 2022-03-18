@@ -146,7 +146,12 @@ export function getLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): m
     });
 }
 
-export function getLabel(map: mapgl.Map, point: GeoPoint, text: string): mapgl.HtmlMarker {
+export function getLabel(
+    map: mapgl.Map,
+    point: GeoPoint,
+    text: string,
+    interactive = false,
+): mapgl.HtmlMarker {
     const content = getLabelHtml(text, styles.labelFontSize);
     const height = styles.labelFontSize;
     const jointTotalWidth = styles.jointWidth + styles.jointBorderWidth + styles.jointBorder2Width;
@@ -156,7 +161,7 @@ export function getLabel(map: mapgl.Map, point: GeoPoint, text: string): mapgl.H
         html: content,
         anchor: [-(jointTotalWidth / 2 + 2), height / 2],
         zIndex: styles.linePhase + 1,
-        interactive: false,
+        interactive,
     });
 }
 
