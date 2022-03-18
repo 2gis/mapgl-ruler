@@ -146,16 +146,22 @@ export function getLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): m
     });
 }
 
-export function getLabel(map: mapgl.Map, point: GeoPoint, text: string): mapgl.HtmlMarker {
+export function getLabel(
+    map: mapgl.Map,
+    point: GeoPoint,
+    text: string,
+    isPopUp = false,
+): mapgl.HtmlMarker {
     const content = getLabelHtml(text, styles.labelFontSize);
     const height = styles.labelFontSize;
     const jointTotalWidth = styles.jointWidth + styles.jointBorderWidth + styles.jointBorder2Width;
-
+    const interactive = isPopUp;
     return new mapgl.HtmlMarker(map, {
         coordinates: point,
         html: content,
         anchor: [-(jointTotalWidth / 2 + 2), height / 2],
-        zIndex: styles.linePhase + 1,
+        zIndex: isPopUp ? styles.popupLabelPhase : styles.linePhase + 1,
+        interactive,
     });
 }
 

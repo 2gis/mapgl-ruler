@@ -104,12 +104,18 @@ export class Joint extends Evented<EventTable> {
     }
 
     enablePopup() {
-        this.label?.setContent(getMarkerPopupHtml());
+        this.label?.destroy();
+        this.label = getLabel(this.map, this.getCoordinates(), getMarkerPopupHtml(), true);
         this.addLabelEventListeners(true);
     }
 
     disablePopup() {
-        this.label?.setContent(getLabelHtml(this.labelText, styles.labelFontSize));
+        this.label?.destroy();
+        this.label = getLabel(
+            this.map,
+            this.getCoordinates(),
+            getLabelHtml(this.labelText, styles.labelFontSize),
+        );
         this.addLabelEventListeners(false);
     }
 
