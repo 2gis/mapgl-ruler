@@ -53,6 +53,7 @@ export class Joint extends Evented<EventTable> {
     disable() {
         this.marker?.destroy();
         this.marker = undefined;
+        document.removeEventListener('mouseup', this.onMouseUp);
 
         this.label?.destroy();
         this.label = undefined;
@@ -96,7 +97,10 @@ export class Joint extends Evented<EventTable> {
         }
 
         this.isFirst = true;
+
         this.marker?.destroy();
+        document.removeEventListener('mouseup', this.onMouseUp);
+
         this.marker = getHtmlMarker(this.map, this.coordinates, this.isFirst);
         this.addMarkerEventListeners();
 
@@ -123,6 +127,7 @@ export class Joint extends Evented<EventTable> {
         if (!this.marker) {
             return;
         }
+
         const el = this.marker.getContent();
         el.addEventListener('mousedown', () => {
             this.dragging = true;
@@ -130,11 +135,8 @@ export class Joint extends Evented<EventTable> {
                 targetData: this,
             });
         });
-        el.addEventListener('mouseup', () => {
-            this.dragging = false;
-            this.label?.setCoordinates(this.coordinates);
-            this.emit('dragend');
-        });
+
+        document.addEventListener('mouseup', this.onMouseUp);
         el.addEventListener('mouseover', this.onMouseOver);
         el.addEventListener('mouseout', this.onMouseOut);
     }
@@ -192,5 +194,14 @@ export class Joint extends Evented<EventTable> {
 
         this.coordinates = this.map.unproject([ev.clientX, ev.clientY]);
         this.marker?.setCoordinates(this.coordinates);
+    };
+
+    private onMouseUp = () => {
+        if (!this.dragging) {
+            return;
+        }
+        this.dragging = false;
+        this.label?.setCoordinates(this.coordinates);
+        this.emit('dragend');
     };
 }
