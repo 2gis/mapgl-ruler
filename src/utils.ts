@@ -124,7 +124,7 @@ export function getCircleMarker(
         color: styles.jointColor,
         strokeColor: styles.jointBorderColor,
         stroke2Color: styles.jointBorder2Color,
-        zIndex: styles.jointPhase,
+        zIndex: styles.snapPointPhase,
     });
 }
 
@@ -132,8 +132,8 @@ export function getLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): m
     return new mapgl.Polyline(map, {
         coordinates: points,
         zIndex: styles.linePhase,
-        zIndex2: styles.linePhase - 1,
-        zIndex3: styles.linePhase - 2,
+        zIndex2: styles.linePhase - 0.00001,
+        zIndex3: styles.linePhase - 0.00002,
         width: styles.lineWidth,
         width2: preview ? 0 : styles.lineWidth + 2 * styles.lineBorderWidth,
         width3: preview
@@ -160,7 +160,7 @@ export function getLabel(
         coordinates: point,
         html: content,
         anchor: [-(jointTotalWidth / 2 + 2), height / 2],
-        zIndex: isPopUp ? styles.popupLabelPhase : styles.linePhase + 1,
+        zIndex: isPopUp ? styles.popupLabelPhase : styles.jointLabelPhase,
         interactive,
     });
 }
