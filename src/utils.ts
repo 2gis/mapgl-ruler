@@ -3,6 +3,10 @@ import { Joint } from './joint';
 import { dictionary } from './l10n';
 import { jointRemoveBtnSvg, styles } from './constants';
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getJointDistanceText(distance: number, first: boolean, lang: string): string {
     if (first) {
         return dictionary.start[lang] || dictionary.start.en;
@@ -17,12 +21,17 @@ export function getJointDistanceText(distance: number, first: boolean, lang: str
     return `${kmDist} ${dictionary.kilometer[lang] || dictionary.kilometer.en}`;
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 function getAddJointText(lang: string): string {
     return dictionary.addPoint[lang] || dictionary.addPoint.en;
 }
 
 /**
- * Возвращает расстояние между двумя географическими точками - формула Haversine
+ * @hidden
+ * @internal
  */
 export function geoPointsDistance(lngLat1: GeoPoint, lngLat2: GeoPoint): number {
     const R = 6371000;
@@ -36,6 +45,10 @@ export function geoPointsDistance(lngLat1: GeoPoint, lngLat2: GeoPoint): number 
     return Math.round(R * c);
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getLabelHtml(text: string | undefined, fontSize: number): string {
     return `
         <div style="font-size: ${fontSize}px;
@@ -51,6 +64,10 @@ export function getLabelHtml(text: string | undefined, fontSize: number): string
     `;
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getLinePopupHtml(content: string, lang: string): string {
     return `
         <div style="text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
@@ -69,6 +86,10 @@ export function getLinePopupHtml(content: string, lang: string): string {
     `;
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getMarkerPopupHtml(): string {
     return `
         <img style="
@@ -81,6 +102,10 @@ export function getMarkerPopupHtml(): string {
     `;
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getHtmlMarker(
     map: mapgl.Map,
     coordinates: GeoPoint,
@@ -109,6 +134,10 @@ export function getHtmlMarker(
     });
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getCircleMarker(
     map: mapgl.Map,
     coordinates: GeoPoint,
@@ -128,6 +157,10 @@ export function getCircleMarker(
     });
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): mapgl.Polyline {
     return new mapgl.Polyline(map, {
         coordinates: points,
@@ -146,6 +179,10 @@ export function getLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): m
     });
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getLabel(
     map: mapgl.Map,
     point: GeoPoint,
@@ -165,6 +202,10 @@ export function getLabel(
     });
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getClosestPointOnLineSegment(
     point: number[],
     point1: number[],
@@ -188,6 +229,10 @@ export function getClosestPointOnLineSegment(
     }
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export function getSnapPoint(map: mapgl.Map, joints: Joint[], point: ScreenPoint): SnapInfo {
     const screenPoints = joints.map((joint) => {
         return map.project(joint.getCoordinates());

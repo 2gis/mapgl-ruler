@@ -5,16 +5,39 @@ import { Polyline, Map, DynamicObjectPointerEvent, MapPointerEvent } from '@2gis
 import { Joint } from './joint';
 import { SnapPoint } from './snapPoint';
 
+/**
+ * The list of events that can be emitted by a Ruler instance.
+ */
 interface EventTable {
+    /**
+     * Emitted when the points are changed
+     */
     change: ChangeEvent;
+
+    /**
+     * Emitted after the ruler is redrawn
+     */
     redraw: undefined;
 }
 
+/**
+ * Ruler initialization options
+ */
 interface RulerOptions {
+    /**
+     * Array of geographical points [longitude, latitude].
+     */
     points?: GeoPoint[];
+
+    /**
+     * Draw ruler when instance will be created.
+     */
     enabled?: boolean;
 }
 
+/**
+ * A class that provides ruler functionality.
+ */
 export class Ruler extends Evented<EventTable> {
     private readonly map: Map;
     private enabled = false;
@@ -30,6 +53,19 @@ export class Ruler extends Evented<EventTable> {
     private snapPoint?: SnapPoint;
     private language: string;
 
+    /**
+     * Example:
+     * ```js
+     * const ruler = new mapgl.Ruler(map, {});
+     * ruler.setPoints([
+     *     [55.31878, 25.23584],
+     *     [55.35878, 25.23584],
+     *     [55.35878, 25.26584],
+     * ]);
+     * ```
+     * @param map The map instance.
+     * @param options Ruler initialization options.
+     */
     constructor(map: mapgl.Map, options: RulerOptions) {
         super();
         this.map = map;
@@ -42,11 +78,17 @@ export class Ruler extends Evented<EventTable> {
         }
     }
 
+    /**
+     * Destroy ruler.
+     */
     destroy() {
         this.disable();
         this.joints = [];
     }
 
+    /**
+     * Enable ruler display.
+     */
     enable() {
         if (this.enabled) {
             return;
@@ -59,6 +101,9 @@ export class Ruler extends Evented<EventTable> {
         this.update();
     }
 
+    /**
+     * Disable ruler display.
+     */
     disable() {
         if (!this.enabled) {
             return;
@@ -79,6 +124,10 @@ export class Ruler extends Evented<EventTable> {
         this.map.off('click', this.onClick);
     }
 
+    /**
+     * Set new points. This will override the previous points.
+     * @param points Array of geographical points [longitude, latitude].
+     */
     setPoints(points: GeoPoint[]): void {
         this.redrawPolyline = true;
         this.joints.forEach((joint) => joint.disable());
@@ -87,6 +136,10 @@ export class Ruler extends Evented<EventTable> {
         this.sendRulerChangeEvent(false);
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     private addPoint(point: GeoPoint, index: number) {
         this.redrawPolyline = true;
         const isFirstMarker = this.joints.length === 0;
@@ -109,6 +162,10 @@ export class Ruler extends Evented<EventTable> {
         this.joints.splice(index, 0, joint);
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onJointMouseOver = (e: TargetedEvent<Joint>) => {
         this.overed = true;
         if (!this.currentDraggableJoint) {
@@ -116,6 +173,10 @@ export class Ruler extends Evented<EventTable> {
         }
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onJointMouseOut = (e: TargetedEvent<Joint>) => {
         this.overed = false;
         if (!this.currentDraggableJoint) {
@@ -123,6 +184,10 @@ export class Ruler extends Evented<EventTable> {
         }
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onJointRemoved = (e: TargetedEvent<Joint>) => {
         const disabled = e.targetData;
         const index = this.joints.indexOf(disabled);
@@ -137,6 +202,10 @@ export class Ruler extends Evented<EventTable> {
         this.sendRulerChangeEvent(true);
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onJointMoveEnd = () => {
         this.redrawPolyline = true;
         this.redrawPreviewLine = true;
@@ -145,14 +214,26 @@ export class Ruler extends Evented<EventTable> {
         this.sendRulerChangeEvent(true);
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onJointMove = () => {
         this.redrawPreviewLine = true;
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onJointMoveStart = (e: TargetedEvent<Joint>) => {
         this.currentDraggableJoint = e.targetData;
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onPolylineMouseMove = (e: DynamicObjectPointerEvent<Polyline>) => {
         if (!this.currentDraggableJoint && !this.overed) {
             this.newSnapInfo = getSnapPoint(this.map, this.joints, e.point);
@@ -160,26 +241,46 @@ export class Ruler extends Evented<EventTable> {
         }
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onPolylineMouseOut = () => {
         this.redrawSnapPoint = true;
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onPolylineClick = (e: DynamicObjectPointerEvent<Polyline>) => {
         this.createSnapPoint(e.point);
         this.sendRulerChangeEvent(true);
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private onClick = (e: MapPointerEvent) => {
         this.addPoint(e.lngLat, this.joints.length);
         this.sendRulerChangeEvent(true);
     };
 
+    /**
+     * @hidden
+     * @internal
+     */
     private createSnapPoint(point: ScreenPoint) {
         const snap = getSnapPoint(this.map, this.joints, point);
         this.addPoint(snap.point, snap.segment + 1);
         this.redrawSnapPoint = true;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     private sendRulerChangeEvent(isUser: boolean): void {
         this.emit('change', {
             points: this.joints.map((joint) => joint.getCoordinates()),
@@ -187,6 +288,10 @@ export class Ruler extends Evented<EventTable> {
         });
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     private update() {
         if (!this.enabled) {
             return;
