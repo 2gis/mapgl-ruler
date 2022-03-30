@@ -25,12 +25,12 @@ interface EventTable {
  */
 interface RulerOptions {
     /**
-     * Array of geographical points [longitude, latitude].
+     * An array of geographical points [longitude, latitude].
      */
     points?: GeoPoint[];
 
     /**
-     * Draw ruler when instance will be created.
+     * Specifies whether the ruler should be drawn on its initialization.
      */
     enabled?: boolean;
 }
@@ -79,7 +79,7 @@ export class Ruler extends Evented<EventTable> {
     }
 
     /**
-     * Destroy ruler.
+     * Destroys the ruler.
      */
     destroy() {
         this.disable();
@@ -87,7 +87,7 @@ export class Ruler extends Evented<EventTable> {
     }
 
     /**
-     * Enable ruler display.
+     * Enables the ruler display.
      */
     enable() {
         if (this.enabled) {
@@ -102,7 +102,7 @@ export class Ruler extends Evented<EventTable> {
     }
 
     /**
-     * Disable ruler display.
+     * Disables the ruler display.
      */
     disable() {
         if (!this.enabled) {
@@ -125,8 +125,8 @@ export class Ruler extends Evented<EventTable> {
     }
 
     /**
-     * Set new points. This will override the previous points.
-     * @param points Array of geographical points [longitude, latitude].
+     * Sets new points. This overrides the previous points.
+     * @param points An array of geographical points [longitude, latitude].
      */
     setPoints(points: GeoPoint[]): void {
         this.redrawPolyline = true;

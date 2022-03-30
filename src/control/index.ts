@@ -3,7 +3,7 @@ import styles from './index.module.css';
 import icon from 'raw-loader!./icon.svg';
 
 /**
- * Provide ruler control on map.
+ * A class that provides a ruler control on the map.
  */
 export class RulerControl extends mapgl.Control {
     private readonly ruler: Ruler;
@@ -21,7 +21,7 @@ export class RulerControl extends mapgl.Control {
      * ```
      * @param map The map instance.
      * @param options Control initialization options.
-     * @param enabled Enable on create.
+     * @param enabled Specifies whether the ruler should be enabled.
      */
     constructor(private map: mapgl.Map, options: mapgl.ControlOptions, enabled = true) {
         super(map, '', options);
@@ -32,7 +32,7 @@ export class RulerControl extends mapgl.Control {
     }
 
     /**
-     * Destroy control and ruler
+     * Destroys the control and the ruler.
      */
     destroy() {
         this.ruler.destroy();
@@ -40,7 +40,7 @@ export class RulerControl extends mapgl.Control {
     }
 
     /**
-     * Get Ruler object
+     * Returns the ruler instance.
      */
     getRuler() {
         return this.ruler;
