@@ -7,7 +7,7 @@ Ruler plugin for [Mapgl](https://docs.2gis.com/en/mapgl/overview)
 Install with NPM
 
 ```shell
-npm install mapgl-ruler
+npm install @2gis/mapgl-ruler
 ```
 
 ### Use ruler directly
@@ -56,11 +56,10 @@ Mapgl-ruler uses github-flow to accept & merge fixes and improvements. Basic pro
 - Add or fix some code.
 - **Run testing suite with `npm run docker:test` and make sure nothing is broken**
 - Add some tests for your new code or fix broken tests.
-- Run `npm run build` to build distribution files.
 - Commit & push.
 - Create a new pull request to original repo.
 
-Pull requests with failing tests will not be accepted. Also, if you add or modify packages to `package.json`, make sure you use `npm` and update `package-lock.lock`.
+Pull requests with failing tests will not be accepted. Also, if you add or modify packages to `package.json`, make sure you use `npm` and update `package-lock.json`.
 
 ## Tests
 
