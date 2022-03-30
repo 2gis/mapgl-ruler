@@ -9,10 +9,6 @@ import {
 import { Evented } from './evented';
 import { styles } from './constants';
 
-/**
- * @hidden
- * @internal
- */
 interface EventTable {
     mouseover: TargetedEvent<Joint>;
     mouseout: TargetedEvent<Joint>;

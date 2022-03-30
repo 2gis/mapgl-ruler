@@ -10,18 +10,18 @@ import { SnapPoint } from './snapPoint';
  */
 interface EventTable {
     /**
-     * Emitted when the points are changed
+     * Emitted when the points are changed.
      */
     change: ChangeEvent;
 
     /**
-     * Emitted after the ruler is redrawn
+     * Emitted after the ruler is redrawn.
      */
     redraw: undefined;
 }
 
 /**
- * Ruler initialization options
+ * Ruler initialization options.
  */
 interface RulerOptions {
     /**

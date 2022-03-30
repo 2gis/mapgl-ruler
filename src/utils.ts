@@ -21,10 +21,6 @@ export function getJointDistanceText(distance: number, first: boolean, lang: str
     return `${kmDist} ${dictionary.kilometer[lang] || dictionary.kilometer.en}`;
 }
 
-/**
- * @hidden
- * @internal
- */
 function getAddJointText(lang: string): string {
     return dictionary.addPoint[lang] || dictionary.addPoint.en;
 }
