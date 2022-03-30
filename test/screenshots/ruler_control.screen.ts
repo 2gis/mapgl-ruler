@@ -11,7 +11,11 @@ const handleRulerEvent = async (page: Page) => {
         window.ready = false;
     });
 };
-const btn_selector = '.src-control-index-module__button';
+
+const clickRulerControl = async (page: Page) => {
+    await page.click('.src-control-index-module__button', { delay: 1000 });
+};
+
 const offset = 30;
 
 describe('RulerControl', () => {
@@ -38,7 +42,7 @@ describe('RulerControl', () => {
     it('Disable ruler on click button', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
         await page.waitForFunction(() => window.ready);
-        await page.click(btn_selector);
+        await clickRulerControl(page);
         await handleRulerEvent(page);
 
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
@@ -49,8 +53,8 @@ describe('RulerControl', () => {
     it('Enable ruler on click button', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
         await page.waitForFunction(() => window.ready);
-        await page.click(btn_selector);
-        await page.click(btn_selector);
+        await clickRulerControl(page);
+        await clickRulerControl(page);
         await handleRulerEvent(page);
 
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
@@ -66,7 +70,10 @@ describe('RulerControl', () => {
             window.control = new window.Control(window.sdk.map, { position: 'topCenter' });
         });
         await handleRulerEvent(page);
-        await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
+        await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], {
+            button: 'left',
+            delay: 1000,
+        });
         await page.waitForFunction(() => window.ready);
         await makeSnapshot(page, dirPath, 'destroy control');
     });

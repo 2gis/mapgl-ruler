@@ -7,6 +7,7 @@ declare global {
             Map: typeof mapgl.Map;
         };
         ready: boolean;
+        rulerChanged: boolean;
         ruler: Ruler;
         Ruler: typeof Ruler;
         control: RulerControl;

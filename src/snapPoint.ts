@@ -2,6 +2,10 @@ import { GeoPoint, SnapInfo } from './types';
 import { CircleMarker, HtmlMarker } from '@2gis/mapgl/global';
 import { getCircleMarker, getJointDistanceText, getLabel, getLinePopupHtml } from './utils';
 
+/**
+ * @hidden
+ * @internal
+ */
 export class SnapPoint {
     map: mapgl.Map;
     point: GeoPoint;

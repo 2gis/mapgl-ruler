@@ -1,3 +1,7 @@
+/**
+ * @hidden
+ * @internal
+ */
 export const dictionary = {
     start: {
         en: 'Start',

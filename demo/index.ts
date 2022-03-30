@@ -9,7 +9,7 @@ window.map = new mapgl.Map('container', {
 });
 
 window.rulerControl = new RulerControl(window.map, { position: 'centerRight' });
-window.rulerControl.ruler.setPoints([
+window.rulerControl.getRuler().setPoints([
     [55.31878, 25.23584],
     [55.35878, 25.23584],
     [55.35878, 25.26584],

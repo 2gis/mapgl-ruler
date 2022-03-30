@@ -20,7 +20,7 @@ declare global {
 declare global {
     interface Window {
         ready: boolean;
-        mapIdle: () => boolean;
+        rulerChanged: boolean;
     }
 }
 
