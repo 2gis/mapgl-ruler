@@ -28,6 +28,8 @@ RUN mkdir /mapgl-ruler
 WORKDIR /mapgl-ruler
 COPY . .
 
+RUN export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 RUN npm cache clean --force
 RUN npm ci
 
