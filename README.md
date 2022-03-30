@@ -54,7 +54,7 @@ Mapgl-ruler uses github-flow to accept & merge fixes and improvements. Basic pro
 - Fork the repo.
 - Create a branch.
 - Add or fix some code.
-- **Run testing suite with `npm run test` and make sure nothing is broken**
+- **Run testing suite with `npm run docker:test` and make sure nothing is broken**
 - Add some tests for your new code or fix broken tests.
 - Run `npm run build` to build distribution files.
 - Commit & push.
@@ -66,10 +66,10 @@ Pull requests with failing tests will not be accepted. Also, if you add or modif
 
 ### Run tests
 ```shell
-docker-compose up --build test
+npm run docker:test
 ```
 
 ### Update screenshots
 ```shell
-docker-compose up --build screenshot-update
+npm run docker:screenshot:update
 ```
