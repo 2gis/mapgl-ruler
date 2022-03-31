@@ -8,7 +8,7 @@ import { SnapPoint } from './snapPoint';
 /**
  * The list of events that can be emitted by a Ruler instance.
  */
-interface EventTable {
+export interface RulerEventTable {
     /**
      * Emitted when the points are changed.
      */
@@ -23,7 +23,7 @@ interface EventTable {
 /**
  * Ruler initialization options.
  */
-interface RulerOptions {
+export interface RulerOptions {
     /**
      * An array of geographical points [longitude, latitude].
      */
@@ -38,7 +38,7 @@ interface RulerOptions {
 /**
  * A class that provides ruler functionality.
  */
-export class Ruler extends Evented<EventTable> {
+export class Ruler extends Evented<RulerEventTable> {
     private readonly map: Map;
     private enabled = false;
     private redrawPolyline = false;

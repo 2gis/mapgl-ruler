@@ -42,7 +42,7 @@ export class RulerControl extends mapgl.Control {
     /**
      * Returns the ruler instance.
      */
-    getRuler() {
+    getRuler(): Ruler {
         return this.ruler;
     }
 
