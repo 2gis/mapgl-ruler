@@ -2,7 +2,9 @@
 name: Test MapGL Ruler Plugin
 
 on:
-  push
+  push:
+    tags-ignore:
+      - '*'
 
 jobs:
   run-tests:
