@@ -1,6 +1,5 @@
 /**
- * @hidden
- * @internal
+ * Geographical points [longitude, latitude].
  */
 export type GeoPoint = number[];
 
@@ -29,6 +28,12 @@ export interface TargetedEvent<T> {
 }
 
 export interface ChangeEvent {
+    /**
+     * An array of geographical points [longitude, latitude].
+     */
     points: GeoPoint[];
+    /**
+     * True if it was user interaction
+     */
     isUser: boolean;
 }
