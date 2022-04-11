@@ -1,13 +1,22 @@
 import { GeoPoint, ScreenPoint, SnapInfo } from './types';
 import { Joint } from './joint';
 import { dictionary } from './l10n';
-import { jointRemoveBtnSvg, styles } from './constants';
+import { jointRemoveBtnSvg } from './constants';
+import { style } from './style';
 
 /**
  * @hidden
  * @internal
  */
-export function getJointDistanceText(distance: number, first: boolean, lang: string): string {
+export function getJointDistanceText(
+    distance: number | undefined,
+    first: boolean,
+    lang: string,
+): string {
+    if (distance === undefined) {
+        return '';
+    }
+
     if (first) {
         return dictionary.start[lang] || dictionary.start.en;
     }
@@ -45,9 +54,9 @@ export function geoPointsDistance(lngLat1: GeoPoint, lngLat2: GeoPoint): number 
  * @hidden
  * @internal
  */
-export function getLabelHtml(text: string | undefined, fontSize: number): string {
+export function getLabelHtml(text: string | undefined): string {
     return `
-        <div style="font-size: ${fontSize}px;
+        <div style="font-size: ${style.labelFontSize}px;
             color: #667799;
             user-select: none;
             font-family: SuisseIntl, Helvetica, Arial, sans-serif;
@@ -106,50 +115,29 @@ export function getHtmlMarker(
     map: mapgl.Map,
     coordinates: GeoPoint,
     big: boolean,
+    interactive: boolean,
 ): mapgl.HtmlMarker {
     return new mapgl.HtmlMarker(map, {
         coordinates,
         html: `<div style="
                 user-select: none;
                 position: absolute;
-                width: ${big ? styles.jointWidth : styles.jointSmallWidth}px;
-                height: ${big ? styles.jointWidth : styles.jointSmallWidth}px;
+                width: ${big ? style.jointWidth : style.jointSmallWidth}px;
+                height: ${big ? style.jointWidth : style.jointSmallWidth}px;
                 top: ${big ? '-6px' : '-4px'};
                 left: ${big ? '-6px' : '-4px'};
-                background: ${styles.jointColor};
+                background: ${style.jointColor};
                 border-radius: 50%;
                 border-style: solid;
-                border-color: ${styles.jointBorderColor};
-                border-width: ${big ? styles.jointBorderWidth : styles.jointSmallBorderWidth}px;
+                border-color: ${style.jointBorderColor};
+                border-width: ${big ? style.jointBorderWidth : style.jointSmallBorderWidth}px;
                 box-shadow: 0 0 0 ${
-                    big ? styles.jointBorder2Width : styles.jointSmallBorder2Width
-                }px ${styles.jointBorder2Color};
+                    big ? style.jointBorder2Width : style.jointSmallBorder2Width
+                }px ${style.jointBorder2Color};
                 cursor: pointer;
             "></div`,
-        zIndex: styles.jointPhase,
-    });
-}
-
-/**
- * @hidden
- * @internal
- */
-export function getCircleMarker(
-    map: mapgl.Map,
-    coordinates: GeoPoint,
-    big: boolean,
-    interactive: boolean,
-): mapgl.CircleMarker {
-    return new mapgl.CircleMarker(map, {
-        coordinates,
+        zIndex: style.jointPhase,
         interactive,
-        diameter: big ? styles.jointWidth : styles.jointSmallWidth,
-        strokeWidth: big ? styles.jointBorderWidth : styles.jointSmallBorderWidth,
-        stroke2Width: big ? styles.jointBorder2Width : styles.jointSmallBorder2Width,
-        color: styles.jointColor,
-        strokeColor: styles.jointBorderColor,
-        stroke2Color: styles.jointBorder2Color,
-        zIndex: styles.snapPointPhase,
     });
 }
 
@@ -160,17 +148,17 @@ export function getCircleMarker(
 export function getLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): mapgl.Polyline {
     return new mapgl.Polyline(map, {
         coordinates: points,
-        zIndex: styles.linePhase,
-        zIndex2: styles.linePhase - 0.00001,
-        zIndex3: styles.linePhase - 0.00002,
-        width: styles.lineWidth,
-        width2: preview ? 0 : styles.lineWidth + 2 * styles.lineBorderWidth,
+        zIndex: style.linePhase,
+        zIndex2: style.linePhase - 0.00001,
+        zIndex3: style.linePhase - 0.00002,
+        width: style.lineWidth,
+        width2: preview ? 0 : style.lineWidth + 2 * style.lineBorderWidth,
         width3: preview
             ? 0
-            : styles.lineWidth + 2 * (styles.lineBorderWidth + styles.lineBorder2Width),
-        color: preview ? styles.previewLineColor : styles.lineColor,
-        color2: styles.lineBorderColor,
-        color3: styles.lineBorder2Color,
+            : style.lineWidth + 2 * (style.lineBorderWidth + style.lineBorder2Width),
+        color: preview ? style.previewLineColor : style.lineColor,
+        color2: style.lineBorderColor,
+        color3: style.lineBorder2Color,
         interactive: !preview,
     });
 }
@@ -185,15 +173,15 @@ export function getLabel(
     text: string,
     isPopUp = false,
 ): mapgl.HtmlMarker {
-    const content = getLabelHtml(text, styles.labelFontSize);
-    const height = styles.labelFontSize;
-    const jointTotalWidth = styles.jointWidth + styles.jointBorderWidth + styles.jointBorder2Width;
+    const content = getLabelHtml(text);
+    const height = style.labelFontSize;
+    const jointTotalWidth = style.jointWidth + style.jointBorderWidth + style.jointBorder2Width;
     const interactive = isPopUp;
     return new mapgl.HtmlMarker(map, {
         coordinates: point,
         html: content,
-        anchor: [-(jointTotalWidth / 2 + 2), height / 2],
-        zIndex: isPopUp ? styles.popupLabelPhase : styles.jointLabelPhase,
+        anchor: [-jointTotalWidth, height / 2],
+        zIndex: isPopUp ? style.popupLabelPhase : style.jointLabelPhase,
         interactive,
     });
 }
@@ -238,9 +226,9 @@ export function getSnapPoint(map: mapgl.Map, joints: Joint[], point: ScreenPoint
     let bestPoint = screenPoints[0];
     let bestSegmentIndex = 0;
 
-    for (let i = 0; i < screenPoints.length - 1; i++) {
+    for (let i = 0; i < screenPoints.length; i++) {
         const point1 = screenPoints[i];
-        const point2 = screenPoints[i + 1];
+        const point2 = screenPoints[i + 1] ?? screenPoints[0];
         const closestPoint = getClosestPointOnLineSegment(point, point1, point2);
 
         const dx = closestPoint[0] - point[0];
@@ -261,4 +249,47 @@ export function getSnapPoint(map: mapgl.Map, joints: Joint[], point: ScreenPoint
         geoPointsDistance(geoPoint, joints[bestSegmentIndex].getCoordinates());
 
     return { point: geoPoint, distance, segment: bestSegmentIndex };
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+export function getPolygonCentroid(points: GeoPoint[]): GeoPoint {
+    const northwest = [points[0][0], points[0][1]];
+    const southeast = [points[0][0], points[0][1]];
+    points.forEach((p) => {
+        if (p[0] < northwest[0]) northwest[0] = p[0];
+        if (p[1] < northwest[1]) northwest[1] = p[1];
+
+        if (p[0] > southeast[0]) southeast[0] = p[0];
+        if (p[1] > southeast[1]) southeast[1] = p[1];
+    });
+
+    return [
+        (southeast[0] - northwest[0]) / 2 + northwest[0],
+        (southeast[1] - northwest[1]) / 2 + northwest[1],
+    ];
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+export function getArea(map: mapgl.Map, points: GeoPoint[]): mapgl.Polygon {
+    return new mapgl.Polygon(map, {
+        coordinates: [points],
+        zIndex: style.areaPhase,
+        interactive: false,
+        color: style.areaColor,
+        strokeWidth: style.areaStrokeWidth,
+    });
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+export function getSnapPointLabelContent(distance: number, lang: string) {
+    return getLinePopupHtml(getJointDistanceText(distance, false, lang), lang);
 }

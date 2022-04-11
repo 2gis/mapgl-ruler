@@ -7,7 +7,6 @@ import {
     getMarkerPopupHtml,
 } from './utils';
 import { Evented } from './evented';
-import { styles } from './constants';
 
 interface EventTable {
     mouseover: TargetedEvent<Joint>;
@@ -57,19 +56,19 @@ export class Joint extends Evented<EventTable> {
     disable() {
         this.marker?.destroy();
         this.marker = undefined;
-        document.removeEventListener('mouseup', this.onMouseUp);
 
         this.label?.destroy();
         this.label = undefined;
 
+        document.removeEventListener('mouseup', this.onMouseUp);
         document.removeEventListener('mousemove', this.onMouseMove);
     }
 
     enable() {
-        this.marker = getHtmlMarker(this.map, this.getCoordinates(), this.isFirst);
+        this.marker = getHtmlMarker(this.map, this.getCoordinates(), this.isFirst, true);
         this.addMarkerEventListeners();
 
-        this.labelText = getJointDistanceText(this.distance, this.isFirst, this.map.getLanguage());
+        this.labelText = this.createLabelText();
         this.label = getLabel(this.map, this.getCoordinates(), this.labelText);
         this.addLabelEventListeners(false);
 
@@ -91,8 +90,13 @@ export class Joint extends Evented<EventTable> {
     setDistance(distance: number, isFirst: boolean) {
         this.distance = distance;
         this.isFirst = isFirst;
-        this.labelText = getJointDistanceText(this.distance, this.isFirst, this.map.getLanguage());
-        this.label?.setContent(getLabelHtml(this.labelText, styles.labelFontSize));
+
+        if (this.hovered) {
+            this.enablePopup();
+        } else {
+            this.labelText = this.createLabelText();
+            this.disablePopup();
+        }
     }
 
     setAsFirstJoint() {
@@ -105,7 +109,7 @@ export class Joint extends Evented<EventTable> {
         this.marker?.destroy();
         document.removeEventListener('mouseup', this.onMouseUp);
 
-        this.marker = getHtmlMarker(this.map, this.coordinates, this.isFirst);
+        this.marker = getHtmlMarker(this.map, this.coordinates, this.isFirst, true);
         this.addMarkerEventListeners();
 
         this.setDistance(0, true);
@@ -119,12 +123,12 @@ export class Joint extends Evented<EventTable> {
 
     disablePopup() {
         this.label?.destroy();
-        this.label = getLabel(
-            this.map,
-            this.getCoordinates(),
-            getLabelHtml(this.labelText, styles.labelFontSize),
-        );
+        this.label = getLabel(this.map, this.getCoordinates(), getLabelHtml(this.labelText));
         this.addLabelEventListeners(false);
+    }
+
+    private createLabelText() {
+        return getJointDistanceText(this.distance, this.isFirst, this.map.getLanguage());
     }
 
     private addMarkerEventListeners() {

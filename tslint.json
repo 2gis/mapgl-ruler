@@ -1,6 +1,7 @@
 {
     "extends": ["tslint:recommended", "tslint-eslint-rules"],
     "rules": {
+        "no-reference": false,
         "no-console": false,
         "no-constant-condition": true,
         "triple-equals": true,

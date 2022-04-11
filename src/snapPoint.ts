@@ -1,6 +1,7 @@
 import { GeoPoint, SnapInfo } from './types';
-import { CircleMarker, HtmlMarker } from '@2gis/mapgl/global';
-import { getCircleMarker, getJointDistanceText, getLabel, getLinePopupHtml } from './utils';
+import { HtmlMarker } from '@2gis/mapgl/global';
+import { getHtmlMarker, getLabel, getSnapPointLabelContent } from './utils';
+import { RulerMode } from './ruler';
 
 /**
  * @hidden
@@ -8,52 +9,48 @@ import { getCircleMarker, getJointDistanceText, getLabel, getLinePopupHtml } fro
  */
 export class SnapPoint {
     map: mapgl.Map;
-    point: GeoPoint;
-    distance: number;
-
-    marker?: CircleMarker;
+    coordinate: GeoPoint;
     label: HtmlMarker;
-    labelText: string;
+    marker?: HtmlMarker;
 
-    constructor(map: mapgl.Map, info: SnapInfo) {
+    labelContent: string | HTMLElement;
+
+    constructor(map: mapgl.Map) {
         this.map = map;
-        this.distance = info.distance;
-        this.point = info.point;
-
-        this.labelText = getLinePopupHtml(
-            getJointDistanceText(this.distance, false, this.map.getLanguage()),
-            this.map.getLanguage(),
-        );
-        this.label = getLabel(this.map, this.point, '');
+        this.coordinate = this.map.getCenter();
+        this.labelContent = '';
+        this.label = getLabel(this.map, this.coordinate, this.labelContent);
     }
 
-    show() {
-        this.label.setContent(this.labelText);
-        this.marker = getCircleMarker(this.map, this.point, true, false);
-    }
+    update(_mode: RulerMode, info: SnapInfo | undefined) {
+        if (info === undefined) {
+            this.hide();
+            return;
+        }
 
-    hide() {
-        this.label.setContent('');
-        this.marker?.destroy();
-    }
+        this.coordinate = info.point;
+        this.labelContent = getSnapPointLabelContent(info.distance, this.map.getLanguage());
 
-    update(info: SnapInfo) {
-        this.distance = info.distance;
-        this.point = info.point;
+        this.label.setContent(this.labelContent);
+        this.label.setCoordinates(this.coordinate);
 
-        this.labelText = getLinePopupHtml(
-            getJointDistanceText(this.distance, false, this.map.getLanguage()),
-            this.map.getLanguage(),
-        );
-        this.label.setContent(this.labelText);
-
-        this.marker?.destroy();
-        this.marker = getCircleMarker(this.map, this.point, true, false);
-        this.label.setCoordinates(this.point);
+        if (!this.marker) {
+            this.marker = getHtmlMarker(this.map, this.coordinate, true, false);
+        } else {
+            this.marker.setCoordinates(this.coordinate);
+        }
     }
 
     destroy() {
-        this.marker?.destroy();
         this.label.destroy();
+        this.marker?.destroy();
+        this.marker = undefined;
+    }
+
+    private hide() {
+        this.labelContent = this.label.getContent();
+        this.label.setContent('');
+        this.marker?.destroy();
+        this.marker = undefined;
     }
 }

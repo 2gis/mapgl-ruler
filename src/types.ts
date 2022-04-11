@@ -15,8 +15,8 @@ export type ScreenPoint = number[];
  */
 export interface SnapInfo {
     point: GeoPoint;
-    distance: number;
     segment: number;
+    distance: number;
 }
 
 /**
@@ -28,12 +28,31 @@ export interface TargetedEvent<T> {
 }
 
 export interface ChangeEvent {
-    /**
-     * An array of geographical points [longitude, latitude].
-     */
-    points: GeoPoint[];
+    info: RulerInfo;
+    coordinates: RulerCoordinates;
     /**
      * True if it was user interaction
      */
     isUser: boolean;
 }
+
+export interface PolygonCoordinates {
+    type: 'polygon';
+    coordinates: GeoPoint[][];
+}
+export interface PolylineCoordinates {
+    type: 'polyline';
+    coordinates: GeoPoint[];
+}
+export type RulerCoordinates = PolygonCoordinates | PolylineCoordinates;
+
+export interface PolygonInfo {
+    type: 'polygon';
+    area: number;
+    perimeter: number;
+}
+export interface PolylineInfo {
+    type: 'polyline';
+    lengths: number[];
+}
+export type RulerInfo = PolygonInfo | PolylineInfo;
