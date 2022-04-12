@@ -42,7 +42,7 @@ export interface RulerOptions {
     points?: GeoPoint[];
 
     /**
-     * Set ruler's behaviour. Measuring the distance of a polyline or the area of polygon.
+     * Sets ruler's behavior. Specifies whether the ruler should be in measuring mode of the distance of a polyline or the area of a polygon.
      */
     mode: RulerMode;
 
