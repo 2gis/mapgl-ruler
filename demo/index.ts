@@ -9,7 +9,7 @@ window.map = new mapgl.Map('container', {
 });
 
 window.ruler = new Ruler(window.map, {
-    mode: 'polygon',
+    mode: 'area',
     points: [
         [55.31878, 25.23584],
         [55.35878, 25.23584],

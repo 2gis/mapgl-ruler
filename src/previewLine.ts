@@ -40,14 +40,14 @@ export class PreviewLine {
             const coordinates: GeoPoint[] = [];
 
             // берем предыдущую точку либо замыкаемся с последней если рисуем полигон
-            if (joints[curr - 1] || mode === 'polygon') {
+            if (joints[curr - 1] || mode === 'area') {
                 coordinates.push((joints[curr - 1] ?? joints[joints.length - 1]).getCoordinates());
             }
 
             coordinates.push(this.draggableJoint.getCoordinates());
 
             // берем следующую точку либо замыкаемся с первой если рисуем полигон
-            if (joints[curr + 1] || mode === 'polygon') {
+            if (joints[curr + 1] || mode === 'area') {
                 coordinates.push((joints[curr + 1] ?? joints[0]).getCoordinates());
             }
 

@@ -38,7 +38,7 @@ export class Polyline extends Evented<EventTable> {
         });
 
         // замыкаем линию если рисуем площадь
-        if (mode === 'polygon') {
+        if (mode === 'area') {
             points.push(joints[0].getCoordinates());
         }
 

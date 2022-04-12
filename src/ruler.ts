@@ -15,7 +15,7 @@ import { Area } from './area';
 import { PreviewLine } from './previewLine';
 import { Polyline } from './polyline';
 
-export type RulerMode = 'polyline' | 'polygon';
+export type RulerMode = 'distance' | 'area';
 
 /**
  * The list of events that can be emitted by a Ruler instance.
@@ -133,7 +133,7 @@ export class Ruler extends Evented<RulerEventTable> {
         this.enabled = true;
         this.redrawFlags.polyline = true;
 
-        if (this.mode === 'polygon') {
+        if (this.mode === 'area') {
             this.area = new Area(this.map, this.joints);
         }
 
@@ -181,12 +181,12 @@ export class Ruler extends Evented<RulerEventTable> {
      */
     getCoordinates(): RulerCoordinates {
         switch (this.mode) {
-            case 'polyline':
+            case 'distance':
                 return {
                     type: 'polyline',
                     coordinates: this.joints.map((j) => j.getCoordinates()),
                 };
-            case 'polygon':
+            case 'area':
                 return {
                     type: 'polygon',
                     coordinates: [this.joints.map((j) => j.getCoordinates())],
@@ -198,12 +198,12 @@ export class Ruler extends Evented<RulerEventTable> {
 
     getInfo(): RulerInfo {
         switch (this.mode) {
-            case 'polyline':
+            case 'distance':
                 return {
                     type: 'polyline',
                     lengths: this.joints.map((j) => j.getDistance()),
                 };
-            case 'polygon':
+            case 'area':
                 return {
                     type: 'polygon',
                     area: this.area?.getArea() ?? 0,
