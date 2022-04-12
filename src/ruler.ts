@@ -183,12 +183,12 @@ export class Ruler extends Evented<RulerEventTable> {
         switch (this.mode) {
             case 'distance':
                 return {
-                    type: 'polyline',
+                    type: 'distance',
                     coordinates: this.joints.map((j) => j.getCoordinates()),
                 };
             case 'area':
                 return {
-                    type: 'polygon',
+                    type: 'area',
                     coordinates: [this.joints.map((j) => j.getCoordinates())],
                 };
             default:
@@ -200,12 +200,12 @@ export class Ruler extends Evented<RulerEventTable> {
         switch (this.mode) {
             case 'distance':
                 return {
-                    type: 'polyline',
+                    type: 'distance',
                     lengths: this.joints.map((j) => j.getDistance()),
                 };
             case 'area':
                 return {
-                    type: 'polygon',
+                    type: 'area',
                     area: this.area?.getArea() ?? 0,
                     perimeter: this.area?.getPerimeter() ?? 0,
                 };

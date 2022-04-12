@@ -36,23 +36,23 @@ export interface ChangeEvent {
     isUser: boolean;
 }
 
-export interface PolygonCoordinates {
-    type: 'polygon';
+export interface AreaCoordinates {
+    type: 'area';
     coordinates: GeoPoint[][];
 }
-export interface PolylineCoordinates {
-    type: 'polyline';
+export interface DistanceCoordinates {
+    type: 'distance';
     coordinates: GeoPoint[];
 }
-export type RulerCoordinates = PolygonCoordinates | PolylineCoordinates;
+export type RulerCoordinates = AreaCoordinates | DistanceCoordinates;
 
-export interface PolygonInfo {
-    type: 'polygon';
+export interface AreaInfo {
+    type: 'area';
     area: number;
     perimeter: number;
 }
-export interface PolylineInfo {
-    type: 'polyline';
+export interface DistanceInfo {
+    type: 'distance';
     lengths: number[];
 }
-export type RulerInfo = PolygonInfo | PolylineInfo;
+export type RulerInfo = AreaInfo | DistanceInfo;
