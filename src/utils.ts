@@ -182,7 +182,7 @@ export function getLabel(
     return new mapgl.HtmlMarker(map, {
         coordinates: point,
         html: content,
-        anchor: [-jointTotalWidth, height / 2],
+        anchor: [-jointTotalWidth / 2, height / 2],
         zIndex: isPopUp ? style.popupLabelPhase : style.jointLabelPhase,
         interactive,
     });
@@ -278,7 +278,7 @@ export function getPolygonCentroid(points: GeoPoint[]): GeoPoint {
  * @hidden
  * @internal
  */
-export function getArea(map: mapgl.Map, points: GeoPoint[]): mapgl.Polygon {
+export function getPolygon(map: mapgl.Map, points: GeoPoint[]): mapgl.Polygon {
     return new mapgl.Polygon(map, {
         coordinates: [points],
         zIndex: style.areaPhase,

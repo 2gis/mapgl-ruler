@@ -1,8 +1,8 @@
-import { geoPointsDistance, getArea, getLabel, getPolygonCentroid } from './utils';
+import { geoPointsDistance, getPolygon, getLabel, getPolygonCentroid } from './utils';
 import { Joint } from './joint';
 
-export class Area {
-    private map: mapgl.Map;
+export class Polygon {
+    private readonly map: mapgl.Map;
     private label?: mapgl.HtmlMarker;
     private polygon?: mapgl.Polygon;
     private area: number;
@@ -15,7 +15,7 @@ export class Area {
 
         if (joints.length > 2) {
             const points = joints.map((j) => j.getCoordinates());
-            this.polygon = getArea(this.map, points);
+            this.polygon = getPolygon(this.map, points);
             this.label = getLabel(this.map, getPolygonCentroid(points), this.getLabelContent());
         }
     }
@@ -35,7 +35,7 @@ export class Area {
             );
 
         const points = joints.map((j) => j.getCoordinates());
-        this.polygon = getArea(this.map, points);
+        this.polygon = getPolygon(this.map, points);
         if (!this.label) {
             this.label = getLabel(this.map, getPolygonCentroid(points), this.getLabelContent());
         } else {

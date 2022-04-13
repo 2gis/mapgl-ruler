@@ -11,7 +11,7 @@ import {
 import { geoPointsDistance, getSnapPoint } from './utils';
 import { Joint } from './joint';
 import { SnapPoint } from './snapPoint';
-import { Area } from './area';
+import { Polygon } from './polygon';
 import { PreviewLine } from './previewLine';
 import { Polyline } from './polyline';
 
@@ -73,7 +73,7 @@ export class Ruler extends Evented<RulerEventTable> {
     private snapPoint: SnapPoint;
     private polyline: Polyline;
     private newSnapInfo?: SnapInfo;
-    private area?: Area;
+    private polygon?: Polygon;
 
     /**
      * Example:
@@ -134,7 +134,7 @@ export class Ruler extends Evented<RulerEventTable> {
         this.redrawFlags.polyline = true;
 
         if (this.mode === 'area') {
-            this.area = new Area(this.map, this.joints);
+            this.polygon = new Polygon(this.map, this.joints);
         }
 
         this.map.on('click', this.onClick);
@@ -156,8 +156,8 @@ export class Ruler extends Evented<RulerEventTable> {
         this.previewLine.destroy();
         this.snapPoint.destroy();
 
-        this.area?.destroy();
-        this.area = undefined;
+        this.polygon?.destroy();
+        this.polygon = undefined;
 
         this.joints.forEach((joint) => joint.disable());
 
@@ -206,8 +206,8 @@ export class Ruler extends Evented<RulerEventTable> {
             case 'area':
                 return {
                     type: 'area',
-                    area: this.area?.getArea() ?? 0,
-                    perimeter: this.area?.getPerimeter() ?? 0,
+                    area: this.polygon?.getArea() ?? 0,
+                    perimeter: this.polygon?.getPerimeter() ?? 0,
                 };
             default:
                 throw new Error(`unknown mode: ${this.mode}`);
@@ -387,7 +387,7 @@ export class Ruler extends Evented<RulerEventTable> {
 
         if (this.redrawFlags.polyline) {
             this.redrawFlags.polyline = false;
-            this.area?.update(this.joints);
+            this.polygon?.update(this.joints);
             this.polyline.update(this.mode, this.joints);
         }
 
@@ -398,7 +398,7 @@ export class Ruler extends Evented<RulerEventTable> {
 
         if (this.redrawFlags.snap) {
             this.redrawFlags.snap = false;
-            this.snapPoint.update(this.mode, this.newSnapInfo);
+            this.snapPoint.update(this.newSnapInfo);
             this.newSnapInfo = undefined;
         }
 

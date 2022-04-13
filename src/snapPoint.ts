@@ -1,43 +1,34 @@
-import { GeoPoint, SnapInfo } from './types';
+import { SnapInfo } from './types';
 import { HtmlMarker } from '@2gis/mapgl/global';
 import { getHtmlMarker, getLabel, getSnapPointLabelContent } from './utils';
-import { RulerMode } from './ruler';
 
 /**
  * @hidden
  * @internal
  */
 export class SnapPoint {
-    map: mapgl.Map;
-    coordinate: GeoPoint;
-    label: HtmlMarker;
-    marker?: HtmlMarker;
-
-    labelContent: string | HTMLElement;
+    private readonly map: mapgl.Map;
+    private label: HtmlMarker;
+    private marker?: HtmlMarker;
 
     constructor(map: mapgl.Map) {
         this.map = map;
-        this.coordinate = this.map.getCenter();
-        this.labelContent = '';
-        this.label = getLabel(this.map, this.coordinate, this.labelContent);
+        this.label = getLabel(this.map, this.map.getCenter(), '');
     }
 
-    update(_mode: RulerMode, info: SnapInfo | undefined) {
+    update(info: SnapInfo | undefined) {
         if (info === undefined) {
             this.hide();
             return;
         }
 
-        this.coordinate = info.point;
-        this.labelContent = getSnapPointLabelContent(info.distance, this.map.getLanguage());
-
-        this.label.setContent(this.labelContent);
-        this.label.setCoordinates(this.coordinate);
+        this.label.setContent(getSnapPointLabelContent(info.distance, this.map.getLanguage()));
+        this.label.setCoordinates(info.point);
 
         if (!this.marker) {
-            this.marker = getHtmlMarker(this.map, this.coordinate, true, false);
+            this.marker = getHtmlMarker(this.map, info.point, true, false);
         } else {
-            this.marker.setCoordinates(this.coordinate);
+            this.marker.setCoordinates(info.point);
         }
     }
 
@@ -48,7 +39,6 @@ export class SnapPoint {
     }
 
     private hide() {
-        this.labelContent = this.label.getContent();
         this.label.setContent('');
         this.marker?.destroy();
         this.marker = undefined;
