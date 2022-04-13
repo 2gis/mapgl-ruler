@@ -1,4 +1,9 @@
 /**
+ * Possible modes of operation of the plugin.
+ */
+export type RulerMode = 'polyline' | 'polygon';
+
+/**
  * Geographical points [longitude, latitude].
  */
 export type GeoPoint = number[];
@@ -28,31 +33,25 @@ export interface TargetedEvent<T> {
 }
 
 export interface ChangeEvent {
-    info: RulerInfo;
-    coordinates: RulerCoordinates;
     /**
      * True if it was user interaction
      */
     isUser: boolean;
+    data: RulerData;
 }
 
-export interface AreaCoordinates {
-    type: 'area';
+export interface BaseData {
+    type: RulerMode;
+}
+export interface PolygonData extends BaseData {
+    type: 'polygon';
     coordinates: GeoPoint[][];
-}
-export interface DistanceCoordinates {
-    type: 'distance';
-    coordinates: GeoPoint[];
-}
-export type RulerCoordinates = AreaCoordinates | DistanceCoordinates;
-
-export interface AreaInfo {
-    type: 'area';
-    area: number;
     perimeter: number;
+    area: number;
 }
-export interface DistanceInfo {
-    type: 'distance';
+export interface PolylineData extends BaseData {
+    type: 'polyline';
+    coordinates: GeoPoint[];
     lengths: number[];
 }
-export type RulerInfo = AreaInfo | DistanceInfo;
+export type RulerData = PolygonData | PolylineData;

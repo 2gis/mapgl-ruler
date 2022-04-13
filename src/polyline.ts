@@ -1,7 +1,6 @@
-import { GeoPoint } from './types';
+import { GeoPoint, RulerMode } from './types';
 import { geoPointsDistance, getLine } from './utils';
 import { Joint } from './joint';
-import { RulerMode } from './ruler';
 import { Evented } from './evented';
 import { DynamicObjectPointerEvent } from '@2gis/mapgl/global';
 
@@ -38,7 +37,7 @@ export class Polyline extends Evented<EventTable> {
         });
 
         // замыкаем линию если рисуем площадь
-        if (mode === 'area') {
+        if (mode === 'polygon') {
             points.push(joints[0].getCoordinates());
         }
 

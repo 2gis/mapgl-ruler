@@ -5,8 +5,8 @@ import {
     ScreenPoint,
     SnapInfo,
     TargetedEvent,
-    RulerCoordinates,
-    RulerInfo,
+    RulerData,
+    RulerMode,
 } from './types';
 import { geoPointsDistance, getSnapPoint } from './utils';
 import { Joint } from './joint';
@@ -14,8 +14,6 @@ import { SnapPoint } from './snapPoint';
 import { Polygon } from './polygon';
 import { PreviewLine } from './previewLine';
 import { Polyline } from './polyline';
-
-export type RulerMode = 'distance' | 'area';
 
 /**
  * The list of events that can be emitted by a Ruler instance.
@@ -27,7 +25,8 @@ export interface RulerEventTable {
     change: ChangeEvent;
 
     /**
-     * Emitted after the ruler is redrawn.
+     * @hidden
+     * @internal
      */
     redraw: undefined;
 }
@@ -133,7 +132,7 @@ export class Ruler extends Evented<RulerEventTable> {
         this.enabled = true;
         this.redrawFlags.polyline = true;
 
-        if (this.mode === 'area') {
+        if (this.mode === 'polygon') {
             this.polygon = new Polygon(this.map, this.joints);
         }
 
@@ -177,35 +176,20 @@ export class Ruler extends Evented<RulerEventTable> {
     }
 
     /**
-     * Return polyline or polygon geographical coordinates.
+     * Get some data depending on the ruler mode.
      */
-    getCoordinates(): RulerCoordinates {
+    getData(): RulerData {
         switch (this.mode) {
-            case 'distance':
+            case 'polyline':
                 return {
-                    type: 'distance',
+                    type: this.mode,
                     coordinates: this.joints.map((j) => j.getCoordinates()),
-                };
-            case 'area':
-                return {
-                    type: 'area',
-                    coordinates: [this.joints.map((j) => j.getCoordinates())],
-                };
-            default:
-                throw new Error(`unknown mode: ${this.mode}`);
-        }
-    }
-
-    getInfo(): RulerInfo {
-        switch (this.mode) {
-            case 'distance':
-                return {
-                    type: 'distance',
                     lengths: this.joints.map((j) => j.getDistance()),
                 };
-            case 'area':
+            case 'polygon':
                 return {
-                    type: 'area',
+                    type: this.mode,
+                    coordinates: [this.joints.map((j) => j.getCoordinates())],
                     area: this.polygon?.getArea() ?? 0,
                     perimeter: this.polygon?.getPerimeter() ?? 0,
                 };
@@ -362,8 +346,7 @@ export class Ruler extends Evented<RulerEventTable> {
      */
     private sendRulerChangeEvent(isUser: boolean) {
         this.emit('change', {
-            info: this.getInfo(),
-            coordinates: this.getCoordinates(),
+            data: this.getData(),
             isUser,
         });
     }

@@ -26,7 +26,7 @@ export class RulerControl extends mapgl.Control {
     constructor(private map: mapgl.Map, options: mapgl.ControlOptions, enabled = true) {
         super(map, '', options);
         this.isEnabled = enabled;
-        this.ruler = new Ruler(this.map, { enabled: this.isEnabled, mode: 'distance' });
+        this.ruler = new Ruler(this.map, { enabled: this.isEnabled, mode: 'polyline' });
 
         this.render();
     }

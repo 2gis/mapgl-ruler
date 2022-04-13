@@ -1,7 +1,6 @@
 import { Joint } from './joint';
-import { GeoPoint } from './types';
+import { GeoPoint, RulerMode } from './types';
 import { getLine } from './utils';
-import { RulerMode } from './ruler';
 
 /**
  * @hidden
@@ -40,14 +39,14 @@ export class PreviewLine {
             const coordinates: GeoPoint[] = [];
 
             // берем предыдущую точку либо замыкаемся с последней если рисуем полигон
-            if (joints[curr - 1] || mode === 'area') {
+            if (joints[curr - 1] || mode === 'polygon') {
                 coordinates.push((joints[curr - 1] ?? joints[joints.length - 1]).getCoordinates());
             }
 
             coordinates.push(this.draggableJoint.getCoordinates());
 
             // берем следующую точку либо замыкаемся с первой если рисуем полигон
-            if (joints[curr + 1] || mode === 'area') {
+            if (joints[curr + 1] || mode === 'polygon') {
                 coordinates.push((joints[curr + 1] ?? joints[0]).getCoordinates());
             }
 
