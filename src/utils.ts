@@ -56,19 +56,22 @@ export function geoPointsDistance(lngLat1: GeoPoint, lngLat2: GeoPoint): number 
  * @hidden
  * @internal
  */
-export function getLabelHtml(text: string | undefined): string {
-    return `
-        <div style="font-size: ${style.labelFontSize}px;
-            color: #667799;
-            user-select: none;
-            font-family: SuisseIntl, Helvetica, Arial, sans-serif;
-            text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
-            white-space: nowrap;
-            cursor: pointer;
-        ">
-            ${text}
-        </div>
-    `;
+export function createLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): mapgl.Polyline {
+    return new mapgl.Polyline(map, {
+        coordinates: points,
+        zIndex: style.linePhase,
+        zIndex2: style.linePhase - 0.00001,
+        zIndex3: style.linePhase - 0.00002,
+        width: style.lineWidth,
+        width2: preview ? 0 : style.lineWidth + 2 * style.lineBorderWidth,
+        width3: preview
+            ? 0
+            : style.lineWidth + 2 * (style.lineBorderWidth + style.lineBorder2Width),
+        color: preview ? style.previewLineColor : style.lineColor,
+        color2: style.lineBorderColor,
+        color3: style.lineBorder2Color,
+        interactive: !preview,
+    });
 }
 
 /**
@@ -113,7 +116,7 @@ export function getMarkerPopupHtml(): string {
  * @hidden
  * @internal
  */
-export function getHtmlMarker(
+export function createHtmlMarker(
     map: mapgl.Map,
     coordinates: GeoPoint,
     opts: {
@@ -141,52 +144,7 @@ export function getHtmlMarker(
                 cursor: pointer;
             "></div`,
         zIndex: style.jointPhase,
-        interactive: opts.interactive,
-    });
-}
-
-/**
- * @hidden
- * @internal
- */
-export function getLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): mapgl.Polyline {
-    return new mapgl.Polyline(map, {
-        coordinates: points,
-        zIndex: style.linePhase,
-        zIndex2: style.linePhase - 0.00001,
-        zIndex3: style.linePhase - 0.00002,
-        width: style.lineWidth,
-        width2: preview ? 0 : style.lineWidth + 2 * style.lineBorderWidth,
-        width3: preview
-            ? 0
-            : style.lineWidth + 2 * (style.lineBorderWidth + style.lineBorder2Width),
-        color: preview ? style.previewLineColor : style.lineColor,
-        color2: style.lineBorderColor,
-        color3: style.lineBorder2Color,
-        interactive: !preview,
-    });
-}
-
-/**
- * @hidden
- * @internal
- */
-export function getLabel(
-    map: mapgl.Map,
-    point: GeoPoint,
-    text: string,
-    isPopUp = false,
-): mapgl.HtmlMarker {
-    const content = getLabelHtml(text);
-    const height = style.labelFontSize;
-    const jointTotalWidth = style.jointWidth + style.jointBorderWidth + style.jointBorder2Width;
-    const interactive = isPopUp;
-    return new mapgl.HtmlMarker(map, {
-        coordinates: point,
-        html: content,
-        anchor: [-jointTotalWidth / 2, height / 2],
-        zIndex: isPopUp ? style.popupLabelPhase : style.jointLabelPhase,
-        interactive,
+        interactive: opts.interactive ?? false,
     });
 }
 
@@ -253,47 +211,4 @@ export function getSnapPoint(map: mapgl.Map, joints: Joint[], point: ScreenPoint
         geoPointsDistance(geoPoint, joints[bestSegmentIndex].getCoordinates());
 
     return { point: geoPoint, distance, segment: bestSegmentIndex };
-}
-
-/**
- * @hidden
- * @internal
- */
-export function getPolygonCentroid(points: GeoPoint[]): GeoPoint {
-    const northwest = [points[0][0], points[0][1]];
-    const southeast = [points[0][0], points[0][1]];
-    points.forEach((p) => {
-        if (p[0] < northwest[0]) northwest[0] = p[0];
-        if (p[1] < northwest[1]) northwest[1] = p[1];
-
-        if (p[0] > southeast[0]) southeast[0] = p[0];
-        if (p[1] > southeast[1]) southeast[1] = p[1];
-    });
-
-    return [
-        (southeast[0] - northwest[0]) / 2 + northwest[0],
-        (southeast[1] - northwest[1]) / 2 + northwest[1],
-    ];
-}
-
-/**
- * @hidden
- * @internal
- */
-export function getPolygon(map: mapgl.Map, points: GeoPoint[]): mapgl.Polygon {
-    return new mapgl.Polygon(map, {
-        coordinates: [points],
-        zIndex: style.areaPhase,
-        interactive: false,
-        color: style.areaColor,
-        strokeWidth: style.areaStrokeWidth,
-    });
-}
-
-/**
- * @hidden
- * @internal
- */
-export function getSnapPointLabelContent(distance: number, lang: string) {
-    return getLinePopupHtml(getJointDistanceText(distance, false, lang), lang);
 }

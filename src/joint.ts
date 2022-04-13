@@ -1,12 +1,7 @@
 import { GeoPoint, TargetedEvent } from './types';
-import {
-    getHtmlMarker,
-    getJointDistanceText,
-    getLabel,
-    getLabelHtml,
-    getMarkerPopupHtml,
-} from './utils';
+import { createHtmlMarker, getJointDistanceText, getMarkerPopupHtml } from './utils';
 import { Evented } from './evented';
+import { style } from './style';
 
 interface EventTable {
     mouseover: TargetedEvent<Joint>;
@@ -28,12 +23,12 @@ export class Joint extends Evented<EventTable> {
     private dragging = false;
     private hovered = false;
     private isFirst: boolean;
-    private labelText?: string;
     private distance: number;
     private hoverTimer?: ReturnType<typeof setTimeout>;
     private coordinates: GeoPoint;
     private marker?: mapgl.HtmlMarker;
-    private label?: mapgl.HtmlMarker;
+    private label?: mapgl.Label;
+    private popup: mapgl.HtmlMarker;
 
     constructor(
         private readonly map: mapgl.Map,
@@ -47,13 +42,21 @@ export class Joint extends Evented<EventTable> {
         this.distance = distance;
         this.coordinates = coordinates;
         this.isFirst = isFirstJoint;
+        this.popup = createPopup(this.map, this.coordinates);
 
         if (enableOnInit) {
             this.enable();
         }
     }
 
+    destroy() {
+        this.disable();
+        this.popup.destroy();
+    }
+
     disable() {
+        this.disablePopup();
+
         this.marker?.destroy();
         this.marker = undefined;
 
@@ -65,15 +68,13 @@ export class Joint extends Evented<EventTable> {
     }
 
     enable() {
-        this.marker = getHtmlMarker(this.map, this.getCoordinates(), {
+        this.marker = createHtmlMarker(this.map, this.getCoordinates(), {
             big: this.isFirst,
             interactive: true,
         });
         this.addMarkerEventListeners();
 
-        this.labelText = this.createLabelText();
-        this.label = getLabel(this.map, this.getCoordinates(), this.labelText);
-        this.addLabelEventListeners(false);
+        this.updateLabel();
 
         document.addEventListener('mousemove', this.onMouseMove);
     }
@@ -94,12 +95,7 @@ export class Joint extends Evented<EventTable> {
         this.distance = distance;
         this.isFirst = isFirst;
 
-        if (this.hovered) {
-            this.enablePopup();
-        } else {
-            this.labelText = this.createLabelText();
-            this.disablePopup();
-        }
+        this.hovered ? this.enablePopup() : this.disablePopup();
     }
 
     setAsFirstJoint() {
@@ -112,29 +108,24 @@ export class Joint extends Evented<EventTable> {
         this.marker?.destroy();
         document.removeEventListener('mouseup', this.onMouseUp);
 
-        this.marker = getHtmlMarker(this.map, this.coordinates, {
+        this.marker = createHtmlMarker(this.map, this.coordinates, {
             big: this.isFirst,
             interactive: true,
         });
         this.addMarkerEventListeners();
-
         this.setDistance(0, true);
     }
 
     enablePopup() {
         this.label?.destroy();
-        this.label = getLabel(this.map, this.getCoordinates(), getMarkerPopupHtml(), true);
-        this.addLabelEventListeners(true);
+        this.popup.setCoordinates(this.coordinates);
+        this.popup.setContent(getMarkerPopupHtml());
+        this.addPopupEventListeners();
     }
 
     disablePopup() {
-        this.label?.destroy();
-        this.label = getLabel(this.map, this.getCoordinates(), getLabelHtml(this.labelText));
-        this.addLabelEventListeners(false);
-    }
-
-    private createLabelText() {
-        return getJointDistanceText(this.distance, this.isFirst, this.map.getLanguage());
+        this.popup.setContent('');
+        this.updateLabel();
     }
 
     private addMarkerEventListeners() {
@@ -144,6 +135,7 @@ export class Joint extends Evented<EventTable> {
 
         const el = this.marker.getContent();
         el.addEventListener('mousedown', () => {
+            this.disablePopup();
             this.dragging = true;
             this.emit('dragstart', {
                 targetData: this,
@@ -155,20 +147,14 @@ export class Joint extends Evented<EventTable> {
         el.addEventListener('mouseout', this.onMouseOut);
     }
 
-    private addLabelEventListeners(isPopup: boolean) {
-        if (!this.label) {
-            return;
-        }
-        const el = this.label.getContent();
+    private addPopupEventListeners() {
+        const el = this.popup.getContent();
         el.addEventListener('mouseover', this.onMouseOver);
         el.addEventListener('mouseout', this.onMouseOut);
-
-        if (isPopup) {
-            el.addEventListener('click', this.onClickLabel);
-        }
+        el.addEventListener('click', this.onClickPopup);
     }
 
-    private onClickLabel = () => {
+    private onClickPopup = () => {
         this.disable();
         this.emit('removed', { targetData: this });
     };
@@ -215,7 +201,46 @@ export class Joint extends Evented<EventTable> {
             return;
         }
         this.dragging = false;
-        this.label?.setCoordinates(this.coordinates);
         this.emit('dragend');
     };
+
+    private updateLabel() {
+        this.label?.destroy();
+        this.label = createLabel(this.map, this.coordinates, this.distance, this.isFirst);
+    }
+}
+
+function getLabelText(distance: number, isFirst: boolean, lang: string): string {
+    return getJointDistanceText(distance, isFirst, lang);
+}
+
+function createLabel(
+    map: mapgl.Map,
+    coordinates: GeoPoint,
+    distance: number,
+    isFirst: boolean,
+): mapgl.Label {
+    return new mapgl.Label(map, {
+        coordinates,
+        text: getLabelText(distance, isFirst, map.getLanguage()),
+        fontSize: style.labelFontSize,
+        zIndex: style.jointLabelPhase,
+        color: style.labelColor,
+        haloColor: style.labelHaloColor,
+        haloRadius: 1,
+        relativeAnchor: [0, 0.5],
+        offset: [style.jointWidth + style.jointBorderWidth + style.jointBorder2Width, 0],
+    });
+}
+
+function createPopup(map: mapgl.Map, point: GeoPoint): mapgl.HtmlMarker {
+    const height = style.labelFontSize;
+    const jointTotalWidth = style.jointWidth + style.jointBorderWidth + style.jointBorder2Width;
+    return new mapgl.HtmlMarker(map, {
+        coordinates: point,
+        html: '',
+        anchor: [-jointTotalWidth / 2, height / 2],
+        zIndex: style.popupLabelPhase,
+        interactive: true,
+    });
 }

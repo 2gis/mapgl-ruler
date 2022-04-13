@@ -118,6 +118,7 @@ export class Ruler extends Evented<RulerEventTable> {
      */
     destroy() {
         this.disable();
+        this.joints.forEach((j) => j.destroy());
         this.joints = [];
     }
 
@@ -169,7 +170,7 @@ export class Ruler extends Evented<RulerEventTable> {
      */
     setPoints(points: GeoPoint[]): void {
         this.redrawFlags.polyline = true;
-        this.joints.forEach((joint) => joint.disable());
+        this.joints.forEach((joint) => joint.destroy());
         this.joints = [];
         points.forEach((point, i) => this.addPoint(point, i));
         this.sendRulerChangeEvent(false);

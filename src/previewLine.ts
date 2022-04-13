@@ -1,6 +1,6 @@
 import { Joint } from './joint';
 import { GeoPoint, RulerMode } from './types';
-import { getLine } from './utils';
+import { createLine } from './utils';
 
 /**
  * @hidden
@@ -50,7 +50,7 @@ export class PreviewLine {
                 coordinates.push((joints[curr + 1] ?? joints[0]).getCoordinates());
             }
 
-            this.polyline = getLine(this.map, coordinates, true);
+            this.polyline = createLine(this.map, coordinates, true);
         }
     }
 }
