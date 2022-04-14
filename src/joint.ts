@@ -65,7 +65,10 @@ export class Joint extends Evented<EventTable> {
     }
 
     enable() {
-        this.marker = getHtmlMarker(this.map, this.getCoordinates(), this.isFirst, true);
+        this.marker = getHtmlMarker(this.map, this.getCoordinates(), {
+            big: this.isFirst,
+            interactive: true,
+        });
         this.addMarkerEventListeners();
 
         this.labelText = this.createLabelText();
@@ -109,7 +112,10 @@ export class Joint extends Evented<EventTable> {
         this.marker?.destroy();
         document.removeEventListener('mouseup', this.onMouseUp);
 
-        this.marker = getHtmlMarker(this.map, this.coordinates, this.isFirst, true);
+        this.marker = getHtmlMarker(this.map, this.coordinates, {
+            big: this.isFirst,
+            interactive: true,
+        });
         this.addMarkerEventListeners();
 
         this.setDistance(0, true);

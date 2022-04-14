@@ -26,7 +26,10 @@ export class SnapPoint {
         this.label.setCoordinates(info.point);
 
         if (!this.marker) {
-            this.marker = getHtmlMarker(this.map, info.point, true, false);
+            this.marker = getHtmlMarker(this.map, info.point, {
+                big: true,
+                interactive: false,
+            });
         } else {
             this.marker.setCoordinates(info.point);
         }

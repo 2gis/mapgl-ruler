@@ -113,33 +113,41 @@ export function getMarkerPopupHtml(): string {
  * @hidden
  * @internal
  */
+export interface HtmlMarkerOptions {
+    big: boolean;
+    interactive: boolean;
+}
+
+/**
+ * @hidden
+ * @internal
+ */
 export function getHtmlMarker(
     map: mapgl.Map,
     coordinates: GeoPoint,
-    big: boolean,
-    interactive: boolean,
+    opts: HtmlMarkerOptions,
 ): mapgl.HtmlMarker {
     return new mapgl.HtmlMarker(map, {
         coordinates,
         html: `<div style="
                 user-select: none;
                 position: absolute;
-                width: ${big ? style.jointWidth : style.jointSmallWidth}px;
-                height: ${big ? style.jointWidth : style.jointSmallWidth}px;
-                top: ${big ? '-6px' : '-4px'};
-                left: ${big ? '-6px' : '-4px'};
+                width: ${opts.big ? style.jointWidth : style.jointSmallWidth}px;
+                height: ${opts.big ? style.jointWidth : style.jointSmallWidth}px;
+                top: ${opts.big ? '-6px' : '-4px'};
+                left: ${opts.big ? '-6px' : '-4px'};
                 background: ${style.jointColor};
                 border-radius: 50%;
                 border-style: solid;
                 border-color: ${style.jointBorderColor};
-                border-width: ${big ? style.jointBorderWidth : style.jointSmallBorderWidth}px;
+                border-width: ${opts.big ? style.jointBorderWidth : style.jointSmallBorderWidth}px;
                 box-shadow: 0 0 0 ${
-                    big ? style.jointBorder2Width : style.jointSmallBorder2Width
+                    opts.big ? style.jointBorder2Width : style.jointSmallBorder2Width
                 }px ${style.jointBorder2Color};
                 cursor: pointer;
             "></div`,
         zIndex: style.jointPhase,
-        interactive,
+        interactive: opts.interactive,
     });
 }
 
