@@ -113,19 +113,13 @@ export function getMarkerPopupHtml(): string {
  * @hidden
  * @internal
  */
-export interface HtmlMarkerOptions {
-    big: boolean;
-    interactive: boolean;
-}
-
-/**
- * @hidden
- * @internal
- */
 export function getHtmlMarker(
     map: mapgl.Map,
     coordinates: GeoPoint,
-    opts: HtmlMarkerOptions,
+    opts: {
+        big?: boolean;
+        interactive?: boolean;
+    },
 ): mapgl.HtmlMarker {
     return new mapgl.HtmlMarker(map, {
         coordinates,

@@ -32,7 +32,7 @@ export interface TargetedEvent<T> {
     targetData: T;
 }
 
-export interface ChangeEvent {
+export interface RulerEvent {
     /**
      * True if it was user interaction
      */
@@ -46,6 +46,7 @@ export interface BaseData {
 export interface PolygonData extends BaseData {
     type: 'polygon';
     coordinates: GeoPoint[][];
+    lengths: number[];
     perimeter: number;
     area: number;
 }
@@ -53,5 +54,6 @@ export interface PolylineData extends BaseData {
     type: 'polyline';
     coordinates: GeoPoint[];
     lengths: number[];
+    length: number;
 }
 export type RulerData = PolygonData | PolylineData;

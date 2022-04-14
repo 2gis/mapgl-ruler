@@ -1,7 +1,7 @@
 import { Evented } from './evented';
 import {
     GeoPoint,
-    ChangeEvent,
+    RulerEvent,
     ScreenPoint,
     SnapInfo,
     TargetedEvent,
@@ -22,7 +22,7 @@ export interface RulerEventTable {
     /**
      * Emitted when the points are changed.
      */
-    change: ChangeEvent;
+    change: RulerEvent;
 
     /**
      * @hidden
@@ -185,13 +185,21 @@ export class Ruler extends Evented<RulerEventTable> {
                     type: this.mode,
                     coordinates: this.joints.map((j) => j.getCoordinates()),
                     lengths: this.joints.map((j) => j.getDistance()),
+                    length: this.joints[this.joints.length - 1].getDistance(),
                 };
             case 'polygon':
+                if (!this.polygon) {
+                    throw new Error(`no polygon but '${this.mode}' mode use.`);
+                }
                 return {
                     type: this.mode,
                     coordinates: [this.joints.map((j) => j.getCoordinates())],
-                    area: this.polygon?.getArea() ?? 0,
-                    perimeter: this.polygon?.getPerimeter() ?? 0,
+                    area: this.polygon.getArea() ?? 0,
+                    perimeter: this.polygon.getPerimeter() ?? 0,
+                    lengths: [
+                        ...this.joints.map((j) => j.getDistance()),
+                        this.polygon.getPerimeter(),
+                    ],
                 };
             default:
                 throw new Error(`unknown mode: ${this.mode}`);
