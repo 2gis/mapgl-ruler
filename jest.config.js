@@ -14,6 +14,16 @@ const suiteParams = {
         testEnvironment: 'node',
         testMatch: ['**/test/units/**/*.ts'],
     },
+    unit: {
+        globalSetup: './test/global-setup.js',
+        globalTeardown: './test/global-teardown.js',
+        maxWorkers: 5,
+        maxConcurrency: 3,
+        testTimeout: 15000,
+        testEnvironment: 'node',
+        testMatch: ['**/units/*.ts'],
+        testRunner: 'jest-jasmine2',
+    },
 };
 
 module.exports = {
