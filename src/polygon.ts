@@ -25,7 +25,7 @@ export class Polygon {
         }
     }
 
-    async update(joints: Joint[]) {
+    update(joints: Joint[]) {
         this.polygon?.destroy();
         if (joints.length <= 2) {
             this.perimeter = 0;
