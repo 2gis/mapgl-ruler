@@ -18,7 +18,7 @@ const suiteParams = {
         maxConcurrency: 3,
         testTimeout: 15000,
         testEnvironment: 'node',
-        testMatch: ['**/units/*.ts'],
+        testMatch: ['src/test/units/**/*.ts'],
         testRunner: 'jest-jasmine2',
     },
 };
