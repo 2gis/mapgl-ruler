@@ -1,5 +1,5 @@
 import { GeoPoint, RulerMode } from './types';
-import { geoPointsDistance, getLine } from './utils';
+import { createLine, geoPointsDistance } from './utils';
 import { Joint } from './joint';
 import { Evented } from './evented';
 import { DynamicObjectPointerEvent } from '@2gis/mapgl/global';
@@ -41,7 +41,7 @@ export class Polyline extends Evented<EventTable> {
             points.push(joints[0].getCoordinates());
         }
 
-        this.polyline = getLine(this.map, points, false);
+        this.polyline = createLine(this.map, points, false);
         this.polyline.on('mousemove', (ev) => this.emit('mousemove', ev));
         this.polyline.on('mouseout', (ev) => this.emit('mouseout', ev));
         this.polyline.on('click', (ev) => this.emit('click', ev));

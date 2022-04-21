@@ -27,6 +27,7 @@ describe('Ruler API', () => {
     it('create with all parameters', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: true,
                 points,
             });
@@ -35,7 +36,9 @@ describe('Ruler API', () => {
     });
     it('create with defaults', async () => {
         await page.evaluate(() => {
-            window.ruler = new window.Ruler(window.sdk.map, {});
+            window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
+            });
         });
 
         await makeSnapshot(page, dirPath, 'create_ruler_with_defaults');
@@ -43,6 +46,7 @@ describe('Ruler API', () => {
     it('create with points', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 points,
             });
         }, points);
@@ -52,6 +56,7 @@ describe('Ruler API', () => {
     it('create disabled', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: false,
                 points,
             });
@@ -63,6 +68,7 @@ describe('Ruler API', () => {
     it('setPoints(...) when enabled', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: true,
             });
             window.ready = false;
@@ -76,6 +82,7 @@ describe('Ruler API', () => {
     it('setPoints(...) when disabled', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: false,
             });
             window.ruler.setPoints(points);
@@ -86,6 +93,7 @@ describe('Ruler API', () => {
     it('enable after setPoints', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: false,
             });
             window.ruler.setPoints(points);
@@ -97,6 +105,7 @@ describe('Ruler API', () => {
     it('enable after set points via `constructor`', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: false,
                 points,
             });
@@ -107,7 +116,9 @@ describe('Ruler API', () => {
     });
     it('setPoints(...) after disabled via method', async () => {
         await page.evaluate((points) => {
-            window.ruler = new window.Ruler(window.sdk.map, {});
+            window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
+            });
             window.ruler.disable();
             window.ruler.setPoints(points);
         }, points);
@@ -116,7 +127,9 @@ describe('Ruler API', () => {
     });
     it('setPoints(...) after destroyed', async () => {
         await page.evaluate((points) => {
-            window.ruler = new window.Ruler(window.sdk.map, {});
+            window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
+            });
             window.ruler.destroy();
             window.ruler.setPoints(points);
         }, points);
@@ -126,6 +139,7 @@ describe('Ruler API', () => {
     it('destroy ruler', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: true,
                 points,
             });
@@ -137,6 +151,7 @@ describe('Ruler API', () => {
     it('enable ruler after destroy', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: true,
                 points,
             });
@@ -149,6 +164,7 @@ describe('Ruler API', () => {
     it('enable ruler after disable', async () => {
         await page.evaluate((points) => {
             window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polyline',
                 enabled: true,
                 points,
             });
@@ -164,6 +180,7 @@ describe('Ruler API', () => {
         await page.evaluate(
             (points) => {
                 window.ruler = new window.Ruler(window.sdk.map, {
+                    mode: 'polyline',
                     points,
                 });
             },
@@ -187,6 +204,7 @@ describe('Ruler API', () => {
             (points) => {
                 window.sdk.map.setLanguage('ru');
                 window.ruler = new window.Ruler(window.sdk.map, {
+                    mode: 'polyline',
                     points,
                 });
             },

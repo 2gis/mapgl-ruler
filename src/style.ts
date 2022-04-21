@@ -6,12 +6,13 @@ const maxPhase = 2147483647; // max zIndex in CSS (2 ** 31 - 1).
  */
 export const style = {
     popupLabelPhase: maxPhase,
-    linePhase: maxPhase - 1,
     jointLabelPhase: maxPhase - 1,
-    jointPhase: maxPhase - 2,
-    areaPhase: maxPhase - 2,
+    areaLabelPhase: maxPhase - 2,
+    linePhase: maxPhase - 3,
+    jointPhase: maxPhase - 4,
+    areaPhase: maxPhase - 5,
 
-    areaColor: '#66779977',
+    areaColor: '#8899bb77',
     areaStrokeWidth: 0,
 
     jointWidth: 7,
@@ -36,4 +37,6 @@ export const style = {
     previewLineColor: '#66779966',
 
     labelFontSize: 13,
+    labelColor: '#556688',
+    labelHaloColor: '#fff',
 };

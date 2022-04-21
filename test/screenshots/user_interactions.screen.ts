@@ -20,7 +20,7 @@ describe('Interactions with Ruler', () => {
         await page.waitForFunction(() => window.ready);
 
         await page.evaluate(() => {
-            window.ruler = new window.Ruler(window.sdk.map, {});
+            window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
             window.ruler.on('redraw', () => (window.ready = true));
             window.ruler.on('change', () => (window.rulerChanged = true));
             window.ready = false;

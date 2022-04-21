@@ -1,48 +1,63 @@
-import { SnapInfo } from './types';
-import { HtmlMarker } from '@2gis/mapgl/global';
-import { getHtmlMarker, getLabel, getSnapPointLabelContent } from './utils';
+import { GeoPoint, SnapInfo } from './types';
+import { createHtmlMarker, getJointDistanceText } from './utils';
+import { style } from './style';
+import { dictionary } from './l10n';
 
 /**
  * @hidden
  * @internal
  */
 export class SnapPoint {
-    private readonly map: mapgl.Map;
-    private label: HtmlMarker;
-    private marker?: HtmlMarker;
+    private label?: mapgl.Label;
+    private marker?: mapgl.HtmlMarker;
 
-    constructor(map: mapgl.Map) {
-        this.map = map;
-        this.label = getLabel(this.map, this.map.getCenter(), '');
-    }
+    constructor(private readonly map: mapgl.Map) {}
 
     update(info: SnapInfo | undefined) {
         if (info === undefined) {
-            this.hide();
+            this.destroy();
             return;
         }
 
-        this.label.setContent(getSnapPointLabelContent(info.distance, this.map.getLanguage()));
-        this.label.setCoordinates(info.point);
-
         if (!this.marker) {
-            this.marker = getHtmlMarker(this.map, info.point, {
+            this.marker = createHtmlMarker(this.map, info.point, {
                 big: true,
+                interactive: false,
             });
         } else {
             this.marker.setCoordinates(info.point);
         }
+
+        this.label?.destroy();
+        this.label = createLabel(this.map, info.point, info.distance);
     }
 
     destroy() {
-        this.label.destroy();
+        this.label?.destroy();
         this.marker?.destroy();
-        this.marker = undefined;
-    }
 
-    private hide() {
-        this.label.setContent('');
-        this.marker?.destroy();
+        this.label = undefined;
         this.marker = undefined;
     }
+}
+
+function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number): mapgl.Label {
+    return new mapgl.Label(map, {
+        coordinates,
+        text: getLabelText(map, distance),
+        fontSize: style.labelFontSize,
+        zIndex: style.jointLabelPhase,
+        color: style.labelColor,
+        haloColor: style.labelHaloColor,
+        haloRadius: 1,
+        relativeAnchor: [0, 0.5],
+        offset: [style.jointWidth + style.jointBorderWidth + style.jointBorder2Width, 0],
+    });
+}
+
+function getLabelText(map: mapgl.Map, distance: number) {
+    const distanceText = getJointDistanceText(distance, false, map.getLanguage());
+    const addJointText = dictionary.addPoint[map.getLanguage()] || dictionary.addPoint.en;
+
+    return `${distanceText}\n${addJointText}`;
 }
