@@ -48,8 +48,9 @@ describe('Ruler API', () => {
                     mode: 'polyline',
                     points,
                 });
+                window.ready = false;
             }, points);
-
+            await page.waitForFunction(() => window.ready);
             await makeSnapshot(page, dirPath, 'create_ruler_with_points');
         });
         it('create disabled', async () => {
@@ -97,8 +98,9 @@ describe('Ruler API', () => {
                 });
                 window.ruler.setPoints(points);
                 window.ruler.enable();
+                window.ready = false;
             }, points);
-
+            await page.waitForFunction(() => window.ready);
             await makeSnapshot(page, dirPath, 'enable_after_set_points');
         });
         it('enable after set points via `constructor`', async () => {
@@ -109,8 +111,9 @@ describe('Ruler API', () => {
                     points,
                 });
                 window.ruler.enable();
+                window.ready = false;
             }, points);
-
+            await page.waitForFunction(() => window.ready);
             await makeSnapshot(page, dirPath, 'enable_after_set_points_via_constructor');
         });
         it('setPoints(...) after disabled via method', async () => {
