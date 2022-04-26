@@ -6,6 +6,8 @@ import {
     initBlankMap,
     makeScreenshotsPath,
     makeSnapshot,
+    waitForReadiness,
+    waitForRulerChanged,
 } from '../puppeteer/utils';
 import { MAP_CENTER, PAGE_CENTER } from '../puppeteer/config';
 
@@ -20,7 +22,7 @@ const points = [
 beforeEach(async () => {
     page = await pageSetUp();
     await initBlankMap(page, { styleZoom: 6 });
-    await page.waitForFunction(() => window.ready);
+    await waitForReadiness(page);
 });
 afterEach(async () => {
     await page.close();
@@ -39,8 +41,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
 
     it('Add point on click', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'add_point_first');
 
         await page.evaluate(() => {
@@ -49,8 +51,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
         });
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1] + 50, { button: 'left' });
         await page.mouse.move(0, 0, { steps: 1 });
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'add_point_second');
 
         await page.evaluate(() => {
@@ -59,8 +61,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
         });
         await page.mouse.click(PAGE_CENTER[0] + 20, PAGE_CENTER[1] - 50, { button: 'left' });
         await page.mouse.move(0, 0, { steps: 1 });
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'add_point_third');
     });
 
@@ -69,8 +71,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
             (points) => window.ruler.setPoints(points),
             [[MAP_CENTER[0] - 1, MAP_CENTER[1]], MAP_CENTER, [MAP_CENTER[0], MAP_CENTER[1] - 0.7]],
         );
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'remove_point_start');
 
         await page.evaluate(() => {
@@ -78,8 +80,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
             window.rulerChanged = false;
         });
         await emulateClickInCross(page, PAGE_CENTER);
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'remove_point_end');
     });
 
@@ -88,8 +90,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
             (points) => window.ruler.setPoints(points),
             [MAP_CENTER, [MAP_CENTER[0] - 1, MAP_CENTER[1]], [MAP_CENTER[0], MAP_CENTER[1] - 0.7]],
         );
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'remove_start_point_start');
 
         await page.evaluate(() => {
@@ -97,8 +99,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
             window.rulerChanged = false;
         });
         await emulateClickInCross(page, PAGE_CENTER);
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'remove_start_point_end');
     });
 
@@ -112,8 +114,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
                 [MAP_CENTER[0] + 1, MAP_CENTER[1] - 1],
             ],
         );
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
 
         await emulateHover(page, PAGE_CENTER);
         await page.waitForTimeout(100);
@@ -125,8 +127,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
         });
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1]);
         await page.mouse.move(0, 0);
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'add_point_on_line');
     });
 
@@ -135,7 +137,7 @@ describe('Interactions with Ruler (polyline mode)', () => {
             (points) => window.ruler.setPoints(points),
             [[MAP_CENTER[0] - 1, MAP_CENTER[1]], MAP_CENTER, [MAP_CENTER[0], MAP_CENTER[1] - 0.7]],
         );
-        await page.waitForFunction(() => window.ready);
+        await waitForReadiness(page);
         await makeSnapshot(page, dirPath, 'drag_point_init');
 
         await page.evaluate(() => {
@@ -150,8 +152,8 @@ describe('Interactions with Ruler (polyline mode)', () => {
 
         await page.mouse.up({ button: 'left' });
         await page.mouse.move(0, 0);
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'drag_point_end');
     });
 });
@@ -169,8 +171,8 @@ describe('Interactions with Ruler (polygon mode)', () => {
 
     it('Add point on click', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1] - 50, { button: 'left' });
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_first');
         await page.evaluate(() => {
             window.ready = false;
@@ -179,8 +181,8 @@ describe('Interactions with Ruler (polygon mode)', () => {
 
         await page.mouse.click(PAGE_CENTER[0] + 50, PAGE_CENTER[1] + 50, { button: 'left' });
         await page.mouse.move(0, 0, { steps: 1 });
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_second');
 
         await page.evaluate(() => {
@@ -189,8 +191,8 @@ describe('Interactions with Ruler (polygon mode)', () => {
         });
         await page.mouse.click(PAGE_CENTER[0] - 50, PAGE_CENTER[1] + 50, { button: 'left' });
         await page.mouse.move(0, 0, { steps: 1 });
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_third');
     });
 
@@ -199,8 +201,8 @@ describe('Interactions with Ruler (polygon mode)', () => {
         await makeSnapshot(page, dirPath, 'polygon_remove_point_start');
 
         await emulateClickInCross(page, PAGE_CENTER);
-        await page.waitForFunction(() => window.ready);
-        await page.waitForFunction(() => window.rulerChanged);
+        await waitForReadiness(page);
+        await waitForRulerChanged(page);
         await makeSnapshot(page, dirPath, 'polygon_remove_point_end');
     });
 

@@ -1,6 +1,12 @@
 import { Page } from 'puppeteer';
 import { pageSetUp } from '../puppeteer';
-import { emulateHover, initBlankMap, makeScreenshotsPath, makeSnapshot } from '../puppeteer/utils';
+import {
+    emulateHover,
+    initBlankMap,
+    makeScreenshotsPath,
+    makeSnapshot,
+    waitForReadiness,
+} from '../puppeteer/utils';
 import { MAP_CENTER, PAGE_CENTER } from '../puppeteer/config';
 
 let page: Page;
@@ -17,7 +23,7 @@ describe('Ruler API', () => {
         page = await pageSetUp();
         await page.evaluate(() => (window.ready = false));
         await initBlankMap(page);
-        await page.waitForFunction(() => window.ready);
+        await waitForReadiness(page);
     });
 
     afterEach(async () => {
@@ -32,7 +38,9 @@ describe('Ruler API', () => {
                     enabled: true,
                     points,
                 });
+                window.ready = false;
             }, points);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'create_ruler_with_params');
         });
         it('create with defaults', async () => {
@@ -50,7 +58,7 @@ describe('Ruler API', () => {
                 });
                 window.ready = false;
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'create_ruler_with_points');
         });
         it('create disabled', async () => {
@@ -76,7 +84,7 @@ describe('Ruler API', () => {
                 window.ruler.setPoints(points);
             }, points);
 
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'set_points_when_enabled_by_option');
         });
         it('setPoints(...) when disabled', async () => {
@@ -96,11 +104,11 @@ describe('Ruler API', () => {
                     mode: 'polyline',
                     enabled: false,
                 });
+                window.ready = false;
                 window.ruler.setPoints(points);
                 window.ruler.enable();
-                window.ready = false;
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'enable_after_set_points');
         });
         it('enable after set points via `constructor`', async () => {
@@ -110,10 +118,10 @@ describe('Ruler API', () => {
                     enabled: false,
                     points,
                 });
-                window.ruler.enable();
                 window.ready = false;
+                window.ruler.enable();
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'enable_after_set_points_via_constructor');
         });
         it('setPoints(...) after disabled via method', async () => {
@@ -166,11 +174,12 @@ describe('Ruler API', () => {
                     enabled: true,
                     points,
                 });
+                window.ready = false;
                 window.ruler.disable();
                 window.ruler.enable();
             }, points);
 
-            await page.waitForTimeout(100);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'enable_after_disable');
         });
 
@@ -193,7 +202,7 @@ describe('Ruler API', () => {
                 window.ready = false;
                 window.sdk.map.setLanguage('ru');
             });
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'change_language_en_to_ru');
         });
 
@@ -217,7 +226,7 @@ describe('Ruler API', () => {
                 window.ready = false;
                 window.sdk.map.setLanguage('KK');
             });
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'change_language_ru_to_unknown');
         });
     });
@@ -238,7 +247,7 @@ describe('Ruler API', () => {
                 });
                 window.ready = false;
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'create_ruler_polygon_with_params');
         });
 
@@ -251,7 +260,7 @@ describe('Ruler API', () => {
                 });
                 window.ready = false;
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'polygon_change_language_en_to_ru');
         });
 
@@ -264,7 +273,7 @@ describe('Ruler API', () => {
                 window.ruler.on('redraw', () => (window.ready = true));
                 window.ruler.setPoints(points);
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'polygon_set_points');
         });
         it('enable polygon', async () => {
@@ -277,7 +286,7 @@ describe('Ruler API', () => {
                 window.ready = false;
                 window.ruler.enable();
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'polygon_enable');
         });
         it('disable polygon', async () => {
@@ -330,7 +339,7 @@ describe('Ruler API', () => {
                 });
                 window.ready = false;
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
 
             const data = await page.evaluate(() => {
                 return window.ruler.getData();
@@ -339,7 +348,7 @@ describe('Ruler API', () => {
             expect(data.coordinates).toEqual([points]);
         });
 
-        // ?? bug, trowing an error for line with no distance
+        // TILES-4320 bug, trowing an error for line with no distance
         it.skip('get empty polyline data', async () => {
             await page.evaluate(() => {
                 window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
@@ -364,7 +373,7 @@ describe('Ruler API', () => {
                 });
                 window.ready = false;
             }, points);
-            await page.waitForFunction(() => window.ready);
+            await waitForReadiness(page);
             const data = await page.evaluate(() => {
                 return window.ruler.getData();
             });
