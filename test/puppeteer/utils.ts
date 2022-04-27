@@ -106,3 +106,11 @@ export async function emulateDrag(page: PuppeteerPage) {
     await page.mouse.move(PAGE_CENTER[0] - 10, PAGE_CENTER[1] - 10, { steps: 50 });
     await page.mouse.up({ button: 'left' });
 }
+
+export async function waitForReadiness(page: PuppeteerPage) {
+    await page.waitForFunction(() => window.ready);
+}
+
+export async function waitForRulerChanged(page: PuppeteerPage) {
+    await page.waitForFunction(() => window.rulerChanged);
+}
