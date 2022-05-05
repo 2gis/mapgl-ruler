@@ -141,8 +141,6 @@ describe('Interactions with Ruler (polyline mode)', () => {
                     points,
                     labelsVisibility: {
                         snapPoint: false,
-                        area: true,
-                        perimeter: true,
                     },
                 });
                 window.ruler.on('redraw', () => (window.ready = true));

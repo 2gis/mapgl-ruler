@@ -129,7 +129,7 @@ export class Joint extends Evented<EventTable> {
         this.updateLabel();
     }
 
-    setLabelVisibility(visible) {
+    setLabelVisibility(visible: boolean) {
         this.showLabel = visible;
         this.updateLabel();
     }

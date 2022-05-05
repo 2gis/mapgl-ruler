@@ -82,9 +82,7 @@ describe('Ruler API', () => {
                     mode: 'polyline',
                     points,
                     labelsVisibility: {
-                        area: true,
                         perimeter: false,
-                        snapPoint: true,
                     },
                 });
             }, points);
@@ -282,8 +280,6 @@ describe('Ruler API', () => {
                     points,
                     labelsVisibility: {
                         area: false,
-                        perimeter: true,
-                        snapPoint: true,
                     },
                 });
                 window.ready = false;

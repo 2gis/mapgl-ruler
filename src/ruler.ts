@@ -38,15 +38,15 @@ export interface LabelsVisibility {
     /**
      * Rule for snap point label. Enabled by default.
      */
-    snapPoint: boolean;
+    snapPoint?: boolean;
     /**
      * Rule for distance labels on perimeter. Enabled by default.
      */
-    perimeter: boolean;
+    perimeter?: boolean;
     /**
      * Rule for area. Used with 'polygon'-mode. Enabled by default.
      */
-    area: boolean;
+    area?: boolean;
 }
 
 /**
@@ -90,7 +90,7 @@ export class Ruler extends Evented<RulerEventTable> {
     private enabled = false;
     private overed = false;
     private language: string;
-    private labelsVisibility: LabelsVisibility;
+    private labelsVisibility: Required<LabelsVisibility>;
     private joints: Joint[] = [];
     private previewLine: PreviewLine;
     private snapPoint: SnapPoint;
@@ -237,10 +237,14 @@ export class Ruler extends Evented<RulerEventTable> {
     }
 
     setLabelsVisibility(visibility: LabelsVisibility) {
-        this.labelsVisibility = visibility;
-        this.snapPoint.setLabelVisibility(visibility.snapPoint);
-        this.polygon?.setLabelVisibility(visibility.area);
-        this.joints.forEach((j) => j.setLabelVisibility(visibility.perimeter));
+        this.labelsVisibility = {
+            snapPoint: visibility.snapPoint ?? true,
+            area: visibility.area ?? true,
+            perimeter: visibility.perimeter ?? true,
+        };
+        this.snapPoint.setLabelVisibility(this.labelsVisibility.snapPoint);
+        this.polygon?.setLabelVisibility(this.labelsVisibility.area);
+        this.joints.forEach((j) => j.setLabelVisibility(this.labelsVisibility.perimeter));
 
         this.emit('redraw');
     }
