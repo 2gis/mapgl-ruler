@@ -132,6 +132,37 @@ describe('Interactions with Ruler (polyline mode)', () => {
         await makeSnapshot(page, dirPath, 'add_point_on_line');
     });
 
+    it('Add point on line with hidden snap-point label', async () => {
+        await page.evaluate(
+            (points) => {
+                window.ruler.destroy();
+                window.ruler = new window.Ruler(window.sdk.map, {
+                    mode: 'polyline',
+                    points,
+                    labelsVisibility: {
+                        snapPoint: false,
+                        area: true,
+                        perimeter: true,
+                    },
+                });
+                window.ruler.on('redraw', () => (window.ready = true));
+                window.ruler.on('change', () => (window.rulerChanged = true));
+                window.ready = false;
+                window.rulerChanged = false;
+            },
+            [
+                [MAP_CENTER[0] - 1, MAP_CENTER[1] + 1],
+                [MAP_CENTER[0] + 1, MAP_CENTER[1] - 1],
+            ],
+        );
+        await waitForReadiness(page);
+
+        await emulateHover(page, PAGE_CENTER);
+        await page.waitForTimeout(100);
+
+        await makeSnapshot(page, dirPath, 'add_point_on_line_hidden_label');
+    });
+
     it('Drag point', async () => {
         await page.evaluate(
             (points) => window.ruler.setPoints(points),

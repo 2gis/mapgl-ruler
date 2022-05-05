@@ -35,7 +35,8 @@ export class Joint extends Evented<EventTable> {
         coordinates: GeoPoint,
         isFirstJoint: boolean,
         distance: number,
-        enableOnInit = true,
+        enableOnInit,
+        private showLabel: boolean,
     ) {
         super();
         this.id = ++lastId;
@@ -128,6 +129,11 @@ export class Joint extends Evented<EventTable> {
         this.updateLabel();
     }
 
+    setLabelVisibility(visible) {
+        this.showLabel = visible;
+        this.updateLabel();
+    }
+
     private addMarkerEventListeners() {
         if (!this.marker) {
             return;
@@ -206,7 +212,9 @@ export class Joint extends Evented<EventTable> {
 
     private updateLabel() {
         this.label?.destroy();
-        this.label = createLabel(this.map, this.coordinates, this.distance, this.isFirst);
+        if (this.showLabel) {
+            this.label = createLabel(this.map, this.coordinates, this.distance, this.isFirst);
+        }
     }
 }
 

@@ -32,6 +32,24 @@ export interface RulerEventTable {
 }
 
 /**
+ * The list of visibility rules for label groups.
+ */
+export interface LabelsVisibility {
+    /**
+     * Rule for snap point label. Enabled by default.
+     */
+    snapPoint: boolean;
+    /**
+     * Rule for distance labels on perimeter. Enabled by default.
+     */
+    perimeter: boolean;
+    /**
+     * Rule for area. Used with 'polygon'-mode. Enabled by default.
+     */
+    area: boolean;
+}
+
+/**
  * Ruler initialization options.
  */
 export interface RulerOptions {
@@ -49,6 +67,11 @@ export interface RulerOptions {
      * Specifies whether the ruler should be drawn on its initialization.
      */
     enabled?: boolean;
+
+    /**
+     * Specifies whether the labels should be drawn.
+     */
+    labelsVisibility?: LabelsVisibility;
 }
 
 interface RedrawFlags {
@@ -67,6 +90,7 @@ export class Ruler extends Evented<RulerEventTable> {
     private enabled = false;
     private overed = false;
     private language: string;
+    private labelsVisibility: LabelsVisibility;
     private joints: Joint[] = [];
     private previewLine: PreviewLine;
     private snapPoint: SnapPoint;
@@ -97,8 +121,13 @@ export class Ruler extends Evented<RulerEventTable> {
             preview: false,
             snap: false,
         };
+        this.labelsVisibility = {
+            snapPoint: options.labelsVisibility?.snapPoint ?? true,
+            perimeter: options.labelsVisibility?.perimeter ?? true,
+            area: options.labelsVisibility?.area ?? true,
+        };
 
-        this.snapPoint = new SnapPoint(this.map);
+        this.snapPoint = new SnapPoint(this.map, this.labelsVisibility.snapPoint);
         this.previewLine = new PreviewLine(this.map);
 
         this.polyline = new Polyline(this.map);
@@ -134,7 +163,7 @@ export class Ruler extends Evented<RulerEventTable> {
         this.redrawFlags.polyline = true;
 
         if (this.mode === 'polygon') {
-            this.polygon = new Polygon(this.map, this.joints);
+            this.polygon = new Polygon(this.map, this.joints, this.labelsVisibility.area);
         }
 
         this.map.on('click', this.onClick);
@@ -207,6 +236,15 @@ export class Ruler extends Evented<RulerEventTable> {
         }
     }
 
+    setLabelsVisibility(visibility: LabelsVisibility) {
+        this.labelsVisibility = visibility;
+        this.snapPoint.setLabelVisibility(visibility.snapPoint);
+        this.polygon?.setLabelVisibility(visibility.area);
+        this.joints.forEach((j) => j.setLabelVisibility(visibility.perimeter));
+
+        this.emit('redraw');
+    }
+
     /**
      * @hidden
      * @internal
@@ -221,7 +259,14 @@ export class Ruler extends Evented<RulerEventTable> {
             distance = prev.getDistance() + geoPointsDistance(prev.getCoordinates(), point);
         }
 
-        const joint = new Joint(this.map, point, isFirstMarker, distance, this.enabled);
+        const joint = new Joint(
+            this.map,
+            point,
+            isFirstMarker,
+            distance,
+            this.enabled,
+            this.labelsVisibility.perimeter,
+        );
 
         joint.on('dragstart', this.onJointMoveStart);
         joint.on('dragend', this.onJointMoveEnd);

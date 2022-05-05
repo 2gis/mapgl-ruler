@@ -16,6 +16,18 @@ window.ruler = new Ruler(window.map, {
         [55.09343147277832, 24.80434400280096],
         [55.09124279022217, 24.80944716233094],
     ],
+    labelsVisibility: {
+        snapPoint: false,
+        area: false,
+        perimeter: false,
+    },
+});
+window.ruler.setLabelsVisibility({
+    snapPoint: true,
+    area: true,
+    perimeter: true,
 });
 
+window.ruler.on('change', () => console.log('change'));
+window.ruler.on('redraw', () => console.log('redraw'));
 window.addEventListener('resize', () => window.map.invalidateSize());
