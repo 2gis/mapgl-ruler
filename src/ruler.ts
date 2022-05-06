@@ -32,9 +32,9 @@ export interface RulerEventTable {
 }
 
 /**
- * The list of visibility rules for label groups.
+ * The list of visibility settings for label groups.
  */
-export interface LabelsVisibility {
+export interface LabelVisibilitySettings {
     /**
      * Rule for snap point label. Enabled by default.
      */
@@ -71,7 +71,7 @@ export interface RulerOptions {
     /**
      * Specifies whether the labels should be drawn.
      */
-    labelsVisibility?: LabelsVisibility;
+    labelVisibilitySettings?: LabelVisibilitySettings;
 }
 
 interface RedrawFlags {
@@ -90,7 +90,7 @@ export class Ruler extends Evented<RulerEventTable> {
     private enabled = false;
     private overed = false;
     private language: string;
-    private labelsVisibility: Required<LabelsVisibility>;
+    private labelVisibilitySettings: Required<LabelVisibilitySettings>;
     private joints: Joint[] = [];
     private previewLine: PreviewLine;
     private snapPoint: SnapPoint;
@@ -121,13 +121,13 @@ export class Ruler extends Evented<RulerEventTable> {
             preview: false,
             snap: false,
         };
-        this.labelsVisibility = {
-            snapPoint: options.labelsVisibility?.snapPoint ?? true,
-            perimeter: options.labelsVisibility?.perimeter ?? true,
-            area: options.labelsVisibility?.area ?? true,
+        this.labelVisibilitySettings = {
+            snapPoint: options.labelVisibilitySettings?.snapPoint ?? true,
+            perimeter: options.labelVisibilitySettings?.perimeter ?? true,
+            area: options.labelVisibilitySettings?.area ?? true,
         };
 
-        this.snapPoint = new SnapPoint(this.map, this.labelsVisibility.snapPoint);
+        this.snapPoint = new SnapPoint(this.map, this.labelVisibilitySettings.snapPoint);
         this.previewLine = new PreviewLine(this.map);
 
         this.polyline = new Polyline(this.map);
@@ -163,7 +163,7 @@ export class Ruler extends Evented<RulerEventTable> {
         this.redrawFlags.polyline = true;
 
         if (this.mode === 'polygon') {
-            this.polygon = new Polygon(this.map, this.joints, this.labelsVisibility.area);
+            this.polygon = new Polygon(this.map, this.joints, this.labelVisibilitySettings.area);
         }
 
         this.map.on('click', this.onClick);
@@ -240,15 +240,15 @@ export class Ruler extends Evented<RulerEventTable> {
      * Set labels visibility.
      * @param settings Visibility settings for label groups.
      */
-    setLabelsVisibility(settings: LabelsVisibility) {
-        this.labelsVisibility = {
+    setLabelsVisibility(settings: LabelVisibilitySettings) {
+        this.labelVisibilitySettings = {
             snapPoint: settings.snapPoint ?? true,
             area: settings.area ?? true,
             perimeter: settings.perimeter ?? true,
         };
-        this.snapPoint.setLabelVisibility(this.labelsVisibility.snapPoint);
-        this.polygon?.setLabelVisibility(this.labelsVisibility.area);
-        this.joints.forEach((j) => j.setLabelVisibility(this.labelsVisibility.perimeter));
+        this.snapPoint.setLabelVisibility(this.labelVisibilitySettings.snapPoint);
+        this.polygon?.setLabelVisibility(this.labelVisibilitySettings.area);
+        this.joints.forEach((j) => j.setLabelVisibility(this.labelVisibilitySettings.perimeter));
 
         this.emit('redraw');
     }
@@ -273,7 +273,7 @@ export class Ruler extends Evented<RulerEventTable> {
             isFirstMarker,
             distance,
             this.enabled,
-            this.labelsVisibility.perimeter,
+            this.labelVisibilitySettings.perimeter,
         );
 
         joint.on('dragstart', this.onJointMoveStart);

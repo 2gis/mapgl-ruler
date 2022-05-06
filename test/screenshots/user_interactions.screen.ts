@@ -139,7 +139,7 @@ describe('Interactions with Ruler (polyline mode)', () => {
                 window.ruler = new window.Ruler(window.sdk.map, {
                     mode: 'polyline',
                     points,
-                    labelsVisibility: {
+                    labelVisibilitySettings: {
                         snapPoint: false,
                     },
                 });

@@ -36,7 +36,7 @@ describe('Ruler API', () => {
                     mode: 'polyline',
                     enabled: true,
                     points,
-                    labelsVisibility: {
+                    labelVisibilitySettings: {
                         area: true,
                         snapPoint: true,
                         perimeter: true,
@@ -81,7 +81,7 @@ describe('Ruler API', () => {
                 window.ruler = new window.Ruler(window.sdk.map, {
                     mode: 'polyline',
                     points,
-                    labelsVisibility: {
+                    labelVisibilitySettings: {
                         perimeter: false,
                     },
                 });
@@ -261,7 +261,7 @@ describe('Ruler API', () => {
                     mode: 'polygon',
                     enabled: true,
                     points,
-                    labelsVisibility: {
+                    labelVisibilitySettings: {
                         area: true,
                         snapPoint: true,
                         perimeter: true,
@@ -278,7 +278,7 @@ describe('Ruler API', () => {
                 window.ruler = new window.Ruler(window.sdk.map, {
                     mode: 'polygon',
                     points,
-                    labelsVisibility: {
+                    labelVisibilitySettings: {
                         area: false,
                     },
                 });

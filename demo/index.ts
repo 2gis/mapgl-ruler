@@ -16,7 +16,7 @@ window.ruler = new Ruler(window.map, {
         [55.09343147277832, 24.80434400280096],
         [55.09124279022217, 24.80944716233094],
     ],
-    labelsVisibility: {
+    labelVisibilitySettings: {
         snapPoint: false,
         area: false,
         perimeter: false,
