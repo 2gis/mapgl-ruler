@@ -236,11 +236,15 @@ export class Ruler extends Evented<RulerEventTable> {
         }
     }
 
-    setLabelsVisibility(visibility: LabelsVisibility) {
+    /**
+     * Set labels visibility.
+     * @param settings Visibility settings for label groups.
+     */
+    setLabelsVisibility(settings: LabelsVisibility) {
         this.labelsVisibility = {
-            snapPoint: visibility.snapPoint ?? true,
-            area: visibility.area ?? true,
-            perimeter: visibility.perimeter ?? true,
+            snapPoint: settings.snapPoint ?? true,
+            area: settings.area ?? true,
+            perimeter: settings.perimeter ?? true,
         };
         this.snapPoint.setLabelVisibility(this.labelsVisibility.snapPoint);
         this.polygon?.setLabelVisibility(this.labelsVisibility.area);
