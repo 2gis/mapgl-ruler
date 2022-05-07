@@ -10,26 +10,29 @@ import { dictionary } from './l10n';
 export class SnapPoint {
     private label?: mapgl.Label;
     private marker?: mapgl.HtmlMarker;
+    private point: GeoPoint = [0, 0];
+    private distance = 0;
 
-    constructor(private readonly map: mapgl.Map) {}
+    constructor(private readonly map: mapgl.Map, private showLabel: boolean) {}
 
     update(info: SnapInfo | undefined) {
         if (info === undefined) {
             this.destroy();
             return;
         }
+        this.point = info.point;
+        this.distance = info.distance;
 
         if (!this.marker) {
-            this.marker = createHtmlMarker(this.map, info.point, {
+            this.marker = createHtmlMarker(this.map, this.point, {
                 big: true,
                 interactive: false,
             });
         } else {
-            this.marker.setCoordinates(info.point);
+            this.marker.setCoordinates(this.point);
         }
 
-        this.label?.destroy();
-        this.label = createLabel(this.map, info.point, info.distance);
+        this.updateLabel();
     }
 
     destroy() {
@@ -38,6 +41,20 @@ export class SnapPoint {
 
         this.label = undefined;
         this.marker = undefined;
+        this.point = [0, 0];
+        this.distance = 0;
+    }
+
+    setLabelVisibility(visible: boolean) {
+        this.showLabel = visible;
+        this.updateLabel();
+    }
+
+    private updateLabel() {
+        this.label?.destroy();
+        if (this.showLabel) {
+            this.label = createLabel(this.map, this.point, this.distance);
+        }
     }
 }
 

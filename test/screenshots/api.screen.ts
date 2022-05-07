@@ -21,7 +21,6 @@ describe('Ruler API', () => {
 
     beforeEach(async () => {
         page = await pageSetUp();
-        await page.evaluate(() => (window.ready = false));
         await initBlankMap(page);
         await waitForReadiness(page);
     });
@@ -37,6 +36,11 @@ describe('Ruler API', () => {
                     mode: 'polyline',
                     enabled: true,
                     points,
+                    labelVisibilitySettings: {
+                        area: true,
+                        snapPoint: true,
+                        perimeter: true,
+                    },
                 });
                 window.ready = false;
             }, points);
@@ -71,6 +75,19 @@ describe('Ruler API', () => {
             }, points);
 
             await makeSnapshot(page, dirPath, 'create_ruler_disabled');
+        });
+        it('create with hidden perimeter labels', async () => {
+            await page.evaluate((points) => {
+                window.ruler = new window.Ruler(window.sdk.map, {
+                    mode: 'polyline',
+                    points,
+                    labelVisibilitySettings: {
+                        perimeter: false,
+                    },
+                });
+            }, points);
+            await waitForReadiness(page);
+            await makeSnapshot(page, dirPath, 'create_ruler_with_hidden_perimeter_labels');
         });
 
         it('setPoints(...) when enabled', async () => {
@@ -244,11 +261,31 @@ describe('Ruler API', () => {
                     mode: 'polygon',
                     enabled: true,
                     points,
+                    labelVisibilitySettings: {
+                        area: true,
+                        snapPoint: true,
+                        perimeter: true,
+                    },
                 });
                 window.ready = false;
             }, points);
             await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'create_ruler_polygon_with_params');
+        });
+
+        it('create polygon with hidden area labels', async () => {
+            await page.evaluate((points) => {
+                window.ruler = new window.Ruler(window.sdk.map, {
+                    mode: 'polygon',
+                    points,
+                    labelVisibilitySettings: {
+                        area: false,
+                    },
+                });
+                window.ready = false;
+            }, points);
+            await waitForReadiness(page);
+            await makeSnapshot(page, dirPath, 'create_ruler_polygon_with_hidden_area_labels');
         });
 
         it('change language EN to RU for polygon', async () => {
@@ -380,5 +417,30 @@ describe('Ruler API', () => {
             expect(data.type).toBe('polyline');
             expect(data.coordinates).toEqual(points);
         });
+    });
+
+    it('#setLabelsVisibility', async () => {
+        await page.evaluate((points) => {
+            window.ruler = new window.Ruler(window.sdk.map, {
+                mode: 'polygon',
+                points,
+            });
+            window.ruler.on('redraw', () => (window.ready = true));
+            window.ready = false;
+            window.ruler.setLabelsVisibility({
+                area: false,
+                perimeter: false,
+                snapPoint: false,
+            });
+        }, points);
+        await waitForReadiness(page);
+        await makeSnapshot(page, dirPath, 'hide_labels');
+
+        await page.evaluate(() => {
+            window.ready = false;
+            window.ruler.setLabelsVisibility({ area: true, perimeter: true, snapPoint: true });
+        });
+        await waitForReadiness(page);
+        await makeSnapshot(page, dirPath, 'show_labels');
     });
 });

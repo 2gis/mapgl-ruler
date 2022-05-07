@@ -7,21 +7,22 @@ import { style } from './style';
 import { dictionary } from './l10n';
 
 export class Polygon {
-    private readonly map: mapgl.Map;
     private label?: mapgl.Label;
     private polygon?: mapgl.Polygon;
+    private centroid: GeoPoint;
     private area: number;
     private perimeter: number;
 
-    constructor(map: mapgl.Map, joints: Joint[]) {
-        this.map = map;
+    constructor(private readonly map: mapgl.Map, joints: Joint[], private showLabel: boolean) {
         this.area = 0;
         this.perimeter = 0;
+        this.centroid = [0, 0];
 
         if (joints.length > 2) {
             const points = joints.map((j) => j.getCoordinates());
             this.polygon = createPolygon(this.map, points);
-            this.label = createLabel(this.map, centroid(points), this.area);
+            this.centroid = centroid(points);
+            this.updateLabel();
         }
     }
 
@@ -36,16 +37,14 @@ export class Polygon {
 
         const points = joints.map((j) => j.getCoordinates());
 
+        this.centroid = centroid(points);
         this.perimeter =
             joints[joints.length - 1].getDistance() +
             geoPointsDistance(points[points.length - 1], points[0]);
 
         this.area = area(points);
-
         this.polygon = createPolygon(this.map, points);
-
-        this.label?.destroy();
-        this.label = createLabel(this.map, centroid(points), this.area);
+        this.updateLabel();
     }
 
     destroy() {
@@ -59,6 +58,18 @@ export class Polygon {
 
     getPerimeter() {
         return this.perimeter;
+    }
+
+    setLabelVisibility(visible: boolean) {
+        this.showLabel = visible;
+        this.updateLabel();
+    }
+
+    private updateLabel() {
+        this.label?.destroy();
+        if (this.showLabel) {
+            this.label = createLabel(this.map, this.centroid, this.area);
+        }
     }
 }
 
