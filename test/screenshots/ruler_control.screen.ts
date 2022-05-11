@@ -30,11 +30,7 @@ describe('RulerControl (polyline mode)', () => {
         await initBlankMap(page, { styleZoom: 6 });
         await waitForReadiness(page);
         await page.evaluate(() => {
-            window.control = new window.Control(
-                window.sdk.map,
-                { position: 'topCenter' },
-                { mode: 'polyline' },
-            );
+            window.control = new window.Control(window.sdk.map, { position: 'topCenter' }, {});
         });
         await handleRulerEvent(page);
     });
