@@ -8,7 +8,7 @@ const suiteParams = {
         maxConcurrency: 3,
         testTimeout: 15000,
         testEnvironment: 'node',
-        testMatch: ['**/*/ruler_control.screen.ts'],
+        testMatch: ['**/*/*.screen.ts'],
     },
     unit: {
         testEnvironment: 'node',
