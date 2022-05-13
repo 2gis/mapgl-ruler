@@ -22,10 +22,9 @@ const clickRulerControl = async (page: Page) => {
 };
 
 const offset = 30;
+const dirPath = makeScreenshotsPath('ruler_control');
 
-describe('RulerControl', () => {
-    const dirPath = makeScreenshotsPath('ruler_control');
-
+describe('RulerControl (polyline mode)', () => {
     beforeEach(async () => {
         page = await pageSetUp();
         await initBlankMap(page, { styleZoom: 6 });
@@ -38,13 +37,13 @@ describe('RulerControl', () => {
 
     afterEach(async () => await page.close());
 
-    it('Ruler must be enabled on create control', async () => {
+    it('(polyline) Ruler must be enabled on create control', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
         await waitForReadiness(page);
-        await makeSnapshot(page, dirPath, 'enabled_on_creation');
+        await makeSnapshot(page, dirPath, 'polyline_enabled_on_creation');
     });
 
-    it('Disable ruler on click button', async () => {
+    it('(polyline) Disable ruler on click button', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
         await waitForReadiness(page);
         await clickRulerControl(page);
@@ -52,10 +51,10 @@ describe('RulerControl', () => {
 
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
         await waitForReadiness(page);
-        await makeSnapshot(page, dirPath, 'disable_on_click');
+        await makeSnapshot(page, dirPath, 'polyline_disable_on_click');
     });
 
-    it('Enable ruler on click button', async () => {
+    it('(polyline) Enable ruler on click button', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
         await waitForReadiness(page);
         await clickRulerControl(page);
@@ -64,15 +63,18 @@ describe('RulerControl', () => {
 
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
         await waitForReadiness(page);
-        await makeSnapshot(page, dirPath, 'enable_on_click');
+        await makeSnapshot(page, dirPath, 'polyline_enable_on_click');
     });
 
-    it('Ruler must be reset after destroy control', async () => {
+    it('(polyline) Ruler must be reset after destroy control', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
         await waitForReadiness(page);
         await page.evaluate(() => {
             window.control.destroy();
-            window.control = new window.Control(window.sdk.map, { position: 'topCenter' });
+            window.control = new window.Control(window.sdk.map, {
+                position: 'topCenter',
+                mode: 'polyline',
+            });
         });
         await handleRulerEvent(page);
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], {
@@ -80,6 +82,71 @@ describe('RulerControl', () => {
             delay: 1000,
         });
         await waitForReadiness(page);
-        await makeSnapshot(page, dirPath, 'destroy control');
+        await makeSnapshot(page, dirPath, 'polyline_destroy_control');
+    });
+});
+
+describe('RulerControl (polygon mode)', () => {
+    beforeEach(async () => {
+        page = await pageSetUp();
+        await initBlankMap(page, { styleZoom: 6 });
+        await waitForReadiness(page);
+        await page.evaluate(() => {
+            window.control = new window.Control(window.sdk.map, {
+                position: 'topCenter',
+                mode: 'polygon',
+            });
+        });
+        await handleRulerEvent(page);
+    });
+
+    afterEach(async () => await page.close());
+
+    it('(polygon) Ruler must be enabled on create control', async () => {
+        await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
+        await waitForReadiness(page);
+        await makeSnapshot(page, dirPath, 'polygon_enabled_on_creation');
+    });
+
+    it('(polygon) Disable ruler on click button', async () => {
+        await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
+        await waitForReadiness(page);
+        await clickRulerControl(page);
+        await handleRulerEvent(page);
+
+        await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
+        await waitForReadiness(page);
+        await makeSnapshot(page, dirPath, 'polygon_disable_on_click');
+    });
+
+    it('(polygon) Enable ruler on click button', async () => {
+        await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
+        await waitForReadiness(page);
+        await clickRulerControl(page);
+        await clickRulerControl(page);
+        await handleRulerEvent(page);
+
+        await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
+        await waitForReadiness(page);
+        await makeSnapshot(page, dirPath, 'polygon_enable_on_click');
+    });
+
+    it('(polygon) Ruler must be reset after destroy control', async () => {
+        await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
+        await waitForReadiness(page);
+        await page.evaluate(() => {
+            window.control.destroy();
+            window.control = new window.Control(window.sdk.map, {
+                position: 'topCenter',
+                mode: 'polygon',
+            });
+        });
+        await handleRulerEvent(page);
+        await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], {
+            button: 'left',
+            delay: 1000,
+        });
+        await waitForReadiness(page);
+        await makeSnapshot(page, dirPath, 'polygon_destroy_control');
     });
 });

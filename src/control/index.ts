@@ -1,12 +1,26 @@
-import { Ruler } from '../ruler';
+import { Ruler, RulerOptions } from '../ruler';
 import styles from './index.module.css';
-import icon from 'raw-loader!./icon.svg';
+import icon_distance from 'raw-loader!./icon_distance.svg';
+import icon_area from 'raw-loader!./icon_area.svg';
+
+export interface RulerControlOptions extends mapgl.ControlOptions {
+    /**
+     * Sets ruler's behavior. Specifies whether the ruler should be in measuring mode of the distance of a polyline or the area of a polygon.
+     */
+    mode?: RulerOptions['mode'];
+
+    /**
+     * Specifies whether the ruler should be enabled after control initialization.
+     */
+    enabled?: boolean;
+}
 
 /**
  * A class that provides a ruler control on the map.
  */
 export class RulerControl extends mapgl.Control {
     private readonly ruler: Ruler;
+    private readonly icon: any;
     private isEnabled: boolean;
 
     /**
@@ -20,13 +34,23 @@ export class RulerControl extends mapgl.Control {
      * ]);
      * ```
      * @param map The map instance.
-     * @param options Control initialization options.
-     * @param enabled Specifies whether the ruler should be enabled.
+     * @param options Ruler control initialization options.
      */
-    constructor(private map: mapgl.Map, options: mapgl.ControlOptions, enabled = true) {
+    constructor(private map: mapgl.Map, options: RulerControlOptions) {
         super(map, '', options);
-        this.isEnabled = enabled;
-        this.ruler = new Ruler(this.map, { enabled: this.isEnabled, mode: 'polyline' });
+        const mode = options.mode ?? 'polyline';
+        this.isEnabled = options.enabled ?? true;
+        switch (mode) {
+            case 'polyline':
+                this.icon = icon_distance;
+                break;
+            case 'polygon':
+                this.icon = icon_area;
+                break;
+            default:
+                throw new Error(`unsupported mode: ${mode}`);
+        }
+        this.ruler = new Ruler(this.map, { enabled: this.isEnabled, mode });
 
         this.render();
     }
@@ -53,9 +77,9 @@ export class RulerControl extends mapgl.Control {
     private render = () => {
         this.getContainer().innerHTML = `
             <div class=${styles.root}>
-                <button class="${styles.button} ${
-            this.isEnabled ? styles.enabled : undefined
-        }"> ${icon}</button>
+                <button class="${styles.button}${this.isEnabled ? ' ' + styles.enabled : ''}"> ${
+            this.icon
+        }</button>
             </div>
         `;
 
