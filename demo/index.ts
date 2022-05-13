@@ -1,28 +1,50 @@
 import { RulerControl } from '../src';
+import { RulerMode } from '../src/types';
 
-declare var window: any;
-
-window.map = new mapgl.Map('container', {
+const map = new mapgl.Map('container', {
     center: [55.08743147277832, 24.80434400280096],
     zoom: 16,
     key: 'cb20c5bf-34d3-4f0e-9b2b-33e9b8edb57f',
 });
 
-window.rulerControl = new RulerControl(window.map, {
+const toggleModeControl = new mapgl.Control(
+    map,
+    `
+        <form name="toggle-form" style="display: flex; flex-direction: column;">
+        <div>
+            <input id="polyline" name="mode" type="radio" value="polyline" checked />
+            <label for="polyline">polyline</label>
+        </div>
+        <div>
+            <input id="polygon" name="mode" type="radio" value="polygon" />
+            <label for="polygon">polygon</label>
+        </div>
+        </form>
+    `,
+    {
+        position: 'topLeft',
+    },
+);
+const form = toggleModeControl.getContainer().querySelector('form');
+if (form) {
+    form.onchange = (ev: Event) => {
+        const mode = (ev.target as HTMLInputElement).value as RulerMode;
+        control.destroy();
+        control = new RulerControl(map, {
+            position: 'centerRight',
+            mode,
+        });
+    };
+}
+
+let control = new RulerControl(map, {
     position: 'centerRight',
-    enabled: true,
-    mode: 'polygon',
+    mode: 'polyline',
 });
-window.ruler = window.rulerControl.ruler;
-
-window.ruler.on('change', () => console.log('change'));
-window.ruler.on('redraw', () => console.log('redraw'));
-
-window.ruler.setPoints([
+control.getRuler().setPoints([
     [55.082101821899414, 24.804694608268026],
     [55.084805488586426, 24.799708126178913],
     [55.09343147277832, 24.80434400280096],
-    [55.09124279022217, 24.80944716233094],
 ]);
 
-window.addEventListener('resize', () => window.map.invalidateSize());
+window.addEventListener('resize', () => map.invalidateSize());
