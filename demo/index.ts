@@ -8,16 +8,11 @@ window.map = new mapgl.Map('container', {
     key: 'cb20c5bf-34d3-4f0e-9b2b-33e9b8edb57f',
 });
 
-window.rulerControl = new RulerControl(
-    window.map,
-    {
-        position: 'centerRight',
-    },
-    {
-        enabled: true,
-        mode: 'polygon',
-    },
-);
+window.rulerControl = new RulerControl(window.map, {
+    position: 'centerRight',
+    enabled: true,
+    mode: 'polygon',
+});
 window.ruler = window.rulerControl.ruler;
 
 window.ruler.on('change', () => console.log('change'));

@@ -30,7 +30,7 @@ describe('RulerControl (polyline mode)', () => {
         await initBlankMap(page, { styleZoom: 6 });
         await waitForReadiness(page);
         await page.evaluate(() => {
-            window.control = new window.Control(window.sdk.map, { position: 'topCenter' }, {});
+            window.control = new window.Control(window.sdk.map, { position: 'topCenter' });
         });
         await handleRulerEvent(page);
     });
@@ -71,11 +71,10 @@ describe('RulerControl (polyline mode)', () => {
         await waitForReadiness(page);
         await page.evaluate(() => {
             window.control.destroy();
-            window.control = new window.Control(
-                window.sdk.map,
-                { position: 'topCenter' },
-                { mode: 'polyline' },
-            );
+            window.control = new window.Control(window.sdk.map, {
+                position: 'topCenter',
+                mode: 'polyline',
+            });
         });
         await handleRulerEvent(page);
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], {
@@ -93,11 +92,10 @@ describe('RulerControl (polygon mode)', () => {
         await initBlankMap(page, { styleZoom: 6 });
         await waitForReadiness(page);
         await page.evaluate(() => {
-            window.control = new window.Control(
-                window.sdk.map,
-                { position: 'topCenter' },
-                { mode: 'polygon' },
-            );
+            window.control = new window.Control(window.sdk.map, {
+                position: 'topCenter',
+                mode: 'polygon',
+            });
         });
         await handleRulerEvent(page);
     });
@@ -138,11 +136,10 @@ describe('RulerControl (polygon mode)', () => {
         await waitForReadiness(page);
         await page.evaluate(() => {
             window.control.destroy();
-            window.control = new window.Control(
-                window.sdk.map,
-                { position: 'topCenter' },
-                { mode: 'polygon' },
-            );
+            window.control = new window.Control(window.sdk.map, {
+                position: 'topCenter',
+                mode: 'polygon',
+            });
         });
         await handleRulerEvent(page);
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], {

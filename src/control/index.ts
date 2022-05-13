@@ -3,14 +3,14 @@ import styles from './index.module.css';
 import icon_distance from 'raw-loader!./icon_distance.svg';
 import icon_area from 'raw-loader!./icon_area.svg';
 
-export interface RulerControlOptions {
+export interface RulerControlOptions extends mapgl.ControlOptions {
     /**
      * Sets ruler's behavior. Specifies whether the ruler should be in measuring mode of the distance of a polyline or the area of a polygon.
      */
     mode?: RulerOptions['mode'];
 
     /**
-     * Specifies whether the ruler should be enabled.
+     * Specifies whether the ruler should be enabled after control initialization.
      */
     enabled?: boolean;
 }
@@ -34,17 +34,12 @@ export class RulerControl extends mapgl.Control {
      * ]);
      * ```
      * @param map The map instance.
-     * @param options Control initialization options.
-     * @param rulerOptions Ruler initialization options.
+     * @param options Ruler control initialization options.
      */
-    constructor(
-        private map: mapgl.Map,
-        options: mapgl.ControlOptions,
-        rulerOptions: RulerControlOptions,
-    ) {
+    constructor(private map: mapgl.Map, options: RulerControlOptions) {
         super(map, '', options);
-        const mode = rulerOptions.mode ?? 'polyline';
-        this.isEnabled = rulerOptions.enabled ?? true;
+        const mode = options.mode ?? 'polyline';
+        this.isEnabled = options.enabled ?? true;
         switch (mode) {
             case 'polyline':
                 this.icon = icon_distance;
@@ -82,7 +77,7 @@ export class RulerControl extends mapgl.Control {
     private render = () => {
         this.getContainer().innerHTML = `
             <div class=${styles.root}>
-                <button class="${styles.button} ${this.isEnabled ? styles.enabled : undefined}"> ${
+                <button class="${styles.button}${this.isEnabled ? ' ' + styles.enabled : ''}"> ${
             this.icon
         }</button>
             </div>
