@@ -13,5 +13,5 @@ export declare class Polygon {
     getArea(): number;
     getPerimeter(): number;
     setLabelVisibility(visible: boolean): void;
-    private updateLabel;
+    updateLabel(): void;
 }

@@ -50,7 +50,7 @@ export class SnapPoint {
         this.updateLabel();
     }
 
-    private updateLabel() {
+    updateLabel() {
         this.label?.destroy();
         if (this.showLabel) {
             this.label = createLabel(this.map, this.point, this.distance);
@@ -73,8 +73,9 @@ function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number): m
 }
 
 function getLabelText(map: mapgl.Map, distance: number) {
-    const distanceText = getJointDistanceText(distance, false, map.getLanguage());
-    const addJointText = dictionary.addPoint[map.getLanguage()] || dictionary.addPoint.en;
+    const lang = map.getLanguage().toLowerCase();
+    const distanceText = getJointDistanceText(distance, false, lang);
+    const addJointText = dictionary.addPoint[lang] || dictionary.addPoint.en;
 
     return `${distanceText}\n${addJointText}`;
 }

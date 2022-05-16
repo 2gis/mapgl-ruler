@@ -65,7 +65,7 @@ export class Polygon {
         this.updateLabel();
     }
 
-    private updateLabel() {
+    updateLabel() {
         this.label?.destroy();
         if (this.showLabel) {
             this.label = createLabel(this.map, this.centroid, this.area);

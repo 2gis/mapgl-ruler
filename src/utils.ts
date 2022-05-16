@@ -18,6 +18,7 @@ export function getJointDistanceText(
     if (distance === undefined) {
         return '';
     }
+    lang = lang.toLowerCase();
 
     if (first) {
         return dictionary.start[lang] || dictionary.start.en;

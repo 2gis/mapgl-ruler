@@ -134,6 +134,13 @@ export class Joint extends Evented<EventTable> {
         this.updateLabel();
     }
 
+    updateLabel() {
+        this.label?.destroy();
+        if (this.showLabel) {
+            this.label = createLabel(this.map, this.coordinates, this.distance, this.isFirst);
+        }
+    }
+
     private addMarkerEventListeners() {
         if (!this.marker) {
             return;
@@ -209,13 +216,6 @@ export class Joint extends Evented<EventTable> {
         this.dragging = false;
         this.emit('dragend');
     };
-
-    private updateLabel() {
-        this.label?.destroy();
-        if (this.showLabel) {
-            this.label = createLabel(this.map, this.coordinates, this.distance, this.isFirst);
-        }
-    }
 }
 
 function getLabelText(distance: number, isFirst: boolean, lang: string): string {

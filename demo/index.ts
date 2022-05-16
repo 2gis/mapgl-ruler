@@ -36,6 +36,24 @@ if (form) {
         });
     };
 }
+const languageControl = new mapgl.Control(
+    map,
+    `
+        <select>
+            <option>EN</option>
+            <option>RU</option>
+        </select>
+    `,
+    {
+        position: 'topLeft',
+    },
+);
+const languageSelect = languageControl.getContainer().querySelector('select');
+if (languageSelect) {
+    languageSelect.onchange = () => {
+        map.setLanguage(languageSelect[languageSelect.selectedIndex].textContent ?? 'en');
+    };
+}
 
 let control = new RulerControl(map, {
     position: 'centerRight',
