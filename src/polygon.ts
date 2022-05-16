@@ -74,6 +74,7 @@ export class Polygon {
 }
 
 function getLabelText(area: number, lang: string) {
+    lang = lang.toLowerCase();
     if (area < 1e5) {
         return `${area.toFixed(1)} ${dictionary.meter[lang]}²`;
     }
