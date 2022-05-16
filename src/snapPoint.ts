@@ -8,7 +8,7 @@ import { dictionary } from './l10n';
  * @internal
  */
 export class SnapPoint {
-    private label?: mapgl.Label;
+    private label?: mapgl.HtmlMarker;
     private marker?: mapgl.HtmlMarker;
     private point: GeoPoint = [0, 0];
     private distance = 0;
@@ -58,17 +58,16 @@ export class SnapPoint {
     }
 }
 
-function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number): mapgl.Label {
-    return new mapgl.Label(map, {
+function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number) {
+    const html = getLabelHtml(getLabelText(map, distance));
+    const height = style.labelFontSize;
+    const jointTotalWidth = style.jointWidth + style.jointBorderWidth + style.jointBorder2Width;
+    return new mapgl.HtmlMarker(map, {
         coordinates,
-        text: getLabelText(map, distance),
-        fontSize: style.labelFontSize,
+        html,
+        anchor: [-jointTotalWidth / 2, height / 2],
         zIndex: style.jointLabelPhase,
-        color: style.labelColor,
-        haloColor: style.labelHaloColor,
-        haloRadius: 1,
-        relativeAnchor: [0, 0.5],
-        offset: [style.jointWidth + style.jointBorderWidth + style.jointBorder2Width, 0],
+        interactive: false,
     });
 }
 
@@ -77,5 +76,32 @@ function getLabelText(map: mapgl.Map, distance: number) {
     const distanceText = getJointDistanceText(distance, false, lang);
     const addJointText = dictionary.addPoint[lang] || dictionary.addPoint.en;
 
-    return `${distanceText}\n${addJointText}`;
+    return { distanceText, addJointText };
+}
+
+function getLabelHtml({ distanceText, addJointText }): string {
+    return `
+        <div style="font-size: ${style.labelFontSize}px;
+            color: #667799;
+            user-select: none;
+            font-family: SuisseIntl, Helvetica, Arial, sans-serif;
+            text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
+            white-space: nowrap;
+            cursor: pointer;
+        ">
+            <div style="text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
+                user-select: none;
+                color: #667799;
+                font-family: SuisseIntl, Helvetica, Arial, sans-serif;
+                font-size: 13px;
+                margin: -6px 0 0 12px; /** отступы от точки наведения */
+                white-space: nowrap;
+                cursor: pointer;
+            ">
+                ${distanceText}
+                <br>
+                ${addJointText}
+            </div>
+        </div>
+    `;
 }
