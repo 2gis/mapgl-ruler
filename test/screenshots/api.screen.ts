@@ -86,7 +86,6 @@ describe('Ruler API', () => {
                     },
                 });
             }, points);
-            await waitForReadiness(page);
             await makeSnapshot(page, dirPath, 'create_ruler_with_hidden_perimeter_labels');
         });
 

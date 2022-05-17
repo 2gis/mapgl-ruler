@@ -21,6 +21,7 @@ declare global {
     interface Window {
         ready: boolean;
         rulerChanged: boolean;
+        rulerRedraw: number;
     }
 }
 
@@ -41,7 +42,9 @@ export function makeScreenshotsPath(relativePath: string) {
 export async function initMapWithOptions(page: PuppeteerPage, options?: Partial<mapgl.MapOptions>) {
     await page.evaluate((opts) => {
         window.sdk.map = new window.sdk.Map('map', opts ?? {});
-        window.sdk.map.on('idle', () => (window.ready = true));
+        window.sdk.map.on('idle', () => {
+            window.ready = true;
+        });
         window.ready = false;
     }, options as any);
 }
@@ -109,8 +112,15 @@ export async function emulateDrag(page: PuppeteerPage) {
 
 export async function waitForReadiness(page: PuppeteerPage) {
     await page.waitForFunction(() => window.ready);
+    await page.evaluate(() => (window.ready = false));
 }
 
 export async function waitForRulerChanged(page: PuppeteerPage) {
     await page.waitForFunction(() => window.rulerChanged);
+    await page.evaluate(() => (window.rulerChanged = false));
+}
+
+export async function waitForRulerRedraw(page: PuppeteerPage, num = 1) {
+    await page.waitForFunction((num) => window.rulerRedraw === num, {}, num);
+    await page.evaluate(() => (window.rulerRedraw = 0));
 }

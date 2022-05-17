@@ -8,6 +8,7 @@ import {
     makeSnapshot,
     waitForReadiness,
     waitForRulerChanged,
+    waitForRulerRedraw,
 } from '../puppeteer/utils';
 import { MAP_CENTER, PAGE_CENTER } from '../puppeteer/config';
 
@@ -191,17 +192,17 @@ describe('Interactions with Ruler (polygon mode)', () => {
     beforeEach(async () => {
         await page.evaluate(() => {
             window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
-            window.ruler.on('redraw', () => (window.ready = true));
+            window.ruler.on('redraw', () => (window.rulerRedraw += 1));
             window.ruler.on('change', () => (window.rulerChanged = true));
-            window.ready = false;
+            window.rulerRedraw = 0;
             window.rulerChanged = false;
         });
     });
 
     it('Add point on click', async () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1] - 50, { button: 'left' });
-        await waitForReadiness(page);
         await waitForRulerChanged(page);
+        await waitForRulerRedraw(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_first');
         await page.evaluate(() => {
             window.ready = false;
@@ -210,8 +211,8 @@ describe('Interactions with Ruler (polygon mode)', () => {
 
         await page.mouse.click(PAGE_CENTER[0] + 50, PAGE_CENTER[1] + 50, { button: 'left' });
         await page.mouse.move(0, 0, { steps: 1 });
-        await waitForReadiness(page);
         await waitForRulerChanged(page);
+        await waitForRulerRedraw(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_second');
 
         await page.evaluate(() => {
@@ -220,18 +221,22 @@ describe('Interactions with Ruler (polygon mode)', () => {
         });
         await page.mouse.click(PAGE_CENTER[0] - 50, PAGE_CENTER[1] + 50, { button: 'left' });
         await page.mouse.move(0, 0, { steps: 1 });
-        await waitForReadiness(page);
         await waitForRulerChanged(page);
+        await waitForRulerRedraw(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_third');
     });
 
     it('Remove middle point', async () => {
         await page.evaluate((points) => window.ruler.setPoints(points), points);
+        await waitForRulerChanged(page);
+        await waitForRulerRedraw(page);
+        await waitForReadiness(page);
         await makeSnapshot(page, dirPath, 'polygon_remove_point_start');
 
         await emulateClickInCross(page, PAGE_CENTER);
-        await waitForReadiness(page);
         await waitForRulerChanged(page);
+        await waitForRulerRedraw(page);
+        await waitForReadiness(page);
         await makeSnapshot(page, dirPath, 'polygon_remove_point_end');
     });
 
@@ -240,12 +245,15 @@ describe('Interactions with Ruler (polygon mode)', () => {
         await page.mouse.move(PAGE_CENTER[0], PAGE_CENTER[1]);
         await page.mouse.down({ button: 'left' });
         await page.mouse.move(PAGE_CENTER[0] + 20, PAGE_CENTER[1] - 20, { steps: 1 });
-        await page.waitForTimeout(100);
+
+        await waitForRulerRedraw(page, 2);
+        await waitForReadiness(page);
         await makeSnapshot(page, dirPath, 'polygon_drag_point_hold_down');
 
         await page.mouse.up({ button: 'left' });
         await page.mouse.move(0, 0, { steps: 1 });
-        await page.waitForTimeout(100);
+        await waitForRulerChanged(page);
+        await waitForRulerRedraw(page);
         await makeSnapshot(page, dirPath, 'polygon_drag_point_end');
     });
 });

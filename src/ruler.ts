@@ -168,6 +168,7 @@ export class Ruler extends Evented<RulerEventTable> {
 
         this.map.on('click', this.onClick);
         this.joints.forEach((joint) => joint.enable());
+        console.log(this.redrawFlags);
         this.update();
     }
 
