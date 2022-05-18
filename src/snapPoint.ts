@@ -1,5 +1,5 @@
 import { GeoPoint, SnapInfo } from './types';
-import { createHtmlMarker, getJointDistanceText } from './utils';
+import { createHtmlMarker, getJointDistanceText, getLabelHtml } from './utils';
 import { style } from './style';
 import { dictionary } from './l10n';
 
@@ -76,20 +76,7 @@ function getLabelText(map: mapgl.Map, distance: number) {
     const distanceText = getJointDistanceText(distance, false, lang);
     const addJointText = dictionary.addPoint[lang] || dictionary.addPoint.en;
 
-    return { distanceText, addJointText };
-}
-
-function getLabelHtml({ distanceText, addJointText }): string {
-    return `
-        <div style="font-size: ${style.labelFontSize}px;
-            color: #667799;
-            user-select: none;
-            font-family: SuisseIntl, Helvetica, Arial, sans-serif;
-            text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
-            white-space: nowrap;
-            cursor: pointer;
-        ">
-            <div style="text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
+    return `<div style="text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
                 user-select: none;
                 color: #667799;
                 font-family: SuisseIntl, Helvetica, Arial, sans-serif;
@@ -102,6 +89,5 @@ function getLabelHtml({ distanceText, addJointText }): string {
                 <br>
                 ${addJointText}
             </div>
-        </div>
     `;
 }

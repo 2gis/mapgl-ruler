@@ -1,5 +1,5 @@
 import { GeoPoint, TargetedEvent } from './types';
-import { createHtmlMarker, getJointDistanceText, getMarkerPopupHtml } from './utils';
+import { createHtmlMarker, getJointDistanceText, getLabelHtml, getMarkerPopupHtml } from './utils';
 import { Evented } from './evented';
 import { style } from './style';
 
@@ -27,7 +27,7 @@ export class Joint extends Evented<EventTable> {
     private hoverTimer?: ReturnType<typeof setTimeout>;
     private coordinates: GeoPoint;
     private marker?: mapgl.HtmlMarker;
-    private label?: mapgl.Label;
+    private label?: mapgl.HtmlMarker;
     private popup: mapgl.HtmlMarker;
 
     constructor(
@@ -218,26 +218,15 @@ export class Joint extends Evented<EventTable> {
     };
 }
 
-function getLabelText(distance: number, isFirst: boolean, lang: string): string {
-    return getJointDistanceText(distance, isFirst, lang);
-}
-
-function createLabel(
-    map: mapgl.Map,
-    coordinates: GeoPoint,
-    distance: number,
-    isFirst: boolean,
-): mapgl.Label {
-    return new mapgl.Label(map, {
+function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number, isFirst: boolean) {
+    const height = style.labelFontSize;
+    const jointTotalWidth = style.jointWidth + style.jointBorderWidth + style.jointBorder2Width;
+    return new mapgl.HtmlMarker(map, {
         coordinates,
-        text: getLabelText(distance, isFirst, map.getLanguage()),
-        fontSize: style.labelFontSize,
+        html: getLabelHtml(getJointDistanceText(distance, isFirst, map.getLanguage())),
+        anchor: [-jointTotalWidth / 2 - 2, height / 2],
         zIndex: style.jointLabelPhase,
-        color: style.labelColor,
-        haloColor: style.labelHaloColor,
-        haloRadius: 1,
-        relativeAnchor: [0, 0.5],
-        offset: [style.jointWidth + style.jointBorderWidth + style.jointBorder2Width, 0],
+        interactive: false,
     });
 }
 

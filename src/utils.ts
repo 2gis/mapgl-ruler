@@ -117,6 +117,26 @@ export function getMarkerPopupHtml(): string {
  * @hidden
  * @internal
  */
+
+export function getLabelHtml(content: string): string {
+    return `
+        <div style="font-size: ${style.labelFontSize}px;
+            color: #667799;
+            user-select: none;
+            font-family: SuisseIntl, Helvetica, Arial, sans-serif;
+            text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
+            white-space: nowrap;
+            cursor: pointer;
+        ">
+            ${content}
+        </div>
+    `;
+}
+
+/**
+ * @hidden
+ * @internal
+ */
 export function createHtmlMarker(
     map: mapgl.Map,
     coordinates: GeoPoint,

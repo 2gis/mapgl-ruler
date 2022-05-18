@@ -203,6 +203,7 @@ describe('Interactions with Ruler (polygon mode)', () => {
         await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1] - 50, { button: 'left' });
         await waitForRulerChanged(page);
         await waitForRulerRedraw(page);
+        await waitForReadiness(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_first');
         await page.evaluate(() => {
             window.ready = false;
@@ -213,6 +214,7 @@ describe('Interactions with Ruler (polygon mode)', () => {
         await page.mouse.move(0, 0, { steps: 1 });
         await waitForRulerChanged(page);
         await waitForRulerRedraw(page);
+        await waitForReadiness(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_second');
 
         await page.evaluate(() => {
@@ -223,6 +225,7 @@ describe('Interactions with Ruler (polygon mode)', () => {
         await page.mouse.move(0, 0, { steps: 1 });
         await waitForRulerChanged(page);
         await waitForRulerRedraw(page);
+        await waitForReadiness(page);
         await makeSnapshot(page, dirPath, 'polygon_add_point_third');
     });
 
