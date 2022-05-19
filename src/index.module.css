@@ -1,0 +1,51 @@
+.cross {
+    user-select: none;
+    width: 24px;
+    height: 24px;
+    margin-top: -4px;
+    cursor: pointer;
+}
+
+.label {
+    font-size: 13px;
+    color: #667799;
+    user-select: none;
+    font-family: SuisseIntl, Helvetica, Arial, sans-serif;
+    text-shadow: 1px 0 1px #fff, -1px 0 1px #fff, 0 1px 1px #fff, 0 -1px 1px #fff;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.joint {
+    user-select: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: -4px;
+    left: -4px;
+    background: #ffffff;
+    border-radius: 50%;
+    border-style: solid;
+    border-color: #667799;
+    border-width: 4px;
+    box-shadow: 0 0 0 2px #ffffff;
+    cursor: pointer;
+}
+.joint.big {
+    width: 7px;
+    height: 7px;
+    top: -6px;
+    left: -6px;
+    border-width: 3px;
+}
+
+.snap {
+    text-shadow: 1px 0 1px #fff, -1px 0 1px #fff, 0 1px 1px #fff, 0 -1px 1px #fff;
+    user-select: none;
+    color: #667799;
+    font-family: SuisseIntl, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    margin: -6px 0 0 12px; /** отступы от точки наведения */
+    white-space: nowrap;
+    cursor: pointer;
+}

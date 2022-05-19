@@ -1,5 +1,5 @@
 import { GeoPoint, SnapInfo } from './types';
-import { createHtmlMarker, getJointDistanceText, getLabelHtml } from './utils';
+import { createHtmlMarker, getJointDistanceText, getLabelHtml, getSnapLabelHtml } from './utils';
 import { style } from './style';
 import { dictionary } from './l10n';
 
@@ -76,18 +76,5 @@ function getLabelText(map: mapgl.Map, distance: number) {
     const distanceText = getJointDistanceText(distance, false, lang);
     const addJointText = dictionary.addPoint[lang] || dictionary.addPoint.en;
 
-    return `<div style="text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
-                user-select: none;
-                color: #667799;
-                font-family: SuisseIntl, Helvetica, Arial, sans-serif;
-                font-size: 13px;
-                margin: -6px 0 0 12px; /** отступы от точки наведения */
-                white-space: nowrap;
-                cursor: pointer;
-            ">
-                ${distanceText}
-                <br>
-                ${addJointText}
-            </div>
-    `;
+    return getSnapLabelHtml(distanceText, addJointText);
 }
