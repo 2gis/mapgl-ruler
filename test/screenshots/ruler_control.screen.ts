@@ -83,7 +83,7 @@ describe('RulerControl (polyline mode)', () => {
 
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
         await waitForRulerChanged(page);
-        await waitForRulerRedraw(page, 2);
+        await waitForRulerRedraw(page);
         await makeSnapshot(page, dirPath, 'polyline_enable_on_click');
     });
 
@@ -160,7 +160,7 @@ describe('RulerControl (polygon mode)', () => {
 
         await page.mouse.click(PAGE_CENTER[0] + offset, PAGE_CENTER[1], { button: 'left' });
         await waitForRulerChanged(page);
-        await waitForRulerRedraw(page, 2);
+        await waitForRulerRedraw(page);
 
         await makeSnapshot(page, dirPath, 'polygon_enable_on_click');
     });

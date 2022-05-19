@@ -120,7 +120,11 @@ export async function waitForRulerChanged(page: PuppeteerPage) {
     await page.evaluate(() => (window.rulerChanged = false));
 }
 
-export async function waitForRulerRedraw(page: PuppeteerPage, num = 1) {
-    await page.waitForFunction((num) => window.rulerRedraw === num, {}, num);
+export async function waitForRulerRedraw(page: PuppeteerPage, num?: number) {
+    await page.waitForFunction(
+        (num) => (Number.isNaN(num) ? window.rulerRedraw > 0 : window.rulerRedraw === num),
+        {},
+        num ?? NaN,
+    );
     await page.evaluate(() => (window.rulerRedraw = 0));
 }
