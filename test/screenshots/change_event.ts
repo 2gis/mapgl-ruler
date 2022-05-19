@@ -122,7 +122,7 @@ describe('ChangeEvent', () => {
             await page.evaluate(() => {
                 window.ruler.on('change', window.spy);
             });
-
+            await page.waitForTimeout(100);
             await emulateClickInCross(page, PAGE_CENTER);
             await page.waitForFunction(() => window.spy.called);
 
@@ -132,6 +132,30 @@ describe('ChangeEvent', () => {
                 coordinates: [[82.920412, 55.03011100006447]],
                 length: 0,
                 lengths: [0],
+                type: 'polyline',
+            });
+        });
+
+        it('Event is called on removing middle point', async () => {
+            const points = [
+                [MAP_CENTER[0] - 1, MAP_CENTER[1]],
+                MAP_CENTER,
+                [MAP_CENTER[0], MAP_CENTER[1] - 0.7],
+            ];
+            await page.evaluate((points) => {
+                window.ruler.setPoints(points);
+                window.ruler.on('change', window.spy);
+            }, points);
+            await page.waitForTimeout(100);
+            await emulateClickInCross(page, PAGE_CENTER);
+            await page.waitForFunction(() => window.spy.called);
+
+            expect(await page.evaluate(() => window.spy.calledOnce)).toBeTruthy();
+            expect(await page.evaluate(() => window.spy.lastCall.args[0].isUser)).toBeTruthy();
+            expect(await page.evaluate(() => window.spy.lastCall.args[0].data)).toEqual({
+                coordinates: [points[0], points[2]],
+                length: 141566,
+                lengths: [0, 141566],
                 type: 'polyline',
             });
         });
