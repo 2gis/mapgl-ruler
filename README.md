@@ -59,8 +59,8 @@ Mapgl-ruler uses github-flow to accept & merge fixes and improvements. Basic pro
 - Commit & push.
 - Create a new pull request to original repo.
 
-Pull requests with failing tests will not be accepted. Also, if you add or modify packages to `package.json`, make sure you use `npm` and update `package-lock.json`.
-
+Pull requests with failing tests will not be accepted.
+Also, if you modify packages or add them to `package.json`, make sure you use `npm` and update `package-lock.json`.
 ## Tests
 
 ### Run tests

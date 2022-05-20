@@ -8,6 +8,7 @@ declare global {
         };
         ready: boolean;
         rulerChanged: boolean;
+        rulerRedraw: number;
         ruler: Ruler;
         Ruler: typeof Ruler;
         control: RulerControl;

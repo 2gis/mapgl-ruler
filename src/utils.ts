@@ -2,6 +2,7 @@ import { GeoPoint, ScreenPoint, SnapInfo } from './types';
 import { Joint } from './joint';
 import { dictionary } from './l10n';
 import { style } from './style';
+import css from './index.module.css';
 
 const jointRemoveBtnSvg =
     'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjIiIGhlaWdodD0iMjIiPjxkZWZzPjxwYXRoIGlkPSJBIiBkPSJNMTIgMTAuNTg2bDMuNzkzLTMuNzkzIDEuNDE0IDEuNDE0TDEzLjQxNCAxMmwzLjc5MyAzLjc5My0xLjQxNCAxLjQxNEwxMiAxMy40MTRsLTMuNzkzIDMuNzkzLTEuNDE0LTEuNDE0TDEwLjU4NiAxMiA2Ljc5MyA4LjIwN2wxLjQxNC0xLjQxNEwxMiAxMC41ODZ6Ii8+PC9kZWZzPjxnIGZpbGwtcnVsZT0iZXZlbm9kZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEgLTEpIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMC41IiBmaWxsPSIjZmZmIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1vcGFjaXR5PSIuMTUiLz48bWFzayBpZD0iQiIgZmlsbD0iI2ZmZiI+PHVzZSB4bGluazpocmVmPSIjQSIvPjwvbWFzaz48dXNlIGZpbGw9IiMwMDAiIGZpbGwtcnVsZT0ibm9uemVybyIgeGxpbms6aHJlZj0iI0EiLz48ZyBmaWxsPSIjMjYyNjI2IiBtYXNrPSJ1cmwoI0IpIj48cGF0aCBkPSJNMCAwaDI0djI0SDB6Ii8+PC9nPjwvZz48L3N2Zz4=';
@@ -18,6 +19,7 @@ export function getJointDistanceText(
     if (distance === undefined) {
         return '';
     }
+    lang = lang.toLowerCase();
 
     if (first) {
         return dictionary.start[lang] || dictionary.start.en;
@@ -30,10 +32,6 @@ export function getJointDistanceText(
     const kmDist = (distance / 1000).toFixed(1);
 
     return `${kmDist} ${dictionary.kilometer[lang] || dictionary.kilometer.en}`;
-}
-
-function getAddJointText(lang: string): string {
-    return dictionary.addPoint[lang] || dictionary.addPoint.en;
 }
 
 /**
@@ -78,22 +76,8 @@ export function createLine(map: mapgl.Map, points: GeoPoint[], preview: boolean)
  * @hidden
  * @internal
  */
-export function getLinePopupHtml(content: string, lang: string): string {
-    return `
-        <div style="text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff, 0px 1px 1px #fff, 0px -1px 1px #fff;
-            user-select: none;
-            color: #667799;
-            font-family: SuisseIntl, Helvetica, Arial, sans-serif;
-            font-size: 13px;
-            margin: -12px 0 0 12px; /** отступы от точки наведения */
-            white-space: nowrap;
-            cursor: pointer;
-        ">
-            ${content}
-            <br>
-            ${getAddJointText(lang)}
-        </div>
-    `;
+export function getSnapLabelHtml(firstLine: string, secondLine: string): string {
+    return `<div class=${css.snap}>${firstLine}<br>${secondLine}</div>`;
 }
 
 /**
@@ -101,15 +85,16 @@ export function getLinePopupHtml(content: string, lang: string): string {
  * @internal
  */
 export function getMarkerPopupHtml(): string {
-    return `
-        <img style="
-            user-select: none;
-            width: 24px;
-            height: 24px;
-            margin-top: -4px;
-            cursor: pointer;
-        " src="data:image/svg+xml;base64,${jointRemoveBtnSvg}" alt="close">
-    `;
+    return `<img class=${css.cross} src="data:image/svg+xml;base64,${jointRemoveBtnSvg}" alt="close">`;
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+
+export function getLabelHtml(content: string): string {
+    return `<div class=${css.label}>${content}</div>`;
 }
 
 /**
@@ -126,23 +111,7 @@ export function createHtmlMarker(
 ): mapgl.HtmlMarker {
     return new mapgl.HtmlMarker(map, {
         coordinates,
-        html: `<div style="
-                user-select: none;
-                position: absolute;
-                width: ${opts.big ? style.jointWidth : style.jointSmallWidth}px;
-                height: ${opts.big ? style.jointWidth : style.jointSmallWidth}px;
-                top: ${opts.big ? '-6px' : '-4px'};
-                left: ${opts.big ? '-6px' : '-4px'};
-                background: ${style.jointColor};
-                border-radius: 50%;
-                border-style: solid;
-                border-color: ${style.jointBorderColor};
-                border-width: ${opts.big ? style.jointBorderWidth : style.jointSmallBorderWidth}px;
-                box-shadow: 0 0 0 ${
-                    opts.big ? style.jointBorder2Width : style.jointSmallBorder2Width
-                }px ${style.jointBorder2Color};
-                cursor: pointer;
-            "></div`,
+        html: `<div class="${css.joint}${opts.big ? ' ' + css.big : ''}"></div`,
         zIndex: style.jointPhase,
         interactive: opts.interactive ?? false,
     });

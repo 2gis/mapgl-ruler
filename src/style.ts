@@ -19,14 +19,6 @@ export const style = {
     jointBorderWidth: 3,
     jointBorder2Width: 2,
 
-    jointSmallWidth: 0,
-    jointSmallBorderWidth: 4,
-    jointSmallBorder2Width: 2,
-
-    jointColor: '#ffffff',
-    jointBorderColor: '#667799',
-    jointBorder2Color: '#ffffff',
-
     lineWidth: 4,
     lineBorderWidth: 2,
     lineBorder2Width: 1,

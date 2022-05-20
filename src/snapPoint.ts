@@ -1,5 +1,5 @@
 import { GeoPoint, SnapInfo } from './types';
-import { createHtmlMarker, getJointDistanceText } from './utils';
+import { createHtmlMarker, getJointDistanceText, getLabelHtml, getSnapLabelHtml } from './utils';
 import { style } from './style';
 import { dictionary } from './l10n';
 
@@ -8,7 +8,7 @@ import { dictionary } from './l10n';
  * @internal
  */
 export class SnapPoint {
-    private label?: mapgl.Label;
+    private label?: mapgl.HtmlMarker;
     private marker?: mapgl.HtmlMarker;
     private point: GeoPoint = [0, 0];
     private distance = 0;
@@ -50,7 +50,7 @@ export class SnapPoint {
         this.updateLabel();
     }
 
-    private updateLabel() {
+    updateLabel() {
         this.label?.destroy();
         if (this.showLabel) {
             this.label = createLabel(this.map, this.point, this.distance);
@@ -58,23 +58,23 @@ export class SnapPoint {
     }
 }
 
-function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number): mapgl.Label {
-    return new mapgl.Label(map, {
+function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number) {
+    const html = getLabelHtml(getLabelText(map, distance));
+    const height = style.labelFontSize;
+    const jointTotalWidth = style.jointWidth + style.jointBorderWidth + style.jointBorder2Width;
+    return new mapgl.HtmlMarker(map, {
         coordinates,
-        text: getLabelText(map, distance),
-        fontSize: style.labelFontSize,
+        html,
+        anchor: [-jointTotalWidth / 2, height / 2],
         zIndex: style.jointLabelPhase,
-        color: style.labelColor,
-        haloColor: style.labelHaloColor,
-        haloRadius: 1,
-        relativeAnchor: [0, 0.5],
-        offset: [style.jointWidth + style.jointBorderWidth + style.jointBorder2Width, 0],
+        interactive: false,
     });
 }
 
 function getLabelText(map: mapgl.Map, distance: number) {
-    const distanceText = getJointDistanceText(distance, false, map.getLanguage());
-    const addJointText = dictionary.addPoint[map.getLanguage()] || dictionary.addPoint.en;
+    const lang = map.getLanguage().toLowerCase();
+    const distanceText = getJointDistanceText(distance, false, lang);
+    const addJointText = dictionary.addPoint[lang] || dictionary.addPoint.en;
 
-    return `${distanceText}\n${addJointText}`;
+    return getSnapLabelHtml(distanceText, addJointText);
 }

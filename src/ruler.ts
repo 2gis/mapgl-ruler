@@ -417,18 +417,29 @@ export class Ruler extends Evented<RulerEventTable> {
      * @hidden
      * @internal
      */
+    private changeLanguage() {
+        this.language = this.map.getLanguage();
+        this.joints.forEach((j) => j.updateLabel());
+        this.snapPoint.updateLabel();
+        this.polygon?.updateLabel();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     private update() {
         if (!this.enabled) {
             return;
         }
 
-        if (this.language !== this.map.getLanguage()) {
-            this.language = this.map.getLanguage();
-            this.redrawFlags.polyline = true;
-        }
-
-        const emitRedrawEvent =
+        let emitRedrawEvent =
             this.redrawFlags.snap || this.redrawFlags.preview || this.redrawFlags.polyline;
+
+        if (this.language !== this.map.getLanguage()) {
+            this.changeLanguage();
+            emitRedrawEvent = true;
+        }
 
         if (this.redrawFlags.polyline) {
             this.redrawFlags.polyline = false;
