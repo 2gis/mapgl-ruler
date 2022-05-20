@@ -39,7 +39,6 @@ describe('ChangeEvent', () => {
                 window.ruler.on('change', window.spy);
                 window.ruler.setPoints(points);
             }, points);
-            await page.waitForFunction(() => window.spy.called);
 
             expect(await page.evaluate(() => window.spy.calledOnce)).toBeTruthy();
             expect(await page.evaluate(() => window.spy.lastCall.args[0].isUser)).toBeFalsy();
@@ -104,7 +103,6 @@ describe('ChangeEvent', () => {
             await page.mouse.down({ button: 'left' });
             await page.mouse.move(PAGE_CENTER[0] + 20, PAGE_CENTER[1] - 20, { steps: 20 });
             await page.mouse.up({ button: 'left' });
-            await page.waitForFunction(() => window.spy.called);
 
             expect(await page.evaluate(() => window.spy.calledTwice)).toBeTruthy();
             expect(await page.evaluate(() => window.spy.lastCall.args[0].isUser)).toBeTruthy();
@@ -124,7 +122,6 @@ describe('ChangeEvent', () => {
             });
             await page.waitForTimeout(100);
             await emulateClickInCross(page, PAGE_CENTER);
-            await page.waitForFunction(() => window.spy.called);
 
             expect(await page.evaluate(() => window.spy.calledOnce)).toBeTruthy();
             expect(await page.evaluate(() => window.spy.lastCall.args[0].isUser)).toBeTruthy();
@@ -148,7 +145,6 @@ describe('ChangeEvent', () => {
             }, points);
             await page.waitForTimeout(100);
             await emulateClickInCross(page, PAGE_CENTER);
-            await page.waitForFunction(() => window.spy.called);
 
             expect(await page.evaluate(() => window.spy.calledOnce)).toBeTruthy();
             expect(await page.evaluate(() => window.spy.lastCall.args[0].isUser)).toBeTruthy();
