@@ -1,4 +1,5 @@
 import { Ruler, RulerControl } from '../src';
+import * as sinon from 'sinon';
 
 export {};
 
@@ -10,3 +11,4 @@ window.sdk.Map = mapgl.Map;
 window.ready = false;
 window.Ruler = Ruler;
 window.Control = RulerControl;
+window.sinon = sinon;

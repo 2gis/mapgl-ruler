@@ -1,4 +1,5 @@
 import { Ruler, RulerControl } from '../src';
+import { SinonStatic, SinonSpy } from 'sinon';
 
 declare global {
     interface Window {
@@ -13,5 +14,7 @@ declare global {
         Ruler: typeof Ruler;
         control: RulerControl;
         Control: typeof RulerControl;
+        sinon: SinonStatic;
+        spy: SinonSpy<any>;
     }
 }
