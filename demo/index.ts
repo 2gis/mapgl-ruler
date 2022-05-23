@@ -16,11 +16,11 @@ const toggleModeControl = new mapgl.Control(
     `
         <form name="toggle-form" style="display: flex; flex-direction: column;">
         <div>
-            <input id="polyline" name="mode" type="radio" value="polyline" checked />
+            <input id="polyline" name="mode" type="radio" value="polyline" />
             <label for="polyline">polyline</label>
         </div>
         <div>
-            <input id="polygon" name="mode" type="radio" value="polygon" />
+            <input id="polygon" name="mode" type="radio" value="polygon" checked />
             <label for="polygon">polygon</label>
         </div>
         </form>
@@ -38,6 +38,7 @@ if (form) {
             position: 'centerRight',
             mode,
         });
+        window.ruler = window.control.getRuler();
     };
 }
 const languageControl = new mapgl.Control(

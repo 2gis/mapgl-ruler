@@ -8,7 +8,7 @@ const suiteParams = {
         maxConcurrency: 3,
         testTimeout: 15000,
         testEnvironment: 'node',
-        testMatch: ['**/*/*.screen.ts'],
+        testMatch: ['**/*/api.screen.ts'],
     },
     unit: {
         testEnvironment: 'node',
