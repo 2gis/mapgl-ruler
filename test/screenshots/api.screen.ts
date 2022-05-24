@@ -349,72 +349,154 @@ describe('Ruler API', () => {
     });
 
     describe('#getData', () => {
-        it('get empty polygon data', async () => {
-            await page.evaluate(() => {
-                window.ruler = new window.Ruler(window.sdk.map, {
-                    mode: 'polygon',
+        describe('polyline', () => {
+            it('when empty', async () => {
+                await page.evaluate(() => {
+                    window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
+                });
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
+                });
+                expect(data).toEqual({
+                    type: 'polyline',
+                    coordinates: [],
+                    length: 0,
+                    lengths: [],
+                });
+            });
+            it('when disabled', async () => {
+                await page.evaluate(() => {
+                    window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
+                    window.ruler.disable();
+                });
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
+                });
+                expect(data).toEqual({
+                    type: 'polyline',
+                    coordinates: [],
+                    length: 0,
+                    lengths: [],
+                });
+            });
+            it('when destroyed', async () => {
+                await page.evaluate(() => {
+                    window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
+                    window.ruler.destroy();
+                });
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
+                });
+                expect(data).toEqual({
+                    type: 'polyline',
+                    coordinates: [],
+                    length: 0,
+                    lengths: [],
+                });
+            });
+            it('with points', async () => {
+                await page.evaluate((points) => {
+                    window.ruler = new window.Ruler(window.sdk.map, {
+                        mode: 'polyline',
+                        points,
+                    });
+                    window.ready = false;
+                }, points);
+                await waitForReadiness(page);
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
+                });
+                expect(data.type).toBe('polyline');
+                expect(data.coordinates).toEqual(points);
+            });
+        });
+
+        describe('polygon', function () {
+            it('when empty', async () => {
+                await page.evaluate(() => {
+                    window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
+                });
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
+                });
+                expect(data).toEqual({
+                    type: 'polygon',
+                    coordinates: [[]],
+                    perimeter: 0,
+                    area: 0,
+                    lengths: [],
+                });
+            });
+            it('when disabled', async () => {
+                await page.evaluate(() => {
+                    window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
+                    window.ruler.disable();
+                });
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
+                });
+                expect(data).toEqual({
+                    type: 'polygon',
+                    coordinates: [[]],
+                    perimeter: 0,
+                    area: 0,
+                    lengths: [],
+                });
+            });
+            it('when destroyed', async () => {
+                await page.evaluate(() => {
+                    window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
+                    window.ruler.destroy();
+                });
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
+                });
+                expect(data).toEqual({
+                    type: 'polygon',
+                    coordinates: [[]],
+                    perimeter: 0,
+                    area: 0,
+                    lengths: [],
                 });
             });
 
-            const data = await page.evaluate(() => {
-                return window.ruler.getData();
-            });
-            expect(data).toEqual({
-                type: 'polygon',
-                coordinates: [[]],
-                area: 0,
-                perimeter: 0,
-                lengths: [0],
-            });
-        });
-        it('get polygon with points data', async () => {
-            await page.evaluate((points) => {
-                window.ruler = new window.Ruler(window.sdk.map, {
-                    mode: 'polygon',
-                    points,
+            it('get polygon with points data', async () => {
+                await page.evaluate((points) => {
+                    window.ruler = new window.Ruler(window.sdk.map, {
+                        mode: 'polygon',
+                        points,
+                    });
+                    window.ready = false;
+                }, points);
+                await waitForReadiness(page);
+
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
                 });
-                window.ready = false;
-            }, points);
-            await waitForReadiness(page);
-
-            const data = await page.evaluate(() => {
-                return window.ruler.getData();
-            });
-            expect(data.type).toBe('polygon');
-            expect(data.coordinates).toEqual([points]);
-        });
-
-        // TILES-4320 bug, trowing an error for line with no distance
-        it.skip('get empty polyline data', async () => {
-            await page.evaluate(() => {
-                window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
+                expect(data.type).toBe('polygon');
+                expect(data.coordinates).toEqual([points]);
             });
 
-            const data = await page.evaluate(() => {
-                return window.ruler.getData();
-            });
-            expect(data).toEqual({
-                type: 'polyline',
-                coordinates: [],
-                area: 0,
-                perimeter: 0,
-                lengths: [0],
-            });
-        });
-        it('get polyline with points data', async () => {
-            await page.evaluate((points) => {
-                window.ruler = new window.Ruler(window.sdk.map, {
-                    mode: 'polyline',
-                    points,
+            it('get polygon with points data without labels', async () => {
+                await page.evaluate((points) => {
+                    window.ruler = new window.Ruler(window.sdk.map, {
+                        mode: 'polygon',
+                        points,
+                        labelVisibilitySettings: {
+                            area: false,
+                            snapPoint: false,
+                            perimeter: false,
+                        },
+                    });
+                    window.ready = false;
+                }, points);
+
+                const data = await page.evaluate(() => {
+                    return window.ruler.getData();
                 });
-                window.ready = false;
-            }, points);
-            await waitForReadiness(page);
-            const data = await page.evaluate(() => {
-                return window.ruler.getData();
+                expect(data.type).toBe('polygon');
+                expect(data.coordinates).toEqual([points]);
             });
-            expect(data.type).toBe('polyline');
-            expect(data.coordinates).toEqual(points);
         });
     });
 
