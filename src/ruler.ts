@@ -215,7 +215,10 @@ export class Ruler extends Evented<RulerEventTable> {
                     type: this.mode,
                     coordinates: this.joints.map((j) => j.getCoordinates()),
                     lengths: this.joints.map((j) => j.getDistance()),
-                    length: this.joints[this.joints.length - 1]?.getDistance() ?? 0,
+                    length:
+                        this.joints.length > 0
+                            ? this.joints[this.joints.length - 1]?.getDistance()
+                            : 0,
                 };
             case 'polygon':
                 const lengths = this.joints.map((j) => j.getDistance());
