@@ -1,5 +1,6 @@
 FROM node:12
 
+USER root
 RUN apt-get update
 RUN apt-get install -y \
     ca-certificates \
@@ -25,12 +26,20 @@ RUN apt-get install -y \
     curl
 
 RUN mkdir /mapgl-ruler
+
+RUN adduser ubuntu
+RUN chown ubuntu:ubuntu /mapgl-ruler
+
 WORKDIR /mapgl-ruler
-COPY . .
+
+COPY package.json package.json
+COPY package-lock.json package-lock.json
 
 RUN export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 RUN npm cache clean --force
 RUN npm ci
 
+COPY --chown=ubuntu:ubuntu . .
+USER ubuntu
 

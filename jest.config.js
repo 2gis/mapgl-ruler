@@ -8,12 +8,24 @@ const suiteParams = {
         maxConcurrency: 3,
         testTimeout: 15000,
         testEnvironment: 'node',
-        testMatch: ['**/*/*.screen.ts'],
-        testRunner: 'jest-jasmine2',
+        testMatch: ['**/test/screenshots/**/*.ts'],
+    },
+    unit: {
+        testEnvironment: 'node',
+        testMatch: ['**/test/units/**/*.ts'],
     },
 };
 
 module.exports = {
     preset: 'ts-jest',
+    globals: {
+        'ts-jest': {
+            diagnostics: {
+                // Игнорируем воргинги про esModuleInterop, которые нам чинить, кажется не требуется
+                // потому что в тестах импорты работают без проблем.
+                ignoreCodes: [151001],
+            },
+        },
+    },
     ...suiteParams[suite],
 };

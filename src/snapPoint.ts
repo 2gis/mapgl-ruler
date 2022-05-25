@@ -1,59 +1,80 @@
 import { GeoPoint, SnapInfo } from './types';
-import { CircleMarker, HtmlMarker } from '@2gis/mapgl/global';
-import { getCircleMarker, getJointDistanceText, getLabel, getLinePopupHtml } from './utils';
+import { createHtmlMarker, getJointDistanceText, getLabelHtml, getSnapLabelHtml } from './utils';
+import { style } from './style';
+import { dictionary } from './l10n';
 
 /**
  * @hidden
  * @internal
  */
 export class SnapPoint {
-    map: mapgl.Map;
-    point: GeoPoint;
-    distance: number;
+    private label?: mapgl.HtmlMarker;
+    private marker?: mapgl.HtmlMarker;
+    private point: GeoPoint = [0, 0];
+    private distance = 0;
 
-    marker?: CircleMarker;
-    label: HtmlMarker;
-    labelText: string;
+    constructor(private readonly map: mapgl.Map, private showLabel: boolean) {}
 
-    constructor(map: mapgl.Map, info: SnapInfo) {
-        this.map = map;
-        this.distance = info.distance;
+    update(info: SnapInfo | undefined) {
+        if (info === undefined) {
+            this.destroy();
+            return;
+        }
         this.point = info.point;
-
-        this.labelText = getLinePopupHtml(
-            getJointDistanceText(this.distance, false, this.map.getLanguage()),
-            this.map.getLanguage(),
-        );
-        this.label = getLabel(this.map, this.point, '');
-    }
-
-    show() {
-        this.label.setContent(this.labelText);
-        this.marker = getCircleMarker(this.map, this.point, true, false);
-    }
-
-    hide() {
-        this.label.setContent('');
-        this.marker?.destroy();
-    }
-
-    update(info: SnapInfo) {
         this.distance = info.distance;
-        this.point = info.point;
 
-        this.labelText = getLinePopupHtml(
-            getJointDistanceText(this.distance, false, this.map.getLanguage()),
-            this.map.getLanguage(),
-        );
-        this.label.setContent(this.labelText);
+        if (!this.marker) {
+            this.marker = createHtmlMarker(this.map, this.point, {
+                big: true,
+                interactive: false,
+            });
+        } else {
+            this.marker.setCoordinates(this.point);
+        }
 
-        this.marker?.destroy();
-        this.marker = getCircleMarker(this.map, this.point, true, false);
-        this.label.setCoordinates(this.point);
+        this.updateLabel();
     }
 
     destroy() {
+        this.label?.destroy();
         this.marker?.destroy();
-        this.label.destroy();
+
+        this.label = undefined;
+        this.marker = undefined;
+        this.point = [0, 0];
+        this.distance = 0;
     }
+
+    setLabelVisibility(visible: boolean) {
+        this.showLabel = visible;
+        this.updateLabel();
+    }
+
+    updateLabel() {
+        this.label?.destroy();
+        if (this.showLabel) {
+            this.label = createLabel(this.map, this.point, this.distance);
+        }
+    }
+}
+
+function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number) {
+    const html = getLabelHtml(getLabelText(map, distance));
+    const height = style.labelFontSize;
+    const jointTotalWidth = style.jointWidth + style.jointBorderWidth + style.jointBorder2Width;
+    return new mapgl.HtmlMarker(map, {
+        coordinates,
+        html,
+        anchor: [-jointTotalWidth / 2, height / 2],
+        zIndex: style.jointLabelPhase,
+        interactive: false,
+    });
+}
+
+function getLabelText(map: mapgl.Map, distance: number) {
+    const lang = map.getLanguage().toLowerCase();
+    const distanceText = getJointDistanceText(distance, false, lang);
+    const addJointText = dictionary.addPoint[lang] || dictionary.addPoint.en;
+
+    return getSnapLabelHtml(distanceText, addJointText);
 }

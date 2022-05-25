@@ -1,4 +1,9 @@
 /**
+ * Possible modes of operation of the plugin.
+ */
+export type RulerMode = 'polyline' | 'polygon';
+
+/**
  * Geographical points [longitude, latitude].
  */
 export type GeoPoint = number[];
@@ -15,8 +20,8 @@ export type ScreenPoint = number[];
  */
 export interface SnapInfo {
     point: GeoPoint;
-    distance: number;
     segment: number;
+    distance: number;
 }
 
 /**
@@ -27,13 +32,28 @@ export interface TargetedEvent<T> {
     targetData: T;
 }
 
-export interface ChangeEvent {
-    /**
-     * An array of geographical points [longitude, latitude].
-     */
-    points: GeoPoint[];
+export interface RulerEvent {
     /**
      * True if it was user interaction
      */
     isUser: boolean;
+    data: RulerData;
 }
+
+export interface BaseData {
+    type: RulerMode;
+}
+export interface PolygonData extends BaseData {
+    type: 'polygon';
+    coordinates: GeoPoint[][];
+    lengths: number[];
+    perimeter: number;
+    area: number;
+}
+export interface PolylineData extends BaseData {
+    type: 'polyline';
+    coordinates: GeoPoint[];
+    lengths: number[];
+    length: number;
+}
+export type RulerData = PolygonData | PolylineData;
