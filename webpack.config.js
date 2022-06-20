@@ -4,8 +4,6 @@ const fs = require('fs-extra');
 
 const tsCheckerPlugin = new ForkTsCheckerWebpackPlugin();
 
-copyAssets();
-
 module.exports = (_, argv) => {
     let type = 'development';
 
@@ -16,6 +14,8 @@ module.exports = (_, argv) => {
     } else if (argv.test) {
         type = 'test';
     }
+
+    copyAssets(type);
 
     const base = {
         mode: 'production',
@@ -143,12 +143,21 @@ module.exports = (_, argv) => {
     }
 };
 
-function copyAssets() {
+function copyAssets(envType) {
+    if (envType === 'production') {
+        return;
+    }
+
     const root = __dirname;
     const dist = path.join(root, 'dist');
 
-    fs.copySync(path.join(root, 'demo', 'index.html'), path.join(dist, 'index.html'));
-    fs.copySync(path.join(root, 'test', 'index.html'), path.join(dist, 'test/index.html'));
+    if (envType === 'demo' || envType === 'development') {
+        fs.copySync(path.join(root, 'demo', 'index.html'), path.join(dist, 'index.html'));
+    }
+
+    if (envType === 'test') {
+        fs.copySync(path.join(root, 'test', 'index.html'), path.join(dist, 'test/index.html'));
+    }
 
     console.log('+ HTML');
 }
