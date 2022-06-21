@@ -61,6 +61,7 @@ Mapgl-ruler uses github-flow to accept & merge fixes and improvements. Basic pro
 
 Pull requests with failing tests will not be accepted.
 Also, if you modify packages or add them to `package.json`, make sure you use `npm` and update `package-lock.json`.
+
 ## Tests
 
 ### Run tests
@@ -72,3 +73,20 @@ npm run docker:test
 ```shell
 npm run docker:screenshot:update
 ```
+
+## Release
+
+### npm 
+
+1. Update the version in package.json on the «master» branch, for example 1.2.3
+1. Go to https://github.com/2gis/mapgl-ruler/releases/new
+1. Click on the «Choose tag» button and create a new tag according to the version in package.json, for example v1.2.3
+1. Make sure the release target is the «master» branch
+1. Paste the release tag into the «Release title» field, for example v1.2.3
+1. Add a release description
+1. Click «Publish release» button 
+1. Go to https://github.com/2gis/mapgl-ruler/actions and wait for the release workflow to complete
+
+### Demo
+
+1. Just execute `npm run deploy-gh-pages` on your local machine from commit you want to deploy as a demo.
