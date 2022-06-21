@@ -71,7 +71,7 @@ export class RulerControl extends mapgl.Control {
     }
 
     /**
-     * Toggle control. The same as clicking the button.
+     * Toggle control. The same as clicking the control button.
      */
     toggle() {
         this.onClick();
