@@ -78,7 +78,8 @@ npm run docker:screenshot:update
 
 ### npm 
 
-1. Update the version in package.json on the «master» branch, for example 1.2.3
+1. Update the package version by running `npm version patch|minor|major`. This command returns a new package version. Let assume it's 1.2.3
+1. Push changes to github and merge in to the «master» branch
 1. Go to https://github.com/2gis/mapgl-ruler/releases/new
 1. Click on the «Choose tag» button and create a new tag according to the version in package.json, for example v1.2.3
 1. Make sure the release target is the «master» branch
