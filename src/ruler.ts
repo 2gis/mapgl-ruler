@@ -54,7 +54,7 @@ export interface LabelVisibilitySettings {
  */
 export interface RulerOptions {
     /**
-     * An array of geographical points [longitude, latitude].
+     * An array of geographical points [longitude, latitude]. Optional.
      */
     points?: GeoPoint[];
 
@@ -69,7 +69,7 @@ export interface RulerOptions {
     enabled?: boolean;
 
     /**
-     * Specifies whether the labels should be drawn.
+     * Specifies whether the labels should be drawn. Optional.
      */
     labelVisibilitySettings?: LabelVisibilitySettings;
 }
@@ -206,7 +206,7 @@ export class Ruler extends Evented<RulerEventTable> {
     }
 
     /**
-     * Get some data depending on the ruler mode.
+     * Get ruler data depending on the ruler mode.
      */
     getData(): RulerData {
         switch (this.mode) {

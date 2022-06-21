@@ -6,6 +6,10 @@ import { GeoPoint } from './types';
 import { style } from './style';
 import { dictionary } from './l10n';
 
+/**
+ * @internal
+ * @hidden
+ */
 export class Polygon {
     private label?: mapgl.Label;
     private polygon?: mapgl.Polygon;

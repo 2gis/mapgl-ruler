@@ -10,6 +10,10 @@ interface EventTable {
     click: DynamicObjectPointerEvent<mapgl.Polyline>;
 }
 
+/**
+ * @internal
+ * @hidden
+ */
 export class Polyline extends Evented<EventTable> {
     private polyline?: mapgl.Polyline;
 

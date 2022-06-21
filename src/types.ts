@@ -40,9 +40,14 @@ export interface RulerEvent {
     data: RulerData;
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export interface BaseData {
     type: RulerMode;
 }
+
 export interface PolygonData extends BaseData {
     type: 'polygon';
     coordinates: GeoPoint[][];
@@ -50,10 +55,12 @@ export interface PolygonData extends BaseData {
     perimeter: number;
     area: number;
 }
+
 export interface PolylineData extends BaseData {
     type: 'polyline';
     coordinates: GeoPoint[];
     lengths: number[];
     length: number;
 }
+
 export type RulerData = PolygonData | PolylineData;
