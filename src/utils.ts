@@ -2,7 +2,7 @@ import { GeoPoint, ScreenPoint, SnapInfo } from './types';
 import { Joint } from './joint';
 import { dictionary } from './l10n';
 import { style } from './style';
-import { JOINT_REMOVE_TUTTON_SVG } from './constants';
+import { JOINT_REMOVE_BUTTON_SVG } from './constants';
 import css from './index.module.css';
 
 /**
@@ -83,7 +83,7 @@ export function getSnapLabelHtml(firstLine: string, secondLine: string): string 
  * @internal
  */
 export function getMarkerPopupHtml(): string {
-    return `<img class=${css.cross} src="data:image/svg+xml;base64,${JOINT_REMOVE_TUTTON_SVG}" alt="close">`;
+    return `<img class=${css.cross} src="data:image/svg+xml;base64,${JOINT_REMOVE_BUTTON_SVG}" alt="close">`;
 }
 
 /**
