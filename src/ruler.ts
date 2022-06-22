@@ -14,6 +14,7 @@ import { SnapPoint } from './snapPoint';
 import { Polygon } from './polygon';
 import { PreviewLine } from './previewLine';
 import { Polyline } from './polyline';
+import { DEFAULT_RULER_MODE } from './constants';
 
 /**
  * The list of events that can be emitted by a Ruler instance.
@@ -59,9 +60,9 @@ export interface RulerOptions {
     points?: GeoPoint[];
 
     /**
-     * Sets ruler's behavior. Specifies whether the ruler should be in measuring mode of the distance of a polyline or the area of a polygon.
+     * Sets ruler's behavior. Specifies whether the ruler should be in measuring mode of the distance of a polyline or the area of a polygon. Optional. `polyline` by default
      */
-    mode: RulerMode;
+    mode?: RulerMode;
 
     /**
      * Specifies whether the ruler should be drawn on its initialization.
@@ -111,10 +112,10 @@ export class Ruler extends Evented<RulerEventTable> {
      * @param map The map instance.
      * @param options Ruler initialization options.
      */
-    constructor(map: mapgl.Map, options: RulerOptions) {
+    constructor(map: mapgl.Map, options: RulerOptions = {}) {
         super();
         this.map = map;
-        this.mode = options.mode;
+        this.mode = options.mode ?? DEFAULT_RULER_MODE;
         this.language = this.map.getLanguage();
         this.redrawFlags = {
             polyline: false,

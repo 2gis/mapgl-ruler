@@ -49,7 +49,7 @@ describe('Ruler API', () => {
         });
         it('create with defaults', async () => {
             await page.evaluate(() => {
-                window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
+                window.ruler = new window.Ruler(window.sdk.map);
             });
 
             await makeSnapshot(page, dirPath, 'create_ruler_with_defaults');

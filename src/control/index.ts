@@ -2,6 +2,7 @@ import { Ruler, RulerOptions } from '../ruler';
 import styles from './index.module.css';
 import icon_distance from 'raw-loader!./icon_distance.svg';
 import icon_area from 'raw-loader!./icon_area.svg';
+import { DEFAULT_RULER_MODE } from '../constants';
 
 export interface RulerControlOptions extends mapgl.ControlOptions {
     /**
@@ -38,7 +39,7 @@ export class RulerControl extends mapgl.Control {
      */
     constructor(private map: mapgl.Map, options: RulerControlOptions) {
         super(map, '', options);
-        const mode = options.mode ?? 'polyline';
+        const mode = options.mode ?? DEFAULT_RULER_MODE;
         this.isEnabled = options.enabled ?? true;
         switch (mode) {
             case 'polyline':
