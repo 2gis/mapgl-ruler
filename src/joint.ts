@@ -205,7 +205,9 @@ export class Joint extends Evented<EventTable> {
 
         this.emit('move', { targetData: this });
 
-        this.coordinates = this.map.unproject([ev.clientX, ev.clientY]);
+        const container = this.map.getContainer();
+
+        this.coordinates = this.map.unproject(getMousePosition(container, ev.clientX, ev.clientY));
         this.marker?.setCoordinates(this.coordinates);
     };
 

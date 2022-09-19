@@ -179,3 +179,12 @@ export function getSnapPoint(map: mapgl.Map, joints: Joint[], point: ScreenPoint
 
     return { point: geoPoint, distance, segment: bestSegmentIndex };
 }
+
+export function getMousePosition(
+    container: HTMLElement,
+    clientX: number,
+    clientY: number,
+): number[] {
+    const rect = container.getBoundingClientRect();
+    return [clientX - rect.left - container.clientLeft, clientY - rect.top - container.clientTop];
+}
