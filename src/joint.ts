@@ -1,5 +1,11 @@
 import { GeoPoint, TargetedEvent } from './types';
-import { createHtmlMarker, getJointDistanceText, getLabelHtml, getMarkerPopupHtml } from './utils';
+import {
+    createHtmlMarker,
+    getJointDistanceText,
+    getLabelHtml,
+    getMarkerPopupHtml,
+    getMousePosition,
+} from './utils';
 import { Evented } from './evented';
 import { style } from './style';
 
