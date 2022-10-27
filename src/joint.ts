@@ -83,6 +83,7 @@ export class Joint extends Evented<EventTable> {
 
         this.updateLabel();
 
+        document.addEventListener('touchmove', this.onMouseMove);
         document.addEventListener('mousemove', this.onMouseMove);
     }
 
@@ -160,8 +161,16 @@ export class Joint extends Evented<EventTable> {
                 targetData: this,
             });
         });
+        el.addEventListener('touchstart', () => {
+            this.disablePopup();
+            this.dragging = true;
+            this.emit('dragstart', {
+                targetData: this,
+            });
+        });
 
         document.addEventListener('mouseup', this.onMouseUp);
+        document.addEventListener('touchend', this.onMouseUp);
         el.addEventListener('mouseover', this.onMouseOver);
         el.addEventListener('mouseout', this.onMouseOut);
     }
@@ -213,7 +222,18 @@ export class Joint extends Evented<EventTable> {
 
         const container = this.map.getContainer();
 
-        this.coordinates = this.map.unproject(getMousePosition(container, ev.clientX, ev.clientY));
+        if (ev.type == 'touchmove') {
+            var evt = typeof ev.originalEvent === 'undefined' ? ev : ev.originalEvent;
+            var touch = evt.touches[0] || evt.changedTouches[0];
+            this.coordinates = this.map.unproject(
+                getMousePosition(container, touch.pageX, touch.pageY),
+            );
+        } else if (ev.type == 'mousemove') {
+            this.coordinates = this.map.unproject(
+                getMousePosition(container, ev.clientX, ev.clientY),
+            );
+        }
+
         this.marker?.setCoordinates(this.coordinates);
     };
 
