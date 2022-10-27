@@ -222,13 +222,13 @@ export class Joint extends Evented<EventTable> {
 
         const container = this.map.getContainer();
 
-        if (ev.type == 'touchmove') {
-            var evt = typeof ev.originalEvent === 'undefined' ? ev : ev.originalEvent;
-            var touch = evt.touches[0] || evt.changedTouches[0];
+        if (ev.type === 'touchmove') {
+            const evt = typeof ev.originalEvent === 'undefined' ? ev : ev.originalEvent;
+            const touch = evt.touches[0] || evt.changedTouches[0];
             this.coordinates = this.map.unproject(
                 getMousePosition(container, touch.pageX, touch.pageY),
             );
-        } else if (ev.type == 'mousemove') {
+        } else if (ev.type === 'mousemove') {
             this.coordinates = this.map.unproject(
                 getMousePosition(container, ev.clientX, ev.clientY),
             );
