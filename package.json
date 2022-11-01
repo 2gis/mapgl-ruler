@@ -1,6 +1,6 @@
 {
   "name": "@2gis/mapgl-ruler",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "",
   "license": "BSD-2-Clause",
   "main": "dist/ruler.js",
