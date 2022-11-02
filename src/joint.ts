@@ -154,20 +154,8 @@ export class Joint extends Evented<EventTable> {
         }
 
         const el = this.marker.getContent();
-        el.addEventListener('mousedown', () => {
-            this.disablePopup();
-            this.dragging = true;
-            this.emit('dragstart', {
-                targetData: this,
-            });
-        });
-        el.addEventListener('touchstart', () => {
-            this.disablePopup();
-            this.dragging = true;
-            this.emit('dragstart', {
-                targetData: this,
-            });
-        });
+        el.addEventListener('mousedown', this.omMouseDown);
+        el.addEventListener('touchstart', this.omMouseDown);
 
         document.addEventListener('mouseup', this.onMouseUp);
         document.addEventListener('touchend', this.onMouseUp);
@@ -243,6 +231,14 @@ export class Joint extends Evented<EventTable> {
         }
         this.dragging = false;
         this.emit('dragend');
+    };
+
+    private omMouseDown = () => {
+        this.disablePopup();
+        this.dragging = true;
+        this.emit('dragstart', {
+            targetData: this,
+        });
     };
 }
 
