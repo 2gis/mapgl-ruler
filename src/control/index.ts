@@ -3,6 +3,7 @@ import styles from './index.module.css';
 import icon_distance from 'raw-loader!./icon_distance.svg';
 import icon_area from 'raw-loader!./icon_area.svg';
 import { DEFAULT_RULER_MODE } from '../constants';
+import { Control } from './control';
 
 export interface RulerControlOptions extends mapgl.ControlOptions {
     /**
@@ -19,7 +20,7 @@ export interface RulerControlOptions extends mapgl.ControlOptions {
 /**
  * A class that provides a ruler control on the map.
  */
-export class RulerControl extends mapgl.Control {
+export class RulerControl extends Control {
     private readonly ruler: Ruler;
     private readonly icon: any;
     private isEnabled: boolean;
