@@ -1,4 +1,3 @@
-
 /**
  * Class for the map's controls creating.
  */
