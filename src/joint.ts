@@ -83,6 +83,7 @@ export class Joint extends Evented<EventTable> {
 
         this.updateLabel();
 
+        document.addEventListener('touchmove', this.onMouseMove);
         document.addEventListener('mousemove', this.onMouseMove);
     }
 
@@ -153,15 +154,11 @@ export class Joint extends Evented<EventTable> {
         }
 
         const el = this.marker.getContent();
-        el.addEventListener('mousedown', () => {
-            this.disablePopup();
-            this.dragging = true;
-            this.emit('dragstart', {
-                targetData: this,
-            });
-        });
+        el.addEventListener('mousedown', this.omMouseDown);
+        el.addEventListener('touchstart', this.omMouseDown);
 
         document.addEventListener('mouseup', this.onMouseUp);
+        document.addEventListener('touchend', this.onMouseUp);
         el.addEventListener('mouseover', this.onMouseOver);
         el.addEventListener('mouseout', this.onMouseOut);
     }
@@ -213,7 +210,18 @@ export class Joint extends Evented<EventTable> {
 
         const container = this.map.getContainer();
 
-        this.coordinates = this.map.unproject(getMousePosition(container, ev.clientX, ev.clientY));
+        if (ev.type === 'touchmove') {
+            const evt = typeof ev.originalEvent === 'undefined' ? ev : ev.originalEvent;
+            const touch = evt.touches[0] || evt.changedTouches[0];
+            this.coordinates = this.map.unproject(
+                getMousePosition(container, touch.pageX, touch.pageY),
+            );
+        } else if (ev.type === 'mousemove') {
+            this.coordinates = this.map.unproject(
+                getMousePosition(container, ev.clientX, ev.clientY),
+            );
+        }
+
         this.marker?.setCoordinates(this.coordinates);
     };
 
@@ -223,6 +231,14 @@ export class Joint extends Evented<EventTable> {
         }
         this.dragging = false;
         this.emit('dragend');
+    };
+
+    private omMouseDown = () => {
+        this.disablePopup();
+        this.dragging = true;
+        this.emit('dragstart', {
+            targetData: this,
+        });
     };
 }
 
