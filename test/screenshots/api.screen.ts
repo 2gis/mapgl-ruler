@@ -8,6 +8,7 @@ import {
     waitForReadiness,
 } from '../puppeteer/utils';
 import { MAP_CENTER, PAGE_CENTER } from '../puppeteer/config';
+import { RulerData } from '../../dist/types/types';
 
 let page: Page;
 
@@ -354,7 +355,7 @@ describe('Ruler API', () => {
                 await page.evaluate(() => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
                 });
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data).toEqual({
@@ -369,7 +370,7 @@ describe('Ruler API', () => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
                     window.ruler.disable();
                 });
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data).toEqual({
@@ -384,7 +385,7 @@ describe('Ruler API', () => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
                     window.ruler.destroy();
                 });
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data).toEqual({
@@ -403,7 +404,7 @@ describe('Ruler API', () => {
                     window.ready = false;
                 }, points);
                 await waitForReadiness(page);
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data.type).toBe('polyline');
@@ -416,7 +417,7 @@ describe('Ruler API', () => {
                 await page.evaluate(() => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
                 });
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data).toEqual({
@@ -432,7 +433,7 @@ describe('Ruler API', () => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
                     window.ruler.disable();
                 });
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data).toEqual({
@@ -448,7 +449,7 @@ describe('Ruler API', () => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
                     window.ruler.destroy();
                 });
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data).toEqual({
@@ -470,7 +471,7 @@ describe('Ruler API', () => {
                 }, points);
                 await waitForReadiness(page);
 
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data.type).toBe('polygon');
@@ -491,7 +492,7 @@ describe('Ruler API', () => {
                     window.ready = false;
                 }, points);
 
-                const data = await page.evaluate(() => {
+                const data = await page.evaluate((): RulerData => {
                     return window.ruler.getData();
                 });
                 expect(data.type).toBe('polygon');
