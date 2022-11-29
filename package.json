@@ -9,7 +9,7 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:docs && npm run build:typings && webpack --production",
+    "build": "npm run clean && npm run build:typings && webpack --production && npm run build:docs",
     "build-demo": "npm run clean && webpack --demo && npm run build:docs",
     "build:docs": "node build/documentalist",
     "build:typings": "tsc -p tsconfig.module.json --declaration --emitDeclarationOnly",
