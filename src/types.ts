@@ -1,5 +1,5 @@
 /**
- * Possible modes of operation of the plugin.
+ * Possible modes of operation of the plugin.//
  */
 export type RulerMode = 'polyline' | 'polygon';
 
