@@ -40,10 +40,6 @@ export interface RulerEvent {
     data: RulerData;
 }
 
-/**
- * @hidden
- * @internal
- */
 export interface BaseData {
     type: RulerMode;
 }

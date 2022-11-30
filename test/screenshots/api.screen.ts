@@ -8,6 +8,7 @@ import {
     waitForReadiness,
 } from '../puppeteer/utils';
 import { MAP_CENTER, PAGE_CENTER } from '../puppeteer/config';
+import { RulerData } from '../../dist/types/types';
 
 let page: Page;
 
@@ -354,7 +355,7 @@ describe('Ruler API', () => {
                 await page.evaluate(() => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
                 });
-                const data = await page.evaluate(() => {
+                const data: RulerData = await page.evaluate(() => {
                     return window.ruler.getData();
                 });
                 expect(data).toEqual({
