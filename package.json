@@ -32,6 +32,7 @@
     "@types/jest": "^27.4.0",
     "@types/jest-image-snapshot": "^4.3.1",
     "@types/puppeteer": "^5.4.4",
+    "check-dts": "^0.6.7",
     "css-loader": "^3.6.0",
     "fork-ts-checker-webpack-plugin": "^4.1.4",
     "fs-extra": "^10.0.0",
