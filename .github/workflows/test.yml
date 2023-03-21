@@ -9,7 +9,7 @@ on:
       - '*'
 
 jobs:
-  types-tests:
+  typings-validation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
