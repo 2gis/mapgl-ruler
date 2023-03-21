@@ -18,6 +18,7 @@ jobs:
           node-version: 14
       - run: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm ci
       - run: npm run build
+      - run: rm ./dist/types/ruler.d.ts
       - run: npm run types-check
 
   run-tests:
