@@ -26,6 +26,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build container and run tests
         run: docker-compose up --build --exit-code-from test test
+      - run: docker images --no-trunc -a
       - uses: actions/upload-artifact@v2
         if: ${{ failure() }}
         with:
