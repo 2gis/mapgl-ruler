@@ -1,7 +1,7 @@
 import { GeoPoint, SnapInfo } from './types';
 import { createHtmlMarker, getJointDistanceText, getLabelHtml, getSnapLabelHtml } from './utils';
 import { style } from './style';
-import { dictionary } from './l10n';
+import { getTranslation } from './l10n';
 
 /**
  * @hidden
@@ -74,7 +74,7 @@ function createLabel(map: mapgl.Map, coordinates: GeoPoint, distance: number) {
 function getLabelText(map: mapgl.Map, distance: number) {
     const lang = map.getLanguage().toLowerCase();
     const distanceText = getJointDistanceText(distance, false, lang);
-    const addJointText = dictionary.addPoint[lang] || dictionary.addPoint.en;
+    const addJointText = getTranslation('addPoint', lang);
 
     return getSnapLabelHtml(distanceText, addJointText);
 }

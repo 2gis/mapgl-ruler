@@ -45,8 +45,9 @@ const languageControl = new mapgl.Control(
     map,
     `
         <select>
-            <option>EN</option>
-            <option>RU</option>
+            <option>en</option>
+            <option>ru</option>
+            <option>ar</option>
         </select>
     `,
     {

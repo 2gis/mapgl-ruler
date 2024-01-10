@@ -1,6 +1,6 @@
 import { GeoPoint, ScreenPoint, SnapInfo } from './types';
 import { Joint } from './joint';
-import { dictionary } from './l10n';
+import { getTranslation } from './l10n';
 import { style } from './style';
 import { JOINT_REMOVE_BUTTON_SVG } from './constants';
 import css from './index.module.css';
@@ -20,16 +20,16 @@ export function getJointDistanceText(
     lang = lang.toLowerCase();
 
     if (first) {
-        return dictionary.start[lang] || dictionary.start.en;
+        return getTranslation('start', lang);
     }
 
     if (distance < 1000) {
-        return `${distance} ${dictionary.meter[lang] || dictionary.meter.en}`;
+        return `${distance} ${getTranslation('meter', lang)}`;
     }
 
     const kmDist = (distance / 1000).toFixed(1);
 
-    return `${kmDist} ${dictionary.kilometer[lang] || dictionary.kilometer.en}`;
+    return `${kmDist} ${getTranslation('kilometer', lang)}`;
 }
 
 /**
