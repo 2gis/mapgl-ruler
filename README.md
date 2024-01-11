@@ -2,6 +2,8 @@
 
 Ruler plugin for [Mapgl](https://docs.2gis.com/en/mapgl/overview)
 
+[Live demo](https://2gis.github.io/mapgl-ruler/)
+
 ## Usage
 
 Install with NPM
