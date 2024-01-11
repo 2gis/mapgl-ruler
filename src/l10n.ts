@@ -1,8 +1,6 @@
-/**
- * @hidden
- * @internal
- */
-export const dictionary = {
+const DEFAULT_LOCALE = 'en';
+
+const DICTIONARY = {
     start: {
         en: 'Start',
         ru: 'Старт',
@@ -19,4 +17,14 @@ export const dictionary = {
         en: 'km',
         ru: 'км',
     },
-};
+} as const;
+
+type L10nKey = keyof typeof DICTIONARY;
+
+/**
+ * @hidden
+ * @internal
+ */
+export function getTranslation(key: L10nKey, locale: string = DEFAULT_LOCALE) {
+    return DICTIONARY[key][locale] ?? DICTIONARY[key][DEFAULT_LOCALE];
+}

@@ -4,7 +4,7 @@ import { area } from './geo/area';
 import { centroid } from './geo/centroid';
 import { GeoPoint } from './types';
 import { style } from './style';
-import { dictionary } from './l10n';
+import { getTranslation } from './l10n';
 
 /**
  * @internal
@@ -80,10 +80,10 @@ export class Polygon {
 function getLabelText(area: number, lang: string) {
     lang = lang.toLowerCase();
     if (area < 1e5) {
-        return `${area.toFixed(1)} ${dictionary.meter[lang]}²`;
+        return `${area.toFixed(1)} ${getTranslation('meter', lang)}²`;
     }
 
-    return `${(area / 1e6).toFixed(1)} ${dictionary.kilometer[lang]}²`;
+    return `${(area / 1e6).toFixed(1)} ${getTranslation('kilometer', lang)}²`;
 }
 
 function createLabel(map: mapgl.Map, coordinates: GeoPoint, area: number): mapgl.Label {
