@@ -1,6 +1,12 @@
 FROM node:12
 
 USER root
+RUN echo "deb http://deb.debian.org/debian bullseye main  \
+    deb-src http://deb.debian.org/debian bullseye main \
+    deb http://deb.debian.org/debian-security/ bullseye-security main \
+    deb-src http://deb.debian.org/debian-security/ bullseye-security main \
+    deb http://deb.debian.org/debian bullseye-updates main \
+    deb-src http://deb.debian.org/debian bullseye-updates main" > /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get install -y \
     ca-certificates \
