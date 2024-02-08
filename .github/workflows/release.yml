@@ -19,7 +19,7 @@ jobs:
           retention-days: 5
 
   publish-npm:
-    # needs: run-tests
+    needs: run-tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
