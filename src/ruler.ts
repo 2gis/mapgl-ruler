@@ -115,6 +115,7 @@ export class Ruler extends Evented<RulerEventTable> {
     constructor(map: mapgl.Map, options: RulerOptions = {}) {
         super();
         this.map = map;
+         // @ts-ignore: Type 'loopWorld' option is in feature
         this.map.setOption('loopWorld', false);
         this.mode = options.mode ?? DEFAULT_RULER_MODE;
         this.language = this.map.getLanguage();
