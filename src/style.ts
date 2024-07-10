@@ -1,4 +1,4 @@
-const maxPhase = 2147483647; // max zIndex in CSS (2 ** 31 - 1).
+const maxPhase = 10; // max zIndex in CSS (2 ** 31 - 1).
 
 /**
  * @hidden
