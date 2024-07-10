@@ -1,4 +1,4 @@
-const maxPhase = 10; // max zIndex in CSS (2 ** 31 - 1).
+const maxPhase = 10; // an equal number that allows us not to go into a negative value when calculating elements.
 
 /**
  * @hidden
