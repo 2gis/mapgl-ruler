@@ -1,4 +1,4 @@
-const maxPhase = 10; // an equal number that allows us not to go into a negative value when calculating elements.
+const maxPhase = 10; // an even number that allows us not to go to a negative value when calculating elements.
 
 /**
  * @hidden
