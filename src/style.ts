@@ -1,4 +1,8 @@
-const maxPhase = 2147483647; // max zIndex in CSS (2 ** 31 - 1).
+// The z-index value for this element is set to 10. This number is chosen to be lower than the z-index
+// of controls and plugins in MapGL, which is 50. This approach allows us to manage the layering of elements
+// without resorting to negative z-index values.
+
+const maxPhase = 10;
 
 /**
  * @hidden
