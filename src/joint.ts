@@ -1,4 +1,4 @@
-import { GeoPoint, TargetedEvent } from './types';
+import { GeoPoint, RenderCustomJointHtmlMarker, TargetedEvent } from './types';
 import {
     createHtmlMarker,
     getJointDistanceText,
@@ -43,6 +43,7 @@ export class Joint extends Evented<EventTable> {
         distance: number,
         enableOnInit,
         private showLabel: boolean,
+        private renderCustomMarker?: RenderCustomJointHtmlMarker,
     ) {
         super();
         this.id = ++lastId;
@@ -75,10 +76,7 @@ export class Joint extends Evented<EventTable> {
     }
 
     enable() {
-        this.marker = createHtmlMarker(this.map, this.getCoordinates(), {
-            big: this.isFirst,
-            interactive: true,
-        });
+        this.createHtmlMarker();
         this.addMarkerEventListeners();
 
         this.updateLabel();
@@ -116,10 +114,7 @@ export class Joint extends Evented<EventTable> {
         this.marker?.destroy();
         document.removeEventListener('mouseup', this.onMouseUp);
 
-        this.marker = createHtmlMarker(this.map, this.coordinates, {
-            big: this.isFirst,
-            interactive: true,
-        });
+        this.createHtmlMarker();
         this.addMarkerEventListeners();
         this.setDistance(0, true);
     }
@@ -239,6 +234,18 @@ export class Joint extends Evented<EventTable> {
         this.emit('dragstart', {
             targetData: this,
         });
+    };
+
+    private createHtmlMarker = () => {
+        this.marker = this.renderCustomMarker
+            ? this.renderCustomMarker(this.map, this.coordinates, {
+                  isFirst: this.isFirst,
+                  interactive: true,
+              })
+            : createHtmlMarker(this.map, this.getCoordinates(), {
+                  big: this.isFirst,
+                  interactive: true,
+              });
     };
 }
 

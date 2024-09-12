@@ -1,4 +1,4 @@
-import { GeoPoint, RulerMode } from './types';
+import { GeoPoint, RulerMode, RulerPolylineOptions } from './types';
 import { createLine, geoPointsDistance } from './utils';
 import { Joint } from './joint';
 import { Evented } from './evented';
@@ -21,7 +21,7 @@ export class Polyline extends Evented<EventTable> {
         super();
     }
 
-    update(mode: RulerMode, joints: Joint[]) {
+    update(mode: RulerMode, joints: Joint[], polylineOptions: RulerPolylineOptions) {
         this.polyline?.destroy();
         if (joints.length === 0) {
             return;
@@ -41,11 +41,11 @@ export class Polyline extends Evented<EventTable> {
         });
 
         // замыкаем линию если рисуем площадь
-        if (mode === 'polygon') {
+        if (mode === 'polygon' && polylineOptions.autoClosePolygon) {
             points.push(joints[0].getCoordinates());
         }
 
-        this.polyline = createLine(this.map, points, false);
+        this.polyline = createLine(this.map, points, false, polylineOptions);
         this.polyline.on('mousemove', (ev) => this.emit('mousemove', ev));
         this.polyline.on('mouseout', (ev) => this.emit('mouseout', ev));
         this.polyline.on('click', (ev) => this.emit('click', ev));

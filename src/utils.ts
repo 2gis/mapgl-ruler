@@ -1,7 +1,7 @@
-import { GeoPoint, ScreenPoint, SnapInfo } from './types';
+import { GeoPoint, RulerPolylineOptions, ScreenPoint, SnapInfo } from './types';
 import { Joint } from './joint';
 import { getTranslation } from './l10n';
-import { style } from './style';
+import { style as styleDefault } from './style';
 import { JOINT_REMOVE_BUTTON_SVG } from './constants';
 import css from './index.module.css';
 
@@ -52,20 +52,31 @@ export function geoPointsDistance(lngLat1: GeoPoint, lngLat2: GeoPoint): number 
  * @hidden
  * @internal
  */
-export function createLine(map: mapgl.Map, points: GeoPoint[], preview: boolean): mapgl.Polyline {
+export function createLine(
+    map: mapgl.Map,
+    points: GeoPoint[],
+    preview: boolean,
+    style?: RulerPolylineOptions,
+): mapgl.Polyline {
+    const lineWidth = style?.lineWidth ?? styleDefault.lineWidth;
+    const lineColor = style?.lineColor ?? styleDefault.lineColor;
+    const lineBorderColor = style?.lineBorderColor ?? styleDefault.lineBorderColor;
+    const lineBorderWidth = style?.lineBorderWidth ?? styleDefault.lineBorderWidth;
+    const lineBorder2Color = style?.lineBorder2Color ?? styleDefault.lineBorder2Color;
+    const lineBorder2Width = style?.lineBorder2Width ?? styleDefault.lineBorder2Width;
+    const previewLineColor = style?.previewLineColor ?? styleDefault.previewLineColor;
+
     return new mapgl.Polyline(map, {
         coordinates: points,
-        zIndex: style.linePhase,
-        zIndex2: style.linePhase - 0.00001,
-        zIndex3: style.linePhase - 0.00002,
-        width: style.lineWidth,
-        width2: preview ? 0 : style.lineWidth + 2 * style.lineBorderWidth,
-        width3: preview
-            ? 0
-            : style.lineWidth + 2 * (style.lineBorderWidth + style.lineBorder2Width),
-        color: preview ? style.previewLineColor : style.lineColor,
-        color2: style.lineBorderColor,
-        color3: style.lineBorder2Color,
+        zIndex: styleDefault.linePhase,
+        zIndex2: styleDefault.linePhase - 0.00001,
+        zIndex3: styleDefault.linePhase - 0.00002,
+        width: lineWidth,
+        width2: preview ? 0 : lineWidth + 2 * lineBorderWidth,
+        width3: preview ? 0 : lineWidth + 2 * (lineBorderWidth + lineBorder2Width),
+        color: preview ? previewLineColor : lineColor,
+        color2: lineBorderColor,
+        color3: lineBorder2Color,
         interactive: !preview,
     });
 }
@@ -105,12 +116,13 @@ export function createHtmlMarker(
     opts: {
         big?: boolean;
         interactive?: boolean;
+        style?: string;
     },
 ): mapgl.HtmlMarker {
     return new mapgl.HtmlMarker(map, {
         coordinates,
         html: `<div class="${css.joint}${opts.big ? ' ' + css.big : ''}"></div`,
-        zIndex: style.jointPhase,
+        zIndex: styleDefault.jointPhase,
         interactive: opts.interactive ?? false,
     });
 }

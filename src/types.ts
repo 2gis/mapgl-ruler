@@ -1,3 +1,5 @@
+import { PolygonOptions } from '@2gis/mapgl/types/types';
+
 /**
  * Possible modes of operation of the plugin.
  */
@@ -60,3 +62,27 @@ export interface PolylineData extends BaseData {
 }
 
 export type RulerData = PolygonData | PolylineData;
+
+export type RulerPolygonOptions = Pick<PolygonOptions, 'color' | 'strokeColor' | 'strokeWidth'>;
+
+export interface RulerPolylineOptions {
+    lineColor?: string;
+    lineWidth?: number;
+    lineBorderColor?: string;
+    lineBorderWidth?: number;
+    lineBorder2Color?: string;
+    lineBorder2Width?: number;
+    previewLineColor?: string;
+    autoClosePolygon?: boolean;
+}
+
+export type RenderCustomJointHtmlMarker = (
+    map: mapgl.Map,
+    coordinates: GeoPoint,
+    options: { isFirst: boolean; interactive: boolean },
+) => mapgl.HtmlMarker;
+
+export type RenderCustomSnapPointHtmlMarker = (
+    map: mapgl.Map,
+    coordinates: GeoPoint,
+) => mapgl.HtmlMarker;

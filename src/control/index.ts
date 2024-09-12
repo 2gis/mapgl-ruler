@@ -11,6 +11,14 @@ export interface RulerControlOptions extends mapgl.ControlOptions {
      */
     mode?: RulerOptions['mode'];
 
+    polygonOptions?: RulerOptions['polygonOptions'];
+
+    polylineOptions?: RulerOptions['polylineOptions'];
+
+    renderCustomJointHtmlMarker?: RulerOptions['renderCustomJointHtmlMarker'];
+
+    renderCustomSnapPointHtmlMarker?: RulerOptions['renderCustomSnapPointHtmlMarker'];
+
     /**
      * Specifies whether the ruler should be enabled after control initialization.
      */
@@ -52,7 +60,14 @@ export class RulerControl extends Control {
             default:
                 throw new Error(`unsupported mode: ${mode}`);
         }
-        this.ruler = new Ruler(this.map, { enabled: this.isEnabled, mode });
+        this.ruler = new Ruler(this.map, {
+            enabled: this.isEnabled,
+            mode,
+            polygonOptions: options.polygonOptions,
+            polylineOptions: options.polylineOptions,
+            renderCustomJointHtmlMarker: options.renderCustomJointHtmlMarker,
+            renderCustomSnapPointHtmlMarker: options.renderCustomSnapPointHtmlMarker,
+        });
 
         this.render();
     }
