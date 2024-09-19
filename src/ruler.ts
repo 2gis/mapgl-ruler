@@ -9,8 +9,8 @@ import {
     RulerMode,
     RulerPolygonOptions,
     RulerPolylineOptions,
-    RenderCustomJointHtmlMarker,
-    RenderCustomSnapPointHtmlMarker,
+    JointFactory,
+    SnapPointFactory,
 } from './types';
 import { geoPointsDistance, getSnapPoint } from './utils';
 import { Joint } from './joint';
@@ -82,9 +82,9 @@ export interface RulerOptions {
 
     polylineOptions?: RulerPolylineOptions;
 
-    renderCustomJointHtmlMarker?: RenderCustomJointHtmlMarker;
+    jointFactory?: JointFactory;
 
-    renderCustomSnapPointHtmlMarker?: RenderCustomSnapPointHtmlMarker;
+    snapPointFactory?: SnapPointFactory;
 }
 
 interface RedrawFlags {
@@ -112,8 +112,8 @@ export class Ruler extends Evented<RulerEventTable> {
     private polygon?: Polygon;
     private polygonOptions: RulerPolygonOptions;
     private polylineOptions: RulerPolylineOptions;
-    private renderCustomJointHtmlMarker?: RulerOptions['renderCustomJointHtmlMarker'];
-    private renderCustomSnapPointHtmlMarker?: RulerOptions['renderCustomSnapPointHtmlMarker'];
+    private jointFactory?: RulerOptions['jointFactory'];
+    private snapPointFactory?: RulerOptions['snapPointFactory'];
 
     /**
      * Example:
@@ -155,8 +155,8 @@ export class Ruler extends Evented<RulerEventTable> {
         this.polyline.on('click', this.onPolylineClick);
         this.polygonOptions = options.polygonOptions ?? {};
         this.polylineOptions = options.polylineOptions ?? {};
-        this.renderCustomJointHtmlMarker = options.renderCustomJointHtmlMarker;
-        this.renderCustomSnapPointHtmlMarker = options.renderCustomSnapPointHtmlMarker;
+        this.jointFactory = options.jointFactory;
+        this.snapPointFactory = options.snapPointFactory;
 
         options.points?.forEach((point, i) => this.addPoint(point, i));
 
@@ -303,7 +303,7 @@ export class Ruler extends Evented<RulerEventTable> {
             distance,
             this.enabled,
             this.labelVisibilitySettings.perimeter,
-            this.renderCustomJointHtmlMarker,
+            this.jointFactory,
         );
 
         joint.on('dragstart', this.onJointMoveStart);
@@ -484,7 +484,7 @@ export class Ruler extends Evented<RulerEventTable> {
 
         if (this.redrawFlags.snap) {
             this.redrawFlags.snap = false;
-            this.snapPoint.update(this.newSnapInfo, this.renderCustomSnapPointHtmlMarker);
+            this.snapPoint.update(this.newSnapInfo, this.snapPointFactory);
             this.newSnapInfo = undefined;
         }
 

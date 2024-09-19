@@ -1,4 +1,4 @@
-import { GeoPoint, RenderCustomSnapPointHtmlMarker, SnapInfo } from './types';
+import { GeoPoint, SnapPointFactory, SnapInfo } from './types';
 import { createHtmlMarker, getJointDistanceText, getLabelHtml, getSnapLabelHtml } from './utils';
 import { style } from './style';
 import { getTranslation } from './l10n';
@@ -17,7 +17,8 @@ export class SnapPoint {
 
     update(
         info: SnapInfo | undefined,
-        renderCustomSnapPointHtmlMarker?: RenderCustomSnapPointHtmlMarker,
+        snapPointFactory: SnapPointFactory = (map, coordinates) =>
+            createHtmlMarker(map, coordinates, { big: true, interactive: false }),
     ) {
         if (info === undefined) {
             this.destroy();
@@ -27,12 +28,7 @@ export class SnapPoint {
         this.distance = info.distance;
 
         if (!this.marker) {
-            this.marker = renderCustomSnapPointHtmlMarker
-                ? renderCustomSnapPointHtmlMarker(this.map, this.point)
-                : createHtmlMarker(this.map, this.point, {
-                      big: true,
-                      interactive: false,
-                  });
+            this.marker = snapPointFactory(this.map, this.point);
         } else {
             this.marker.setCoordinates(this.point);
         }

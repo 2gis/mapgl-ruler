@@ -63,7 +63,7 @@ export interface PolylineData extends BaseData {
 
 export type RulerData = PolygonData | PolylineData;
 
-export type RulerPolygonOptions = Pick<PolygonOptions, 'color' | 'strokeColor' | 'strokeWidth'>;
+export type RulerPolygonOptions = Pick<PolygonOptions, 'color'>;
 
 export interface RulerPolylineOptions {
     lineColor?: string;
@@ -76,13 +76,10 @@ export interface RulerPolylineOptions {
     autoClosePolygon?: boolean;
 }
 
-export type RenderCustomJointHtmlMarker = (
+export type JointFactory = (
     map: mapgl.Map,
     coordinates: GeoPoint,
     options: { isFirst: boolean; interactive: boolean },
 ) => mapgl.HtmlMarker;
 
-export type RenderCustomSnapPointHtmlMarker = (
-    map: mapgl.Map,
-    coordinates: GeoPoint,
-) => mapgl.HtmlMarker;
+export type SnapPointFactory = (map: mapgl.Map, coordinates: GeoPoint) => mapgl.HtmlMarker;

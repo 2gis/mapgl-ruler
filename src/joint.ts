@@ -1,4 +1,4 @@
-import { GeoPoint, RenderCustomJointHtmlMarker, TargetedEvent } from './types';
+import { GeoPoint, JointFactory, TargetedEvent } from './types';
 import {
     createHtmlMarker,
     getJointDistanceText,
@@ -43,7 +43,11 @@ export class Joint extends Evented<EventTable> {
         distance: number,
         enableOnInit,
         private showLabel: boolean,
-        private renderCustomMarker?: RenderCustomJointHtmlMarker,
+        private renderCustomMarker: JointFactory = (
+            map,
+            coordinates,
+            { isFirst, interactive },
+        ) => createHtmlMarker(map, coordinates, { big: isFirst, interactive }),
     ) {
         super();
         this.id = ++lastId;
@@ -237,15 +241,10 @@ export class Joint extends Evented<EventTable> {
     };
 
     private createHtmlMarker = () => {
-        this.marker = this.renderCustomMarker
-            ? this.renderCustomMarker(this.map, this.coordinates, {
-                  isFirst: this.isFirst,
-                  interactive: true,
-              })
-            : createHtmlMarker(this.map, this.getCoordinates(), {
-                  big: this.isFirst,
-                  interactive: true,
-              });
+        this.marker = this.renderCustomMarker(this.map, this.getCoordinates(), {
+            isFirst: this.isFirst,
+            interactive: true,
+        });
     };
 }
 

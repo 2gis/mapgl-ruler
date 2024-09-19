@@ -15,9 +15,9 @@ export interface RulerControlOptions extends mapgl.ControlOptions {
 
     polylineOptions?: RulerOptions['polylineOptions'];
 
-    renderCustomJointHtmlMarker?: RulerOptions['renderCustomJointHtmlMarker'];
+    jointFactory?: RulerOptions['jointFactory'];
 
-    renderCustomSnapPointHtmlMarker?: RulerOptions['renderCustomSnapPointHtmlMarker'];
+    snapPointFactory?: RulerOptions['snapPointFactory'];
 
     /**
      * Specifies whether the ruler should be enabled after control initialization.
@@ -65,8 +65,8 @@ export class RulerControl extends Control {
             mode,
             polygonOptions: options.polygonOptions,
             polylineOptions: options.polylineOptions,
-            renderCustomJointHtmlMarker: options.renderCustomJointHtmlMarker,
-            renderCustomSnapPointHtmlMarker: options.renderCustomSnapPointHtmlMarker,
+            jointFactory: options.jointFactory,
+            snapPointFactory: options.snapPointFactory,
         });
 
         this.render();

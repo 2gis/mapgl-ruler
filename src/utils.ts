@@ -56,15 +56,15 @@ export function createLine(
     map: mapgl.Map,
     points: GeoPoint[],
     preview: boolean,
-    style?: RulerPolylineOptions,
+    options?: RulerPolylineOptions,
 ): mapgl.Polyline {
-    const lineWidth = style?.lineWidth ?? styleDefault.lineWidth;
-    const lineColor = style?.lineColor ?? styleDefault.lineColor;
-    const lineBorderColor = style?.lineBorderColor ?? styleDefault.lineBorderColor;
-    const lineBorderWidth = style?.lineBorderWidth ?? styleDefault.lineBorderWidth;
-    const lineBorder2Color = style?.lineBorder2Color ?? styleDefault.lineBorder2Color;
-    const lineBorder2Width = style?.lineBorder2Width ?? styleDefault.lineBorder2Width;
-    const previewLineColor = style?.previewLineColor ?? styleDefault.previewLineColor;
+    const lineWidth = options?.lineWidth ?? styleDefault.lineWidth;
+    const lineColor = options?.lineColor ?? styleDefault.lineColor;
+    const lineBorderColor = options?.lineBorderColor ?? styleDefault.lineBorderColor;
+    const lineBorderWidth = options?.lineBorderWidth ?? styleDefault.lineBorderWidth;
+    const lineBorder2Color = options?.lineBorder2Color ?? styleDefault.lineBorder2Color;
+    const lineBorder2Width = options?.lineBorder2Width ?? styleDefault.lineBorder2Width;
+    const previewLineColor = options?.previewLineColor ?? styleDefault.previewLineColor;
 
     return new mapgl.Polyline(map, {
         coordinates: points,

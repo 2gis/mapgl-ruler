@@ -114,7 +114,6 @@ function createPolygon(
         zIndex: style.areaPhase,
         interactive: false,
         color: options.color ?? style.areaColor,
-        strokeWidth: options.strokeWidth ?? style.areaStrokeWidth,
-        strokeColor: options.strokeColor ?? style.areaStrokeColor,
+        strokeWidth: style.areaStrokeWidth,
     });
 }
