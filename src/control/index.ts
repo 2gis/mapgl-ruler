@@ -11,12 +11,24 @@ export interface RulerControlOptions extends mapgl.ControlOptions {
      */
     mode?: RulerOptions['mode'];
 
+    /**
+     * Polygon drawing options.
+     */
     polygonOptions?: RulerOptions['polygonOptions'];
 
+    /**
+     * Polyline drawing options.
+     */
     polylineOptions?: RulerOptions['polylineOptions'];
 
+    /**
+     * Custom joint factory function, useful for styling
+     */
     jointFactory?: RulerOptions['jointFactory'];
 
+    /**
+     * Custom snap point factory function, useful for styling
+     */
     snapPointFactory?: RulerOptions['snapPointFactory'];
 
     /**
