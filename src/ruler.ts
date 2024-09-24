@@ -7,6 +7,10 @@ import {
     TargetedEvent,
     RulerData,
     RulerMode,
+    RulerPolygonOptions,
+    RulerPolylineOptions,
+    JointFactory,
+    SnapPointFactory,
 } from './types';
 import { geoPointsDistance, getSnapPoint } from './utils';
 import { Joint } from './joint';
@@ -73,6 +77,14 @@ export interface RulerOptions {
      * Specifies whether the labels should be drawn. Optional.
      */
     labelVisibilitySettings?: LabelVisibilitySettings;
+
+    polygonOptions?: RulerPolygonOptions;
+
+    polylineOptions?: RulerPolylineOptions;
+
+    jointFactory?: JointFactory;
+
+    snapPointFactory?: SnapPointFactory;
 }
 
 interface RedrawFlags {
@@ -98,6 +110,10 @@ export class Ruler extends Evented<RulerEventTable> {
     private polyline: Polyline;
     private newSnapInfo?: SnapInfo;
     private polygon?: Polygon;
+    private polygonOptions: RulerPolygonOptions;
+    private polylineOptions: RulerPolylineOptions;
+    private jointFactory?: RulerOptions['jointFactory'];
+    private snapPointFactory?: RulerOptions['snapPointFactory'];
 
     /**
      * Example:
@@ -137,6 +153,10 @@ export class Ruler extends Evented<RulerEventTable> {
         this.polyline.on('mousemove', this.onPolylineMouseMove);
         this.polyline.on('mouseout', this.onPolylineMouseOut);
         this.polyline.on('click', this.onPolylineClick);
+        this.polygonOptions = options.polygonOptions ?? {};
+        this.polylineOptions = options.polylineOptions ?? {};
+        this.jointFactory = options.jointFactory;
+        this.snapPointFactory = options.snapPointFactory;
 
         options.points?.forEach((point, i) => this.addPoint(point, i));
 
@@ -166,7 +186,12 @@ export class Ruler extends Evented<RulerEventTable> {
         this.redrawFlags.polyline = true;
 
         if (this.mode === 'polygon') {
-            this.polygon = new Polygon(this.map, this.joints, this.labelVisibilitySettings.area);
+            this.polygon = new Polygon(
+                this.map,
+                this.joints,
+                this.labelVisibilitySettings.area,
+                this.polygonOptions,
+            );
         }
 
         this.map.on('click', this.onClick);
@@ -278,6 +303,7 @@ export class Ruler extends Evented<RulerEventTable> {
             distance,
             this.enabled,
             this.labelVisibilitySettings.perimeter,
+            this.jointFactory,
         );
 
         joint.on('dragstart', this.onJointMoveStart);
@@ -447,18 +473,18 @@ export class Ruler extends Evented<RulerEventTable> {
 
         if (this.redrawFlags.polyline) {
             this.redrawFlags.polyline = false;
-            this.polygon?.update(this.joints);
-            this.polyline.update(this.mode, this.joints);
+            this.polygon?.update(this.joints, this.polygonOptions);
+            this.polyline.update(this.mode, this.joints, this.polylineOptions);
         }
 
         if (this.redrawFlags.preview) {
             this.redrawFlags.preview = false;
-            this.previewLine.update(this.mode, this.joints);
+            this.previewLine.update(this.mode, this.joints, this.polylineOptions);
         }
 
         if (this.redrawFlags.snap) {
             this.redrawFlags.snap = false;
-            this.snapPoint.update(this.newSnapInfo);
+            this.snapPoint.update(this.newSnapInfo, this.snapPointFactory);
             this.newSnapInfo = undefined;
         }
 

@@ -1,5 +1,5 @@
 import { Joint } from './joint';
-import { GeoPoint, RulerMode } from './types';
+import { GeoPoint, RulerMode, RulerPolylineOptions } from './types';
 import { createLine } from './utils';
 
 /**
@@ -28,7 +28,7 @@ export class PreviewLine {
         this.draggableJoint = joint;
     }
 
-    update(mode: RulerMode, joints: Joint[]) {
+    update(mode: RulerMode, joints: Joint[], previewLineOptions: RulerPolylineOptions) {
         this.polyline?.destroy();
         if (this.draggableJoint) {
             const curr = joints.indexOf(this.draggableJoint);
@@ -50,7 +50,7 @@ export class PreviewLine {
                 coordinates.push((joints[curr + 1] ?? joints[0]).getCoordinates());
             }
 
-            this.polyline = createLine(this.map, coordinates, true);
+            this.polyline = createLine(this.map, coordinates, true, previewLineOptions);
         }
     }
 }

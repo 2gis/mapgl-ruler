@@ -12,6 +12,26 @@ export interface RulerControlOptions extends mapgl.ControlOptions {
     mode?: RulerOptions['mode'];
 
     /**
+     * Polygon drawing options.
+     */
+    polygonOptions?: RulerOptions['polygonOptions'];
+
+    /**
+     * Polyline drawing options.
+     */
+    polylineOptions?: RulerOptions['polylineOptions'];
+
+    /**
+     * Custom joint factory function, useful for styling
+     */
+    jointFactory?: RulerOptions['jointFactory'];
+
+    /**
+     * Custom snap point factory function, useful for styling
+     */
+    snapPointFactory?: RulerOptions['snapPointFactory'];
+
+    /**
      * Specifies whether the ruler should be enabled after control initialization.
      */
     enabled?: boolean;
@@ -52,7 +72,14 @@ export class RulerControl extends Control {
             default:
                 throw new Error(`unsupported mode: ${mode}`);
         }
-        this.ruler = new Ruler(this.map, { enabled: this.isEnabled, mode });
+        this.ruler = new Ruler(this.map, {
+            enabled: this.isEnabled,
+            mode,
+            polygonOptions: options.polygonOptions,
+            polylineOptions: options.polylineOptions,
+            jointFactory: options.jointFactory,
+            snapPointFactory: options.snapPointFactory,
+        });
 
         this.render();
     }
