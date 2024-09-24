@@ -22,6 +22,10 @@ export class Polyline extends Evented<EventTable> {
     }
 
     update(mode: RulerMode, joints: Joint[], polylineOptions: RulerPolylineOptions) {
+        if (polylineOptions.autoClosePolygon === undefined) {
+            polylineOptions.autoClosePolygon = true;
+        }
+
         this.polyline?.destroy();
         if (joints.length === 0) {
             return;
