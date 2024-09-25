@@ -5,7 +5,7 @@ on:
   pull_request:
   push:
     branches:
-      - '*'
+      - 'master'
     tags-ignore:
       - '*'
 
@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build container and run tests
-        run: docker-compose up --build --exit-code-from test test
+        run: docker compose up --build --exit-code-from test test
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
