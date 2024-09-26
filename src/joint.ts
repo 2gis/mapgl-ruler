@@ -43,11 +43,8 @@ export class Joint extends Evented<EventTable> {
         distance: number,
         enableOnInit,
         private showLabel: boolean,
-        private renderCustomMarker: JointFactory = (
-            map,
-            coordinates,
-            { isFirst, interactive },
-        ) => createHtmlMarker(map, coordinates, { big: isFirst, interactive }),
+        private renderCustomMarker: JointFactory = (map, coordinates, { isFirst, interactive }) =>
+            createHtmlMarker(map, coordinates, { big: isFirst, interactive }),
     ) {
         super();
         this.id = ++lastId;
