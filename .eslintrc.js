@@ -9,7 +9,7 @@ module.exports = {
     rules: {
         'no-console': 'off',
         'no-constant-condition': 'error',
-        'eqeqeq': 'error', // Точно такое же поведение, как у 'triple-equals' в TSLint
+        'eqeqeq': 'error',
         'no-multi-spaces': 'off',
         'array-bracket-spacing': ['error', 'never'],
         'block-spacing': ['error', 'always'],
@@ -24,29 +24,29 @@ module.exports = {
         'quotes': ['error', 'single', { avoidEscape: true }],
         'space-in-parens': 'off',
         'arrow-parens': ['error', 'always'],
-        'no-shadow': 'off', // Аналогично 'no-shadowed-variable'
-        'import/order': 'off', // Аналогично 'ordered-imports'
-        'no-confusing-arrow': 'off', // Аналогично 'only-arrow-functions'
-        'for-direction': 'off', // Аналогично 'forin'
+        'no-shadow': 'off',
+        'import/order': 'off',
+        'no-confusing-arrow': 'off',
+        'for-direction': 'off',
         'max-classes-per-file': ['off'],
-        'max-len': 'off', // Аналогично 'max-line-length'
-        'class-name-casing': 'error', // Аналогично 'class-name'
+        'max-len': 'off',
+        'class-name-casing': 'error',
         'no-namespace': ['error', { allowDeclarations: true }],
-        'object-shorthand': 'off', // Аналогично 'object-literal-sort-keys'
+        'object-shorthand': 'off',
         'prefer-for-of': 'off',
-        'comma-dangle': 'off', // Аналогично 'trailing-comma'
+        'comma-dangle': 'off',
         'no-irregular-whitespace': 'error',
         'no-default-export': 'error',
-        'no-undef': 'off', // Аналогично 'variable-name'
+        'no-undef': 'off',
         'no-empty': 'off',
-        'one-var': 'off', // Аналогично 'one-variable-per-declaration'
+        'one-var': 'off',
         'align': 'off',
-        'no-tabs': 'error', // Аналогично 'ter-no-tabs'
-        'jsdoc/require-returns': 'off', // Аналогично 'no-redundant-jsdoc'
-        'jsdoc/valid-types': 'error', // Аналогично 'jsdoc-format'
+        'no-tabs': 'error',
+        'jsdoc/require-returns': 'off',
+        'jsdoc/valid-types': 'error',
         '@typescript-eslint/no-inferrable-types': 'error',
-        'semi': 'off', // Аналогично 'semicolon'
-        'no-restricted-globals': ['error', 'isNaN'], // Используем Number.isNaN
+        'semi': 'off',
+        'no-restricted-globals': ['error', 'isNaN'],
         'space-before-function-paren': 'off',
         '@typescript-eslint/member-ordering': [
             'error',
