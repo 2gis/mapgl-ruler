@@ -34,6 +34,7 @@ module.exports = (_, argv) => {
                         },
                     ],
                 },
+                // For CSS modules
                 {
                     test: /\.module\.css$/i,
                     use: [
@@ -67,6 +68,9 @@ module.exports = (_, argv) => {
             path: path.resolve(__dirname, 'dist'),
             publicPath: '/',
             libraryTarget: 'umd',
+            // webpack for amd uses window, which may not be in the nodejs environment.
+            // probably corrected in 5 webpack, then it will be possible to delete globalObject
+            // https://github.com/webpack/webpack/pull/8625
             globalObject: "typeof self !== 'undefined' ? self : this",
         },
     };
@@ -97,7 +101,6 @@ module.exports = (_, argv) => {
         stats: 'errors-only',
     };
 
-    // Уникальные порты для devServer
     const devConfig = {
         mode: 'development',
         devtool: 'eval-source-map',
@@ -107,7 +110,7 @@ module.exports = (_, argv) => {
                 directory: path.resolve(__dirname, 'dist'),
             },
             host: 'localhost',
-            port: 3000, // порт для library
+            port: 3000,
             client: {
                 logging: 'error',
             },
@@ -119,15 +122,6 @@ module.exports = (_, argv) => {
         stats: 'minimal',
     };
 
-    const devConfigDemo = {
-        ...devConfig,
-        devServer: {
-            ...devConfig.devServer,
-            port: 3001, // порт для demo
-        },
-    };
-
-    // Запуск только одного devServer для library, другие конфиги делаются вручную
     switch (type) {
         case 'production':
             return [library];
@@ -137,8 +131,8 @@ module.exports = (_, argv) => {
             return test;
         case 'development':
             return [
-                { ...library, ...devConfig }, // devConfig только для одного
-                { ...demo },  // demo компилируется вручную
+                { ...library, ...devConfig },
+                { ...demo },
             ];
     }
 };
