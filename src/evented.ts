@@ -2,7 +2,7 @@
  * Event emitter
  */
 export class Evented<M> {
-    private readonly events: { [K in keyof M]?: ((ev: M[K]) => void)[] };
+    private readonly events: { [K in keyof M]?: Array<(ev: M[K]) => void> };
 
     constructor() {
         this.events = {};

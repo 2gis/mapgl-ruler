@@ -106,26 +106,20 @@ module.exports = (_, argv) => {
         devtool: 'eval-source-map',
         plugins: [tsCheckerPlugin],
         devServer: {
-            contentBase: path.resolve(__dirname, 'dist'),
+            static: {
+                directory: path.resolve(__dirname, 'dist'),
+            },
             host: 'localhost',
             port: 3000,
-            stats: {
-                modules: false,
-                hash: false,
-                version: false,
-                assets: false,
-                entrypoints: false,
-                builtAt: false,
-                // https://github.com/TypeStrong/ts-loader#transpileonly-boolean-defaultfalse
-                warningsFilter: /export .* was not found in /,
+            client: {
+                logging: 'error',
             },
-            disableHostCheck: true,
-            clientLogLevel: 'error',
-            // it is used so that the script can be pulled from another domain, for example, in visual-comparator
             headers: {
                 'Access-Control-Allow-Origin': '*',
             },
+            allowedHosts: 'all',
         },
+        stats: 'minimal',
     };
 
     switch (type) {
@@ -136,10 +130,7 @@ module.exports = (_, argv) => {
         case 'test':
             return test;
         case 'development':
-            return [
-                { ...library, ...devConfig },
-                { ...demo, ...devConfig },
-            ];
+            return [{ ...library, ...devConfig }, { ...demo }];
     }
 };
 

@@ -58,7 +58,10 @@ export class RulerControl extends Control {
      * @param map The map instance.
      * @param options Ruler control initialization options.
      */
-    constructor(private map: mapgl.Map, options: RulerControlOptions) {
+    constructor(
+        private map: mapgl.Map,
+        options: RulerControlOptions,
+    ) {
         super(map, '', options);
         const mode = options.mode ?? DEFAULT_RULER_MODE;
         this.isEnabled = options.enabled ?? true;
@@ -114,8 +117,8 @@ export class RulerControl extends Control {
         this.getContainer().innerHTML = `
             <div class=${styles.root}>
                 <button class="${styles.button}${this.isEnabled ? ' ' + styles.enabled : ''}"> ${
-            this.icon
-        }</button>
+                    this.icon
+                }</button>
             </div>
         `;
 

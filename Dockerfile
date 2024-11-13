@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:20
 
 USER root
 RUN echo "deb http://deb.debian.org/debian bullseye main  \
