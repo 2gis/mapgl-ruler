@@ -354,9 +354,7 @@ describe('Ruler API', () => {
                 await page.evaluate(() => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
                 });
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data).toEqual({
                     type: 'polyline',
                     coordinates: [],
@@ -369,9 +367,7 @@ describe('Ruler API', () => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
                     window.ruler.disable();
                 });
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data).toEqual({
                     type: 'polyline',
                     coordinates: [],
@@ -384,9 +380,7 @@ describe('Ruler API', () => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polyline' });
                     window.ruler.destroy();
                 });
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data).toEqual({
                     type: 'polyline',
                     coordinates: [],
@@ -403,9 +397,7 @@ describe('Ruler API', () => {
                     window.ready = false;
                 }, points);
                 await waitForReadiness(page);
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data.type).toBe('polyline');
                 expect(data.coordinates).toEqual(points);
             });
@@ -416,9 +408,7 @@ describe('Ruler API', () => {
                 await page.evaluate(() => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
                 });
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data).toEqual({
                     type: 'polygon',
                     coordinates: [[]],
@@ -432,9 +422,7 @@ describe('Ruler API', () => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
                     window.ruler.disable();
                 });
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data).toEqual({
                     type: 'polygon',
                     coordinates: [[]],
@@ -448,9 +436,7 @@ describe('Ruler API', () => {
                     window.ruler = new window.Ruler(window.sdk.map, { mode: 'polygon' });
                     window.ruler.destroy();
                 });
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data).toEqual({
                     type: 'polygon',
                     coordinates: [[]],
@@ -470,9 +456,7 @@ describe('Ruler API', () => {
                 }, points);
                 await waitForReadiness(page);
 
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data.type).toBe('polygon');
                 expect(data.coordinates).toEqual([points]);
             });
@@ -491,9 +475,7 @@ describe('Ruler API', () => {
                     window.ready = false;
                 }, points);
 
-                const data = await page.evaluate(() => {
-                    return window.ruler.getData();
-                });
+                const data = await page.evaluate(() => window.ruler.getData());
                 expect(data.type).toBe('polygon');
                 expect(data.coordinates).toEqual([points]);
             });

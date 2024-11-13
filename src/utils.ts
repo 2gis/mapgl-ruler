@@ -159,9 +159,7 @@ export function getClosestPointOnLineSegment(
  * @internal
  */
 export function getSnapPoint(map: mapgl.Map, joints: Joint[], point: ScreenPoint): SnapInfo {
-    const screenPoints = joints.map((joint) => {
-        return map.project(joint.getCoordinates());
-    });
+    const screenPoints = joints.map((joint) => map.project(joint.getCoordinates()));
 
     let minDistance = Infinity;
     let bestPoint = screenPoints[0];
