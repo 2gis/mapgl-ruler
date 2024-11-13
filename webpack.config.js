@@ -130,10 +130,7 @@ module.exports = (_, argv) => {
         case 'test':
             return test;
         case 'development':
-            return [
-                { ...library, ...devConfig },
-                { ...demo },
-            ];
+            return [{ ...library, ...devConfig }, { ...demo }];
     }
 };
 

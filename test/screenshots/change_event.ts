@@ -114,7 +114,7 @@ describe('ChangeEvent', () => {
             });
         });
 
-        //broken? cannot wait to delete all the data
+        // broken? cannot wait to delete all the data
         it.skip('Event is called on removing point', async () => {
             await page.mouse.click(PAGE_CENTER[0], PAGE_CENTER[1], { button: 'left' });
             await page.evaluate(() => {
