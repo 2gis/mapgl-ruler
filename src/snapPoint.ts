@@ -13,7 +13,10 @@ export class SnapPoint {
     private point: GeoPoint = [0, 0];
     private distance = 0;
 
-    constructor(private readonly map: mapgl.Map, private showLabel: boolean) {}
+    constructor(
+        private readonly map: mapgl.Map,
+        private showLabel: boolean,
+    ) {}
 
     update(
         info: SnapInfo | undefined,
