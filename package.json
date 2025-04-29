@@ -29,8 +29,8 @@
     "deploy-gh-pages": "npm run clean && npm run build-demo && gh-pages -d dist"
   },
   "devDependencies": {
+    "@2gis/js-docs-generator": "^0.0.2",
     "@2gis/mapgl": "^1.25.0",
-    "@documentalist/compiler": "^2.9.0",
     "@types/jest": "^27.4.0",
     "@types/jest-image-snapshot": "^4.3.1",
     "@types/puppeteer": "^5.4.4",

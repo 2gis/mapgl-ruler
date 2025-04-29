@@ -27,8 +27,11 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
+
+      - run: echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
       - run: npm ci
       - run: npm run build
       - run: npm publish --access public
         env:
+          VERSION: ${{ env.TAG }}
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
