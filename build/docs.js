@@ -1,4 +1,4 @@
-const { generateDocs } = require('@2gis/js-docs-generator');
+const { generateDocs } = require('@2gis/ts-docs-generator');
 const fs = require('fs');
 const path = require('path');
 
@@ -7,6 +7,7 @@ fs.mkdirSync(path.join('dist', 'docs', version), { recursive: true });
 
 generateDocs({
     version,
+    project: 'ruler',
     defaultReference: 'Ruler',
     docsHost: 'https://unpkg.com/@2gis/mapgl-ruler@^2/dist/docs',
     excludePaths: [],
