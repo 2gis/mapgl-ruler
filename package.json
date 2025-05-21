@@ -11,7 +11,7 @@
   "scripts": {
     "build": "npm run clean && webpack --production && npm run build:docs && npm run build:typings",
     "build-demo": "npm run clean && webpack --demo && npm run build:docs",
-    "build:docs": "node build/documentalist",
+    "build:docs": "node build/docs",
     "build:typings": "tsc -p tsconfig.module.json --declaration --emitDeclarationOnly",
     "clean": "rm -rf dist",
     "dev": "webpack-dev-server",
@@ -29,8 +29,8 @@
     "deploy-gh-pages": "npm run clean && npm run build-demo && gh-pages -d dist"
   },
   "devDependencies": {
+    "@2gis/ts-docs-generator": "^0.1.0",
     "@2gis/mapgl": "^1.25.0",
-    "@documentalist/compiler": "^2.9.0",
     "@types/jest": "^27.4.0",
     "@types/jest-image-snapshot": "^4.3.1",
     "@types/puppeteer": "^5.4.4",
