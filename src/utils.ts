@@ -124,6 +124,7 @@ export function createHtmlMarker(
         html: `<div class="${css.joint}${opts.big ? ' ' + css.big : ''}"></div`,
         zIndex: styleDefault.jointPhase,
         interactive: opts.interactive ?? false,
+        labeling: { type: 'invincible', width: 20, height: 20 },
     });
 }
 
