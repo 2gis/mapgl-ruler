@@ -87,7 +87,7 @@ export class RulerControl extends Control {
             polylineOptions: options.polylineOptions,
             jointFactory: options.jointFactory,
             snapPointFactory: options.snapPointFactory,
-            markerBurningArea: options.markerBurningArea
+            markerBurningArea: options.markerBurningArea,
         });
 
         this.render();

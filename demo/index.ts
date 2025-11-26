@@ -37,7 +37,7 @@ if (form) {
         window.control = new RulerControl(map, {
             position: 'centerRight',
             mode,
-            markerBurningArea: 8
+            markerBurningArea: 8,
         });
         window.ruler = window.control.getRuler();
     };
@@ -65,7 +65,7 @@ if (languageSelect) {
 window.control = new RulerControl(map, {
     position: 'centerRight',
     mode: 'polygon',
-    markerBurningArea: 8
+    markerBurningArea: 8,
 });
 window.ruler = window.control.getRuler();
 window.control.getRuler().setPoints([
