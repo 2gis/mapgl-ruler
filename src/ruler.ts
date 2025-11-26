@@ -85,6 +85,11 @@ export interface RulerOptions {
     jointFactory?: JointFactory;
 
     snapPointFactory?: SnapPointFactory;
+
+    /**
+     * Specifies the size of the marker burning area within the radius of the ruler joint.
+     */
+    markerBurningArea?: number;
 }
 
 interface RedrawFlags {
@@ -114,6 +119,7 @@ export class Ruler extends Evented<RulerEventTable> {
     private polylineOptions: RulerPolylineOptions;
     private jointFactory?: RulerOptions['jointFactory'];
     private snapPointFactory?: RulerOptions['snapPointFactory'];
+    private markerBurningArea?: RulerOptions['markerBurningArea'];
 
     /**
      * Example:
@@ -157,6 +163,7 @@ export class Ruler extends Evented<RulerEventTable> {
         this.polylineOptions = options.polylineOptions ?? {};
         this.jointFactory = options.jointFactory;
         this.snapPointFactory = options.snapPointFactory;
+        this.markerBurningArea = options.markerBurningArea;
 
         options.points?.forEach((point, i) => this.addPoint(point, i));
 
@@ -303,6 +310,7 @@ export class Ruler extends Evented<RulerEventTable> {
             distance,
             this.enabled,
             this.labelVisibilitySettings.perimeter,
+            this.markerBurningArea,
             this.jointFactory,
         );
 
