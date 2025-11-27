@@ -31,7 +31,7 @@ export class Control {
         this._wrap.style.userSelect = 'none';
         this._wrap.innerHTML = content;
 
-        this._position = position;
+        this._position = position ?? 'topLeft';
         this._controlPane = (map as any)._controlPane;
         this._container = this._controlPane.getContainerByPosition(position);
         this._container?.append(this._wrap);

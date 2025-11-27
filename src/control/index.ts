@@ -35,6 +35,11 @@ export interface RulerControlOptions extends mapgl.ControlOptions {
      * Specifies whether the ruler should be enabled after control initialization.
      */
     enabled?: boolean;
+
+    /**
+     * Specifies the size of the marker burning area within the radius of the ruler joint.
+     */
+    markerBurningArea?: RulerOptions['markerBurningArea'];
 }
 
 /**
@@ -82,6 +87,7 @@ export class RulerControl extends Control {
             polylineOptions: options.polylineOptions,
             jointFactory: options.jointFactory,
             snapPointFactory: options.snapPointFactory,
+            markerBurningArea: options.markerBurningArea,
         });
 
         this.render();

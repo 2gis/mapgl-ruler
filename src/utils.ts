@@ -117,6 +117,7 @@ export function createHtmlMarker(
         big?: boolean;
         interactive?: boolean;
         style?: string;
+        markerBurningArea?: number;
     },
 ): mapgl.HtmlMarker {
     return new mapgl.HtmlMarker(map, {
@@ -124,6 +125,9 @@ export function createHtmlMarker(
         html: `<div class="${css.joint}${opts.big ? ' ' + css.big : ''}"></div`,
         zIndex: styleDefault.jointPhase,
         interactive: opts.interactive ?? false,
+        labeling: opts.markerBurningArea
+            ? { type: 'invincible', width: opts.markerBurningArea, height: opts.markerBurningArea }
+            : undefined,
     });
 }
 
