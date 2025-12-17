@@ -29,7 +29,7 @@
     "deploy-gh-pages": "npm run clean && npm run build-demo && gh-pages -d dist"
   },
   "devDependencies": {
-    "@2gis/ts-docs-generator": "^0.1.0",
+    "@2gis/ts-docs-generator": "^0.2.0",
     "@2gis/mapgl": "^1.67.0",
     "@types/jest": "^27.4.0",
     "@types/jest-image-snapshot": "^4.3.1",
